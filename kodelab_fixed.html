@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kodelab — Belajar HTML, CSS &amp; JavaScript</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/JetBrains-Mono/2.304/jetbrains-mono.css');
+
+:root{
+  --ink: #14161c;
+  --panel: #1c1f27;
+  --panel-2: #23262f;
+  --line: #333747;
+  --paper: #f4f2ec;
+  --paper-dim: #b9b6ac;
+  --amber: #e8b44c;
+  --amber-dim: #a9853c;
+  --teal: #6fb7a8;
+  --red: #d9695f;
+  --text: #e8e6df;
+  --text-dim: #9a9da6;
+  --font-ui: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text);
+  font-family:var(--font-ui);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Layout shell ---------- */
+.app{
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  height:100vh;
+}
+.overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:40; }
+.overlay.show{ display:block; }
+
+@media (max-width: 860px){
+  .app{ grid-template-columns: 1fr; }
+  .sidebar{ position:fixed; z-index:50; top:0; left:0; bottom:0; width:280px; transform:translateX(-100%); transition:transform .25s ease; }
+  .sidebar.open{ transform:translateX(0); }
+  .menu-btn{ display:inline-flex !important; }
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar{
+  background:var(--panel);
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.brand{
+  padding:22px 20px 16px;
+  border-bottom:1px solid var(--line);
+  flex-shrink:0;
+}
+.brand-mark{
+  font-family:var(--font-mono);
+  font-size:20px;
+  font-weight:700;
+  color:var(--paper);
+  letter-spacing:-0.02em;
+}
+.brand-mark span{ color:var(--amber); }
+.brand-sub{
+  margin-top:4px;
+  font-size:12.5px;
+  color:var(--text-dim);
+}
+.progress-wrap{
+  padding:14px 20px;
+  border-bottom:1px solid var(--line);
+  flex-shrink:0;
+}
+.progress-label{
+  display:flex;
+  justify-content:space-between;
+  font-size:11.5px;
+  color:var(--text-dim);
+  margin-bottom:6px;
+}
+.progress-track{
+  height:5px;
+  background:var(--panel-2);
+  border-radius:3px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:var(--amber);
+  border-radius:3px;
+  transition:width .4s ease;
+}
+.nav{
+  flex:1;
+  overflow-y:auto;
+  padding:10px 10px 20px;
+}
+.nav::-webkit-scrollbar{ width:6px; }
+.nav::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+
+.track-group{ margin-bottom:6px; }
+.track-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  background:none;
+  border:none;
+  color:var(--text);
+  font-family:var(--font-ui);
+  font-size:13.5px;
+  font-weight:600;
+  padding:10px 10px;
+  cursor:pointer;
+  border-radius:6px;
+  text-align:left;
+}
+.track-head:hover{ background:var(--panel-2); }
+.track-dot{
+  width:8px; height:8px; border-radius:50%;
+  flex-shrink:0;
+}
+.track-count{
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text-dim);
+}
+.track-chev{
+  font-size:11px;
+  color:var(--text-dim);
+  transition:transform .2s;
+  width:12px;
+}
+.track-group.open .track-chev{ transform:rotate(90deg); }
+
+.lesson-list{
+  display:none;
+  padding:2px 0 6px 26px;
+  border-left:1px solid var(--line);
+  margin-left:15px;
+}
+.track-group.open .lesson-list{ display:block; }
+
+.lesson-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  background:none;
+  border:none;
+  color:var(--text-dim);
+  font-family:var(--font-ui);
+  font-size:13px;
+  padding:7px 10px;
+  cursor:pointer;
+  border-radius:5px;
+  text-align:left;
+  line-height:1.3;
+}
+.lesson-item:hover{ background:var(--panel-2); color:var(--text); }
+.lesson-item.active{
+  background:rgba(232,180,76,0.12);
+  color:var(--amber);
+  font-weight:600;
+}
+.lesson-check{
+  width:14px; height:14px;
+  border-radius:50%;
+  border:1.5px solid var(--line);
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px;
+}
+.lesson-item.done .lesson-check{
+  background:var(--teal);
+  border-color:var(--teal);
+  color:var(--ink);
+}
+
+/* ---------- Main ---------- */
+.main{
+  overflow-y:auto;
+  height:100vh;
+  position:relative;
+}
+.topbar{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; gap:14px;
+  padding:14px 28px;
+  background:rgba(20,22,28,0.9);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.menu-btn{
+  display:none;
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--text);
+  width:34px; height:34px;
+  border-radius:6px;
+  align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:15px;
+  flex-shrink:0;
+}
+.crumb{
+  font-size:13px;
+  color:var(--text-dim);
+  font-family:var(--font-mono);
+}
+.crumb b{ color:var(--paper); font-weight:600; }
+
+.content{
+  max-width:760px;
+  margin:0 auto;
+  padding:40px 28px 100px;
+}
+.lesson-eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--amber);
+  margin-bottom:10px;
+}
+.lesson-title{
+  font-family:var(--font-serif);
+  font-size:34px;
+  line-height:1.15;
+  color:var(--paper);
+  margin:0 0 14px;
+  max-width:22ch;
+}
+.lesson-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:24px;
+}
+.meta-pill{
+  font-family:var(--font-mono);
+  font-size:11px;
+  padding:4px 11px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  color:var(--text-dim);
+}
+.meta-pill.level{ color:var(--amber); border-color:var(--amber-dim); }
+.lesson-body{
+  font-family:var(--font-serif);
+  font-size:17px;
+  line-height:1.7;
+  color:var(--text);
+  max-width:66ch;
+}
+.lesson-body p{ margin:0 0 16px; }
+.lesson-body code{
+  font-family:var(--font-mono);
+  background:var(--panel-2);
+  padding:2px 6px;
+  border-radius:4px;
+  font-size:0.86em;
+  color:var(--teal);
+}
+.lesson-body ul{ margin:0 0 16px; padding-left:22px; }
+.lesson-body li{ margin-bottom:8px; }
+
+.code-block{
+  margin:22px 0;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  background:#0f1116;
+}
+.code-block-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:9px 14px;
+  background:var(--panel-2);
+  border-bottom:1px solid var(--line);
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--text-dim);
+}
+.code-block pre{
+  margin:0;
+  padding:16px;
+  overflow-x:auto;
+  font-family:var(--font-mono);
+  font-size:13.5px;
+  line-height:1.6;
+  color:#dcdfe4;
+}
+.copy-btn{
+  background:none; border:none; color:var(--text-dim);
+  font-family:var(--font-mono); font-size:11px; cursor:pointer;
+}
+.copy-btn:hover{ color:var(--amber); }
+
+/* playground */
+.playground{
+  margin:30px 0;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+}
+.pg-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px;
+  background:var(--panel-2);
+  border-bottom:1px solid var(--line);
+}
+.pg-label{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--paper);
+  display:flex; align-items:center; gap:8px;
+}
+.pg-label::before{
+  content:'';
+  width:7px; height:7px; border-radius:50%;
+  background:var(--amber);
+  display:inline-block;
+}
+.run-btn{
+  background:var(--amber);
+  color:#1a1305;
+  border:none;
+  font-family:var(--font-ui);
+  font-weight:600;
+  font-size:12.5px;
+  padding:6px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.run-btn:hover{ background:#f0c268; }
+.pg-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+@media (max-width:640px){ .pg-body{ grid-template-columns:1fr; } }
+.pg-editor{
+  border-right:1px solid var(--line);
+}
+@media (max-width:640px){ .pg-editor{ border-right:none; border-bottom:1px solid var(--line); } }
+.pg-editor textarea{
+  width:100%;
+  height:220px;
+  background:#0f1116;
+  color:#dcdfe4;
+  border:none;
+  padding:14px;
+  font-family:var(--font-mono);
+  font-size:13px;
+  line-height:1.6;
+  resize:vertical;
+  outline:none;
+}
+.pg-output{
+  background:#fff;
+}
+.pg-output iframe{
+  width:100%;
+  height:220px;
+  border:none;
+  display:block;
+}
+.pg-console{
+  height:220px;
+  overflow-y:auto;
+  padding:14px;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  background:#0b0d11;
+  color:#8fd6c4;
+  line-height:1.7;
+}
+.pg-console .err{ color:var(--red); }
+.pg-console .arrow{ color:var(--text-dim); }
+
+.callout{
+  margin:22px 0;
+  padding:14px 16px;
+  border-left:3px solid var(--amber);
+  background:rgba(232,180,76,0.07);
+  border-radius:0 8px 8px 0;
+  font-family:var(--font-ui);
+  font-size:14.5px;
+  color:var(--paper);
+  line-height:1.6;
+}
+.callout b{ color:var(--amber); }
+
+/* ---------- Quiz ---------- */
+.quiz-section{
+  margin:44px 0 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  background:var(--panel);
+}
+.quiz-head{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+  background:var(--panel-2);
+}
+.quiz-eyebrow{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--teal);
+  margin-bottom:4px;
+}
+.quiz-title{
+  font-family:var(--font-ui);
+  font-size:16px;
+  color:var(--paper);
+  margin:0;
+  font-weight:700;
+}
+.quiz-progress{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--text-dim);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+#quizList{ padding:6px 20px 4px; }
+.quiz-q{
+  padding:18px 0;
+  border-bottom:1px solid var(--line);
+}
+.quiz-q:last-child{ border-bottom:none; }
+.quiz-q-text{
+  font-family:var(--font-ui);
+  font-size:14.5px;
+  color:var(--paper);
+  margin:0 0 12px;
+  line-height:1.5;
+  font-weight:600;
+}
+.quiz-options{
+  display:flex; flex-direction:column; gap:8px;
+}
+.quiz-opt{
+  text-align:left;
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--text);
+  font-family:var(--font-ui);
+  font-size:13.5px;
+  padding:10px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.quiz-opt:hover:not(:disabled){ border-color:var(--amber-dim); }
+.quiz-opt{
+  display:block;
+  width:100%;
+  min-height:42px;
+  line-height:1.45;
+  white-space:normal;
+  word-break:break-word;
+}
+.quiz-opt:disabled{ cursor:default; }
+.quiz-opt.correct{
+  border-color:var(--teal);
+  background:rgba(111,183,168,0.12);
+  color:var(--teal);
+  font-weight:700;
+}
+.quiz-opt.incorrect{
+  border-color:var(--red);
+  background:rgba(217,105,95,0.12);
+  color:var(--red);
+  font-weight:700;
+}
+.quiz-feedback{
+  display:none;
+  margin-top:10px;
+  font-family:var(--font-ui);
+  font-size:13px;
+  line-height:1.6;
+  padding:10px 12px;
+  border-radius:8px;
+}
+.quiz-feedback.ok{ background:rgba(111,183,168,0.08); color:var(--teal); }
+.quiz-feedback.bad{ background:rgba(217,105,95,0.08); color:var(--red); }
+.quiz-feedback b{ font-weight:700; }
+.quiz-summary{
+  display:none;
+  align-items:center; justify-content:space-between;
+  gap:14px;
+  padding:16px 20px;
+  background:var(--panel-2);
+}
+.quiz-summary-score{
+  font-family:var(--font-ui);
+  font-size:14px;
+  font-weight:700;
+  color:var(--paper);
+}
+.quiz-retry-btn{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--text);
+  font-family:var(--font-ui);
+  font-size:12.5px;
+  font-weight:600;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.quiz-retry-btn:hover{ border-color:var(--amber-dim); color:var(--amber); }
+
+.lesson-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:44px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+}
+.nav-btn{
+  flex:1;
+  max-width:280px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  padding:14px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  text-align:left;
+  font-family:var(--font-ui);
+}
+.nav-btn:hover{ border-color:var(--amber-dim); }
+.nav-btn.next{ margin-left:auto; text-align:right; }
+.nav-btn-label{ font-size:11px; color:var(--text-dim); font-family:var(--font-mono); }
+.nav-btn-title{ font-size:14px; margin-top:4px; color:var(--paper); font-weight:600; }
+.nav-btn:disabled{ opacity:.3; cursor:default; }
+
+.mark-done{
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:30px;
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:9px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:var(--font-ui);
+  font-size:13.5px;
+  font-weight:600;
+}
+.mark-done.done{
+  background:rgba(111,183,168,0.15);
+  border-color:var(--teal);
+  color:var(--teal);
+}
+
+/* Welcome screen */
+.welcome{
+  max-width:680px;
+  margin:0 auto;
+  padding:60px 28px 40px;
+}
+.welcome-eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--amber);
+  margin-bottom:14px;
+}
+.welcome h1{
+  font-family:var(--font-serif);
+  font-size:40px;
+  color:var(--paper);
+  margin:0 0 14px;
+  line-height:1.15;
+}
+.welcome p{
+  font-family:var(--font-serif);
+  font-size:17px;
+  line-height:1.7;
+  color:var(--text-dim);
+  max-width:56ch;
+}
+.stat-row{
+  display:flex;
+  gap:28px;
+  margin-top:28px;
+  padding-top:26px;
+  border-top:1px solid var(--line);
+}
+.stat-item{ }
+.stat-num{
+  font-family:var(--font-mono);
+  font-size:26px;
+  font-weight:700;
+  color:var(--paper);
+}
+.stat-label{
+  font-family:var(--font-ui);
+  font-size:12px;
+  color:var(--text-dim);
+  margin-top:2px;
+}
+.track-cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:32px;
+}
+@media (max-width:640px){ .track-cards{ grid-template-columns:1fr; } }
+.track-card{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:18px;
+  cursor:pointer;
+  background:var(--panel);
+}
+.track-card:hover{ border-color:var(--amber-dim); }
+.track-card-dot{
+  width:10px; height:10px; border-radius:50%; margin-bottom:12px;
+}
+.track-card h3{
+  font-family:var(--font-ui);
+  font-size:15px;
+  color:var(--paper);
+  margin:0 0 6px;
+}
+.track-card p{
+  font-family:var(--font-ui);
+  font-size:12.5px;
+  color:var(--text-dim);
+  line-height:1.5;
+  margin:0;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">kode<span>lab</span></div>
+      <div class="brand-sub">HTML · CSS · JavaScript, dari nol</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progres belajar</span>
+        <span id="progressText">0 / 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div class="crumb" id="crumb">kodelab / beranda</div>
+    </div>
+    <div id="viewport"></div>
+  </main>
+</div>
+
+<script>
+/* ======================= DATA MATERI ======================= */
+const TRACKS = [
+  {
+    id:'html', name:'HTML', color:'#e8b44c',
+    desc:'Struktur & elemen dasar halaman web.',
+    lessons: [
+      {
+        id:'html-1', title:'Apa itu HTML?', level:'Pemula', duration:'4 menit',
+        body:`
+          <p>HTML (<code>HyperText Markup Language</code>) adalah bahasa markup yang membentuk kerangka setiap halaman web. Bukan bahasa pemrograman — HTML tidak punya logika atau perhitungan, tugasnya hanya menandai bagian mana yang judul, mana yang paragraf, mana yang gambar, dan seterusnya.</p>
+          <p>Setiap elemen HTML ditulis sebagai <code>tag</code>. Kebanyakan tag punya pasangan pembuka dan penutup, membungkus konten di antaranya:</p>
+        `,
+        code:{lang:'html', text:`<p>Ini sebuah paragraf.</p>
+<h1>Ini judul utama</h1>`},
+        after:`<p>Browser membaca file <code>.html</code> dari atas ke bawah, lalu merender setiap tag sesuai maknanya. <code>&lt;h1&gt;</code> ditampilkan besar dan tebal, <code>&lt;p&gt;</code> ditampilkan sebagai teks biasa — bukan karena gayanya, tapi karena maknanya sebagai "judul" dan "paragraf".</p>`,
+        callout:'HTML mengatur <b>struktur & makna</b> konten. Tampilan visual (warna, jarak, tata letak) itu tugas CSS — akan kita bahas di track selanjutnya.',
+        playground:{
+          type:'html',
+          starter:`<h1>Halo, dunia!</h1>
+<p>Ini adalah paragraf pertama saya.</p>`
+        },
+        quiz:[
+          { q:'HTML adalah singkatan dari?', options:['HyperText Markup Language','High Text Markdown Language','Hyperlink Text Management Language','Home Tool Markup Language'], correct:0, explain:'HTML adalah singkatan dari HyperText Markup Language, bahasa markup untuk struktur halaman web.' },
+          { q:'HTML tergolong sebagai bahasa apa?', options:['Bahasa markup','Bahasa pemrograman','Bahasa query','Bahasa scripting'], correct:0, explain:'HTML adalah bahasa markup — ia menandai struktur konten, bukan menjalankan logika atau perhitungan seperti bahasa pemrograman.' },
+          { q:'Apa fungsi utama HTML pada sebuah halaman web?', options:['Menentukan struktur dan makna konten','Mengatur warna dan tata letak','Menangani logika interaktif','Menyimpan data ke database'], correct:0, explain:'HTML fokus pada struktur & makna konten. Tampilan diatur oleh CSS, dan interaktivitas oleh JavaScript.' },
+        ]
+      },
+      {
+        id:'html-2', title:'Struktur dokumen HTML', level:'Pemula', duration:'4 menit',
+        body:`<p>Setiap file HTML punya kerangka wajib. <code>&lt;!DOCTYPE html&gt;</code> memberitahu browser bahwa ini dokumen HTML5. Semuanya dibungkus <code>&lt;html&gt;</code>, lalu dipecah menjadi dua bagian besar: <code>&lt;head&gt;</code> untuk informasi tak terlihat (judul tab, link CSS), dan <code>&lt;body&gt;</code> untuk konten yang benar-benar tampil.</p>`,
+        code:{lang:'html', text:`<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Halaman Saya</title>
+</head>
+<body>
+  <h1>Konten muncul di sini</h1>
+</body>
+</html>`},
+        after:`<p>Atribut <code>lang="id"</code> membantu mesin pencari dan pembaca layar mengenali bahasa halaman. <code>meta charset="UTF-8"</code> memastikan karakter seperti "é" atau emoji tampil dengan benar.</p>`,
+        playground:{ type:'html', starter:`<!DOCTYPE html>
+<html lang="id">
+<head><title>Halaman Saya</title></head>
+<body>
+  <h1>Coba ubah judul ini</h1>
+</body>
+</html>` },
+        quiz:[
+          { q:'Tag apa yang membungkus konten yang benar-benar tampil di layar?', options:['<body>','<head>','<title>','<meta>'], correct:0, explain:'<body> membungkus semua konten yang tampil di layar, sedangkan <head> berisi informasi yang tidak terlihat langsung.' },
+          { q:'Apa fungsi <meta charset="UTF-8">?', options:['Menentukan encoding karakter','Menentukan warna latar','Menentukan versi CSS','Menentukan ukuran font'], correct:0, explain:'meta charset="UTF-8" memastikan karakter khusus (seperti é atau emoji) ditampilkan dengan benar oleh browser.' },
+          { q:'Apa manfaat atribut lang="id" pada tag <html>?', options:['Membantu mesin pencari & pembaca layar mengenali bahasa halaman','Mengubah warna teks','Menentukan versi HTML','Menyembunyikan konten'], correct:0, explain:'Atribut lang membantu aksesibilitas (pembaca layar) dan SEO dengan menandai bahasa yang digunakan pada halaman.' },
+        ]
+      },
+      {
+        id:'html-3', title:'Heading & paragraf', level:'Pemula', duration:'3 menit',
+        body:`<p>HTML punya enam level heading, <code>&lt;h1&gt;</code> sampai <code>&lt;h6&gt;</code>, dari yang paling penting ke paling kecil. Gunakan <code>&lt;h1&gt;</code> hanya sekali per halaman untuk judul utama — level di bawahnya untuk sub-bagian, seperti daftar isi buku.</p>`,
+        code:{lang:'html', text:`<h1>Judul Artikel</h1>
+<h2>Bagian Pertama</h2>
+<p>Isi bagian pertama ditulis di sini...</p>
+<h2>Bagian Kedua</h2>
+<p>Isi bagian kedua ditulis di sini...</p>`},
+        callout:'Jangan pilih heading berdasarkan ukuran font yang diinginkan — pilih berdasarkan <b>tingkat kepentingan</b> konten. Ukuran bisa diatur lewat CSS.',
+        playground:{ type:'html', starter:`<h1>Toko Kopi Nusantara</h1>
+<h2>Menu Kami</h2>
+<p>Kopi hitam, kopi susu, dan cokelat panas.</p>` },
+        quiz:[
+          { q:'Heading paling penting dalam sebuah halaman menggunakan tag apa?', options:['<h1>','<h6>','<p>','<head>'], correct:0, explain:'<h1> adalah heading dengan tingkat kepentingan tertinggi, biasanya untuk judul utama halaman.' },
+          { q:'Idealnya, berapa kali <h1> digunakan dalam satu halaman?', options:['Sekali','Sebanyak mungkin','Dua kali','Tidak pernah'], correct:0, explain:'<h1> sebaiknya hanya dipakai sekali sebagai judul utama, agar struktur halaman tetap jelas dan mudah dipahami mesin pencari.' },
+          { q:'Dasar yang tepat untuk memilih level heading adalah?', options:['Tingkat kepentingan konten','Ukuran font yang diinginkan','Warna teks','Panjang teks'], correct:0, explain:'Pemilihan heading harus berdasarkan makna/hierarki konten, bukan tampilan — ukuran visual bisa diatur lewat CSS.' },
+        ]
+      },
+      {
+        id:'html-4', title:'Link & gambar', level:'Pemula', duration:'3 menit',
+        body:`<p>Tag <code>&lt;a&gt;</code> membuat tautan menggunakan atribut <code>href</code>. Tag <code>&lt;img&gt;</code> menampilkan gambar lewat atribut <code>src</code> — tag ini tidak punya penutup karena tidak membungkus konten apa pun.</p>`,
+        code:{lang:'html', text:`<a href="https://developer.mozilla.org">Kunjungi MDN</a>
+<img src="https://picsum.photos/300/160" alt="Gambar acak">`},
+        after:`<p>Atribut <code>alt</code> pada gambar wajib diisi — ia menjadi teks pengganti saat gambar gagal dimuat, dan dibacakan oleh pembaca layar untuk pengguna tunanetra.</p>`,
+        playground:{ type:'html', starter:`<a href="https://developer.mozilla.org" target="_blank">Belajar lebih lanjut di MDN</a>
+<br><br>
+<img src="https://picsum.photos/280/150" alt="Foto pemandangan acak">` },
+        quiz:[
+          { q:'Atribut untuk menentukan tujuan tautan pada tag <a> adalah?', options:['href','src','alt','target'], correct:0, explain:'href (hyperlink reference) menentukan URL tujuan dari sebuah tautan.' },
+          { q:'Atribut wajib pada <img> untuk teks pengganti gambar adalah?', options:['alt','href','title','caption'], correct:0, explain:'alt menyediakan teks pengganti saat gambar gagal dimuat, dan penting untuk aksesibilitas (dibaca oleh pembaca layar).' },
+          { q:'Mengapa tag <img> tidak memiliki tag penutup?', options:['Karena tidak membungkus konten apa pun','Karena itu kesalahan penulisan umum','Karena gambar bukan elemen HTML','Karena harus ditulis dua kali'], correct:0, explain:'<img> adalah elemen "self-closing" karena tidak membungkus konten di dalamnya — cukup atribut seperti src dan alt.' },
+        ]
+      },
+      {
+        id:'html-5', title:'List (daftar)', level:'Pemula', duration:'2 menit',
+        body:`<p>Dua jenis daftar utama: <code>&lt;ul&gt;</code> (unordered — pakai bullet) dan <code>&lt;ol&gt;</code> (ordered — pakai nomor). Setiap item ditulis dengan <code>&lt;li&gt;</code>.</p>`,
+        code:{lang:'html', text:`<ul>
+  <li>Telur</li>
+  <li>Tepung</li>
+  <li>Gula</li>
+</ul>
+
+<ol>
+  <li>Panaskan oven</li>
+  <li>Campur bahan kering</li>
+  <li>Panggang 20 menit</li>
+</ol>`},
+        playground:{ type:'html', starter:`<h3>Bahan-bahan</h3>
+<ul>
+  <li>Telur</li>
+  <li>Tepung</li>
+</ul>
+<h3>Langkah</h3>
+<ol>
+  <li>Campur semua bahan</li>
+  <li>Panggang 20 menit</li>
+</ol>` },
+        quiz:[
+          { q:'Tag untuk membuat daftar bernomor adalah?', options:['<ol>','<ul>','<li>','<dl>'], correct:0, explain:'<ol> (ordered list) menghasilkan daftar bernomor, sedangkan <ul> menghasilkan daftar dengan bullet.' },
+          { q:'Tag <ul> menghasilkan daftar dengan tanda apa secara default?', options:['Bullet','Nomor','Huruf','Tanpa tanda'], correct:0, explain:'<ul> singkatan dari unordered list, tampil dengan bullet karena urutannya tidak penting.' },
+          { q:'Setiap item dalam <ol> atau <ul> ditulis dengan tag?', options:['<li>','<item>','<list>','<ol>'], correct:0, explain:'<li> (list item) digunakan untuk menandai setiap item, baik di dalam <ol> maupun <ul>.' },
+        ]
+      },
+      {
+        id:'html-6', title:'Form input', level:'Menengah', duration:'5 menit',
+        body:`<p>Form mengumpulkan input dari pengguna. Tag <code>&lt;input&gt;</code> punya banyak <code>type</code> — <code>text</code>, <code>email</code>, <code>password</code>, <code>checkbox</code>, dan lainnya. Tag <code>&lt;label&gt;</code> menghubungkan teks penjelas dengan input lewat atribut <code>for</code> yang cocok dengan <code>id</code> input.</p>`,
+        code:{lang:'html', text:`<form>
+  <label for="nama">Nama:</label>
+  <input type="text" id="nama" name="nama">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email">
+
+  <button type="submit">Kirim</button>
+</form>`},
+        playground:{ type:'html', starter:`<form>
+  <label for="nama">Nama:</label><br>
+  <input type="text" id="nama"><br><br>
+  <button type="submit">Kirim</button>
+</form>` },
+        quiz:[
+          { q:'Tag <label> dihubungkan ke input tertentu lewat atribut?', options:['for, yang cocok dengan id input','name','value','type'], correct:0, explain:'Atribut for pada <label> harus sama dengan id input yang dituju, sehingga label dan input saling terhubung.' },
+          { q:'Type input yang digunakan untuk alamat email adalah?', options:['email','text','mail','address'], correct:0, explain:'type="email" memberi validasi dasar format email dan tampilan keyboard khusus di perangkat mobile.' },
+          { q:'Tombol untuk mengirimkan form biasanya bertipe?', options:['submit','send','go','post'], correct:0, explain:'type="submit" pada <button> atau <input> memicu pengiriman data form.' },
+        ]
+      },
+      {
+        id:'html-7', title:'Tabel', level:'Menengah', duration:'3 menit',
+        body:`<p>Tabel dibangun dari <code>&lt;table&gt;</code>, baris <code>&lt;tr&gt;</code>, sel header <code>&lt;th&gt;</code>, dan sel data <code>&lt;td&gt;</code>. Gunakan tabel untuk data tabular sungguhan — bukan untuk mengatur tata letak halaman.</p>`,
+        code:{lang:'html', text:`<table>
+  <tr>
+    <th>Nama</th>
+    <th>Skor</th>
+  </tr>
+  <tr>
+    <td>Andi</td>
+    <td>88</td>
+  </tr>
+</table>`},
+        playground:{ type:'html', starter:`<table border="1">
+  <tr><th>Nama</th><th>Skor</th></tr>
+  <tr><td>Andi</td><td>88</td></tr>
+  <tr><td>Sari</td><td>92</td></tr>
+</table>` },
+        quiz:[
+          { q:'Sel header pada tabel ditulis dengan tag?', options:['<th>','<td>','<tr>','<thead>'], correct:0, explain:'<th> (table header) digunakan untuk sel judul kolom/baris, biasanya tampil tebal dan rata tengah secara default.' },
+          { q:'Baris tabel ditulis dengan tag?', options:['<tr>','<td>','<th>','<table>'], correct:0, explain:'<tr> (table row) membungkus satu baris tabel, berisi sel-sel <td> atau <th>.' },
+          { q:'Tabel HTML sebaiknya digunakan untuk?', options:['Menampilkan data tabular','Mengatur tata letak halaman','Membuat menu navigasi','Menyimpan gambar'], correct:0, explain:'Tabel dirancang untuk data tabular sungguhan (seperti nilai, statistik). Tata letak halaman sebaiknya diatur dengan CSS (flexbox/grid).' },
+        ]
+      },
+      {
+        id:'html-8', title:'Div, span & semantik', level:'Menengah', duration:'4 menit',
+        body:`<p><code>&lt;div&gt;</code> dan <code>&lt;span&gt;</code> adalah wadah generik tanpa makna khusus — dipakai untuk mengelompokkan elemen agar mudah diberi gaya lewat CSS. HTML5 menambahkan tag semantik seperti <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, dan <code>&lt;footer&gt;</code> yang menjelaskan peran bagian tersebut.</p>`,
+        code:{lang:'html', text:`<header>
+  <h1>Nama Situs</h1>
+  <nav>...</nav>
+</header>
+<main>
+  <article>Konten utama</article>
+</main>
+<footer>© 2026</footer>`},
+        callout:'Gunakan tag semantik saat maknanya cocok — ini membantu SEO dan aksesibilitas. Gunakan <code>div</code>/<code>span</code> untuk sisanya.',
+        playground:{ type:'html', starter:`<header><h1>Blog Saya</h1></header>
+<main>
+  <article>
+    <h2>Judul Artikel</h2>
+    <p>Isi artikel di sini.</p>
+  </article>
+</main>
+<footer>© 2026 Blog Saya</footer>` },
+        quiz:[
+          { q:'<div> dan <span> disebut elemen apa?', options:['Generik tanpa makna khusus','Semantik','Interaktif','Formulir'], correct:0, explain:'<div> dan <span> tidak membawa makna tertentu — keduanya wadah generik untuk pengelompokan dan styling lewat CSS.' },
+          { q:'Tag semantik untuk bagian navigasi halaman adalah?', options:['<nav>','<div>','<span>','<data>'], correct:0, explain:'<nav> secara semantik menandai kumpulan tautan navigasi utama pada halaman.' },
+          { q:'Kapan sebaiknya menggunakan tag semantik seperti <article> dibanding <div>?', options:['Saat maknanya memang cocok dengan konten','Selalu, tanpa pengecualian','Tidak pernah','Hanya untuk halaman kecil'], correct:0, explain:'Gunakan tag semantik ketika makna konten memang sesuai — ini membantu SEO dan aksesibilitas tanpa mengubah tampilan secara default.' },
+        ]
+      },
+    ]
+  },
+  {
+    id:'css', name:'CSS', color:'#6fb7a8',
+    desc:'Mengatur tampilan, warna, dan tata letak.',
+    lessons:[
+      {
+        id:'css-1', title:'Apa itu CSS?', level:'Pemula', duration:'3 menit',
+        body:`<p>CSS (<code>Cascading Style Sheets</code>) mengatur bagaimana elemen HTML tampil: warna, ukuran, jarak, posisi. CSS terdiri dari <b>selector</b> (elemen mana yang diatur) dan <b>deklarasi</b> di dalam kurung kurawal (properti apa yang diubah).</p>`,
+        code:{lang:'css', text:`p {
+  color: darkslategray;
+  font-size: 18px;
+}`},
+        after:`<p>Ada tiga cara memasang CSS: <code>style</code> inline di tag, tag <code>&lt;style&gt;</code> di <code>&lt;head&gt;</code>, atau file <code>.css</code> terpisah yang ditautkan dengan <code>&lt;link&gt;</code>. Cara ketiga paling disarankan karena memisahkan struktur dan tampilan.</p>`,
+        playground:{ type:'html', starter:`<style>
+p {
+  color: teal;
+  font-size: 20px;
+}
+</style>
+<p>Ubah warna teks ini lewat CSS di atas.</p>` },
+        quiz:[
+          { q:'CSS adalah singkatan dari?', options:['Cascading Style Sheets','Creative Style System','Computer Style Sheets','Colorful Style Syntax'], correct:0, explain:'CSS singkatan dari Cascading Style Sheets, digunakan untuk mengatur tampilan halaman HTML.' },
+          { q:'Dua bagian utama dari sebuah aturan CSS adalah?', options:['Selector dan deklarasi','Tag dan atribut','Head dan body','Class dan id saja'], correct:0, explain:'Sebuah aturan CSS terdiri dari selector (elemen yang dituju) dan deklarasi di dalam kurung kurawal (properti yang diubah).' },
+          { q:'Cara memasang CSS yang paling disarankan untuk proyek besar adalah?', options:['File .css terpisah yang ditautkan dengan <link>','Inline style di setiap tag','Tag <style> di setiap halaman','Menulis langsung di JavaScript'], correct:0, explain:'File CSS terpisah memisahkan struktur (HTML) dan tampilan (CSS), sehingga lebih mudah dikelola dan digunakan ulang di banyak halaman.' },
+        ]
+      },
+      {
+        id:'css-2', title:'Selector', level:'Pemula', duration:'4 menit',
+        body:`<p>Selector menentukan elemen mana yang terkena gaya. Selector tag (<code>p</code>) mengenai semua elemen itu. Selector class (<code>.judul</code>) mengenai elemen dengan atribut <code>class="judul"</code>. Selector id (<code>#header</code>) mengenai satu elemen unik dengan <code>id="header"</code>.</p>`,
+        code:{lang:'css', text:`.judul { color: crimson; }
+#header { background: #eee; }
+p { line-height: 1.6; }`},
+        callout:'Gunakan <b>class</b> untuk gaya yang dipakai berulang, dan <b>id</b> hanya untuk elemen tunggal yang benar-benar unik di halaman.',
+        playground:{ type:'html', starter:`<style>
+.judul { color: crimson; }
+#kotak { background: #f0e6d2; padding: 10px; }
+</style>
+<h2 class="judul">Judul berwarna</h2>
+<div id="kotak">Kotak dengan latar</div>` },
+        quiz:[
+          { q:'Selector class ditulis dengan awalan?', options:['titik (.)','pagar (#)','bintang (*)','garis miring (/)'], correct:0, explain:'Selector class diawali tanda titik, misalnya .judul untuk elemen dengan class="judul".' },
+          { q:'Selector id ditulis dengan awalan?', options:['pagar (#)','titik (.)','at (@)','dolar ($)'], correct:0, explain:'Selector id diawali tanda pagar, misalnya #header untuk elemen dengan id="header".' },
+          { q:'Kapan sebaiknya menggunakan id dibanding class?', options:['Untuk satu elemen tunggal yang unik di halaman','Untuk gaya yang dipakai berulang','Untuk semua elemen','Tidak pernah dipakai'], correct:0, explain:'id seharusnya unik dan hanya dipakai sekali per halaman, sedangkan class cocok untuk gaya yang dipakai berulang.' },
+        ]
+      },
+      {
+        id:'css-3', title:'Box model', level:'Pemula', duration:'4 menit',
+        body:`<p>Setiap elemen HTML adalah sebuah kotak, tersusun dari dalam ke luar: <code>content</code> → <code>padding</code> (jarak dalam) → <code>border</code> (garis tepi) → <code>margin</code> (jarak luar). Memahami box model kunci untuk mengatur tata letak dengan presisi.</p>`,
+        code:{lang:'css', text:`.kotak {
+  width: 200px;
+  padding: 16px;
+  border: 2px solid #333;
+  margin: 20px;
+}`},
+        playground:{ type:'html', starter:`<style>
+.kotak {
+  width: 180px;
+  padding: 16px;
+  border: 3px solid #333;
+  margin: 20px;
+  background: #f0e6d2;
+}
+</style>
+<div class="kotak">Kotak ini</div>
+<div class="kotak">Dan ini</div>` },
+        quiz:[
+          { q:'Urutan box model dari dalam ke luar adalah?', options:['content → padding → border → margin','content → border → padding → margin','margin → border → padding → content','padding → content → border → margin'], correct:0, explain:'Susunan box model: konten di paling dalam, lalu padding, border, dan margin di paling luar.' },
+          { q:'Jarak di dalam elemen sebelum border disebut?', options:['padding','margin','border','outline'], correct:0, explain:'padding adalah ruang di antara konten dan border elemen tersebut.' },
+          { q:'Jarak di luar elemen, di antara elemen dan tetangganya disebut?', options:['margin','padding','border','gap'], correct:0, explain:'margin adalah ruang di luar border, memisahkan elemen dari elemen lain di sekitarnya.' },
+        ]
+      },
+      {
+        id:'css-4', title:'Flexbox', level:'Menengah', duration:'5 menit',
+        body:`<p>Flexbox mengatur elemen dalam satu baris atau kolom secara fleksibel. Terapkan <code>display: flex</code> pada wadah (parent), lalu atur susunan anak-anaknya dengan <code>justify-content</code> (sumbu utama) dan <code>align-items</code> (sumbu silang).</p>`,
+        code:{lang:'css', text:`.wadah {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}`},
+        playground:{ type:'html', starter:`<style>
+.wadah {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background: #eee;
+  padding: 10px;
+}
+.item { background: #6fb7a8; color: white; padding: 12px; border-radius: 6px; }
+</style>
+<div class="wadah">
+  <div class="item">Satu</div>
+  <div class="item">Dua</div>
+  <div class="item">Tiga</div>
+</div>` },
+        quiz:[
+          { q:'Untuk mengaktifkan flexbox pada sebuah wadah, properti yang digunakan adalah?', options:['display: flex','display: block','position: flex','flex: true'], correct:0, explain:'display: flex pada elemen wadah (parent) mengaktifkan flexbox untuk mengatur anak-anaknya.' },
+          { q:'Properti untuk mengatur susunan pada sumbu utama flexbox adalah?', options:['justify-content','align-items','flex-wrap','gap'], correct:0, explain:'justify-content mengatur posisi item sepanjang sumbu utama (biasanya horizontal).' },
+          { q:'Properti untuk mengatur susunan pada sumbu silang flexbox adalah?', options:['align-items','justify-content','flex-direction','order'], correct:0, explain:'align-items mengatur posisi item sepanjang sumbu silang (biasanya vertikal).' },
+        ]
+      },
+      {
+        id:'css-5', title:'CSS Grid', level:'Menengah', duration:'5 menit',
+        body:`<p>Grid mengatur tata letak dua dimensi (baris <i>dan</i> kolom sekaligus). Tentukan jumlah kolom dengan <code>grid-template-columns</code>, misalnya <code>repeat(3, 1fr)</code> untuk tiga kolom sama lebar.</p>`,
+        code:{lang:'css', text:`.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}`},
+        playground:{ type:'html', starter:`<style>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.card { background: #e8b44c; padding: 20px; text-align: center; border-radius: 6px; }
+</style>
+<div class="grid">
+  <div class="card">1</div>
+  <div class="card">2</div>
+  <div class="card">3</div>
+</div>` },
+        quiz:[
+          { q:'Properti untuk menentukan jumlah kolom pada grid adalah?', options:['grid-template-columns','grid-template-rows','grid-gap','grid-area'], correct:0, explain:'grid-template-columns menentukan jumlah dan lebar kolom pada grid container.' },
+          { q:'repeat(3, 1fr) pada grid-template-columns menghasilkan?', options:['3 kolom sama lebar','3 baris sama tinggi','1 kolom lebar 3fr','3 grid terpisah'], correct:0, explain:'repeat(3, 1fr) membuat 3 kolom dengan lebar yang sama, masing-masing mengambil 1 bagian dari ruang tersedia.' },
+          { q:'Perbedaan utama antara grid dan flexbox adalah?', options:['Grid mengatur tata letak dua dimensi, flexbox satu dimensi','Grid hanya untuk teks','Flexbox tidak bisa dipakai untuk tata letak','Tidak ada perbedaan'], correct:0, explain:'Grid dirancang untuk tata letak dua dimensi (baris dan kolom sekaligus), sementara flexbox lebih cocok untuk satu dimensi (baris atau kolom saja).' },
+        ]
+      },
+      {
+        id:'css-6', title:'Warna & unit', level:'Menengah', duration:'4 menit',
+        body:`<p>Warna bisa ditulis dengan nama (<code>red</code>), hex (<code>#ff0000</code>), atau <code>rgb()</code>/<code>rgba()</code> untuk transparansi. Untuk ukuran, <code>px</code> bersifat tetap, <code>%</code> relatif terhadap parent, dan <code>rem</code> relatif terhadap ukuran font root — cocok untuk desain yang skalabel.</p>`,
+        code:{lang:'css', text:`.box {
+  background: rgba(232, 180, 76, 0.3);
+  width: 80%;
+  font-size: 1.2rem;
+}`},
+        playground:{ type:'html', starter:`<style>
+.box { background: rgba(111,183,168,0.4); padding: 20px; font-size: 1.3rem; }
+</style>
+<div class="box">Kotak semi-transparan</div>` },
+        quiz:[
+          { q:'Unit yang nilainya relatif terhadap ukuran font root disebut?', options:['rem','px','%','vh'], correct:0, explain:'rem (root em) relatif terhadap ukuran font pada elemen root (html), sehingga cocok untuk desain yang mudah diskalakan.' },
+          { q:'Fungsi rgba() digunakan untuk menambahkan?', options:['Transparansi warna','Ukuran font','Ketebalan border','Bayangan'], correct:0, explain:'Parameter keempat pada rgba() adalah alpha (transparansi), dengan nilai 0 (transparan) sampai 1 (pekat).' },
+          { q:'Unit yang bersifat tetap (tidak relatif terhadap apa pun) adalah?', options:['px','%','rem','em'], correct:0, explain:'px adalah unit absolut/tetap, berbeda dengan %, rem, atau em yang nilainya relatif terhadap elemen lain.' },
+        ]
+      },
+      {
+        id:'css-7', title:'Responsive design', level:'Menengah', duration:'5 menit',
+        body:`<p>Media query mengubah gaya berdasarkan lebar layar, sehingga tampilan menyesuaikan dari desktop ke ponsel. Pola umum: rancang untuk mobile dulu, lalu tambahkan gaya untuk layar lebih lebar dengan <code>min-width</code>.</p>`,
+        code:{lang:'css', text:`.kolom { width: 100%; }
+
+@media (min-width: 600px) {
+  .kolom { width: 50%; }
+}`},
+        callout:'Coba lebarkan/persempit jendela browser saat menguji halaman untuk melihat efek media query secara langsung.',
+        playground:{ type:'html', starter:`<style>
+.kolom { background: #6fb7a8; padding: 20px; color:white; }
+@media (min-width: 500px) {
+  .kolom { background: #e8b44c; color: black; }
+}
+</style>
+<div class="kolom">Lebarkan preview untuk lihat perubahan warna</div>` },
+        quiz:[
+          { q:'Aturan CSS yang menyesuaikan tampilan berdasarkan lebar layar disebut?', options:['media query','flexbox','grid template','pseudo-class'], correct:0, explain:'Media query memungkinkan penerapan gaya berbeda berdasarkan kondisi tertentu, seperti lebar layar.' },
+          { q:'Pendekatan umum dalam desain responsif modern adalah?', options:['Mobile-first, lalu tambah gaya untuk layar lebih lebar','Desktop-first selalu','Tanpa media query sama sekali','Hanya untuk aplikasi native'], correct:0, explain:'Mobile-first berarti merancang tampilan dasar untuk layar kecil dulu, lalu menambah penyesuaian untuk layar yang lebih besar.' },
+          { q:'min-width dalam media query berarti gaya berlaku saat?', options:['Lebar layar sama atau lebih besar dari nilai tersebut','Lebar layar sama atau lebih kecil','Tinggi layar tertentu','Warna layar tertentu'], correct:0, explain:'min-width memicu gaya ketika lebar viewport sama dengan atau melebihi nilai yang ditentukan.' },
+        ]
+      },
+    ]
+  },
+  {
+    id:'js', name:'JavaScript', color:'#d9695f',
+    desc:'Logika, interaktivitas, dan perilaku halaman.',
+    lessons:[
+      {
+        id:'js-1', title:'Apa itu JavaScript?', level:'Pemula', duration:'3 menit',
+        body:`<p>JavaScript adalah bahasa pemrograman yang membuat halaman web interaktif — merespons klik, memvalidasi form, mengubah konten tanpa reload. Berbeda dari HTML/CSS, JS punya variabel, logika, dan bisa dijalankan langsung di konsol browser.</p>`,
+        code:{lang:'js', text:`console.log("Halo dari JavaScript!");`},
+        playground:{ type:'js', starter:`console.log("Halo dari JavaScript!");
+console.log(2 + 3);` },
+        quiz:[
+          { q:'JavaScript membuat halaman web menjadi?', options:['Interaktif','Statis','Hanya bisa dibaca','Tidak bisa diubah'], correct:0, explain:'JavaScript memungkinkan halaman merespons aksi pengguna, sehingga menjadi interaktif — bukan sekadar tampilan statis.' },
+          { q:'Fungsi console.log() digunakan untuk?', options:['Menampilkan output ke konsol','Menampilkan alert','Mengubah warna teks','Menyimpan data permanen'], correct:0, explain:'console.log() mencetak nilai ke konsol browser, berguna untuk debugging dan memeriksa nilai variabel.' },
+          { q:'Apa yang membedakan JavaScript dari HTML?', options:['JavaScript punya variabel dan logika','JavaScript punya tag dan atribut','JavaScript punya selector dan deklarasi','JavaScript mengatur struktur dokumen'], correct:0, explain:'HTML hanya menandai struktur, sedangkan JavaScript adalah bahasa pemrograman sungguhan dengan variabel, logika, dan alur kendali.' },
+        ]
+      },
+      {
+        id:'js-2', title:'Variabel & tipe data', level:'Pemula', duration:'4 menit',
+        body:`<p>Gunakan <code>let</code> untuk variabel yang nilainya bisa berubah, dan <code>const</code> untuk yang tetap. Tipe data dasar: <code>string</code> (teks), <code>number</code> (angka), <code>boolean</code> (benar/salah), dan <code>array</code>/<code>object</code> untuk data majemuk.</p>`,
+        code:{lang:'js', text:`let nama = "Sari";
+const usia = 21;
+let aktif = true;
+let hobi = ["membaca", "melukis"];
+
+console.log(nama, usia, aktif);`},
+        playground:{ type:'js', starter:`let nama = "Sari";
+const usia = 21;
+console.log("Nama:", nama);
+console.log("Usia:", usia);` },
+        quiz:[
+          { q:'Kata kunci untuk variabel yang nilainya tidak boleh diubah adalah?', options:['const','let','var','static'], correct:0, explain:'const mendeklarasikan variabel dengan nilai tetap yang tidak bisa ditugaskan ulang setelah didefinisikan.' },
+          { q:'Tipe data untuk teks disebut?', options:['string','number','boolean','array'], correct:0, explain:'string adalah tipe data untuk teks, ditulis di antara tanda kutip seperti "Sari".' },
+          { q:'Tanda [] dalam JavaScript merepresentasikan tipe data?', options:['array','object','string','boolean'], correct:0, explain:'[] digunakan untuk membuat array — daftar nilai yang tersusun berurutan.' },
+        ]
+      },
+      {
+        id:'js-3', title:'Operator & percabangan', level:'Pemula', duration:'4 menit',
+        body:`<p>Operator perbandingan (<code>===</code>, <code>&gt;</code>, <code>&lt;</code>) menghasilkan boolean, dipakai dalam <code>if/else</code> untuk mengambil keputusan berdasarkan kondisi.</p>`,
+        code:{lang:'js', text:`let nilai = 75;
+
+if (nilai >= 80) {
+  console.log("Nilai A");
+} else if (nilai >= 60) {
+  console.log("Nilai B");
+} else {
+  console.log("Nilai C");
+}`},
+        playground:{ type:'js', starter:`let nilai = 75;
+if (nilai >= 80) {
+  console.log("A");
+} else if (nilai >= 60) {
+  console.log("B");
+} else {
+  console.log("C");
+}` },
+        quiz:[
+          { q:'Operator === digunakan untuk?', options:['Membandingkan nilai secara ketat','Menjumlahkan angka','Menggabungkan teks','Mendeklarasikan variabel'], correct:0, explain:'=== membandingkan nilai dan tipe data sekaligus (perbandingan ketat), berbeda dengan = yang digunakan untuk penugasan nilai.' },
+          { q:'Struktur untuk mengambil keputusan berdasarkan kondisi adalah?', options:['if/else','for','function','array'], correct:0, explain:'if/else memungkinkan program menjalankan blok kode berbeda tergantung apakah suatu kondisi benar atau salah.' },
+          { q:'Hasil dari operator perbandingan (misalnya >=) selalu bertipe?', options:['boolean','string','number','object'], correct:0, explain:'Operator perbandingan selalu menghasilkan nilai true atau false, yaitu tipe data boolean.' },
+        ]
+      },
+      {
+        id:'js-4', title:'Fungsi', level:'Pemula', duration:'4 menit',
+        body:`<p>Fungsi mengelompokkan kode yang bisa dipakai ulang. Bisa dideklarasikan dengan <code>function</code>, atau ditulis singkat sebagai <i>arrow function</i>.</p>`,
+        code:{lang:'js', text:`function sapa(nama) {
+  return "Halo, " + nama + "!";
+}
+
+const tambah = (a, b) => a + b;
+
+console.log(sapa("Budi"));
+console.log(tambah(4, 5));`},
+        playground:{ type:'js', starter:`function sapa(nama) {
+  return "Halo, " + nama + "!";
+}
+console.log(sapa("Budi"));
+
+const tambah = (a, b) => a + b;
+console.log(tambah(4, 5));` },
+        quiz:[
+          { q:'Kata kunci untuk mendeklarasikan fungsi secara umum adalah?', options:['function','func','def','method'], correct:0, explain:'Kata kunci function digunakan untuk mendeklarasikan fungsi biasa di JavaScript.' },
+          { q:'(a, b) => a + b adalah contoh dari?', options:['Arrow function','Object literal','Array literal','Pernyataan kondisional'], correct:0, explain:'Sintaks => menandakan arrow function, cara singkat menulis fungsi di JavaScript modern.' },
+          { q:'Kata kunci return dalam fungsi berguna untuk?', options:['Mengembalikan nilai hasil fungsi','Menghentikan seluruh program','Menampilkan alert','Membuat variabel baru'], correct:0, explain:'return mengirimkan nilai hasil dari fungsi ke tempat fungsi tersebut dipanggil.' },
+        ]
+      },
+      {
+        id:'js-5', title:'Array & perulangan', level:'Menengah', duration:'5 menit',
+        body:`<p>Array menyimpan daftar nilai. Method <code>for</code> atau <code>.forEach()</code> mengulang setiap elemennya. Method <code>.map()</code> membuat array baru hasil transformasi tiap elemen.</p>`,
+        code:{lang:'js', text:`const buah = ["apel", "jeruk", "mangga"];
+
+buah.forEach(item => console.log(item));
+
+const kapital = buah.map(item => item.toUpperCase());
+console.log(kapital);`},
+        playground:{ type:'js', starter:`const buah = ["apel", "jeruk", "mangga"];
+buah.forEach(item => console.log(item));
+
+const kapital = buah.map(b => b.toUpperCase());
+console.log(kapital);` },
+        quiz:[
+          { q:'Method untuk mengulang tiap elemen array tanpa membuat array baru adalah?', options:['forEach','map','filter','reduce'], correct:0, explain:'forEach menjalankan sebuah fungsi untuk setiap elemen array, tanpa mengembalikan array baru.' },
+          { q:'Method yang menghasilkan array baru hasil transformasi tiap elemen adalah?', options:['map','forEach','push','pop'], correct:0, explain:'map() mentransformasi setiap elemen array dan mengembalikan array baru berisi hasilnya.' },
+          { q:'Array di JavaScript digunakan untuk menyimpan?', options:['Daftar nilai','Satu nilai tunggal','Fungsi saja','Gaya CSS'], correct:0, explain:'Array adalah struktur data untuk menyimpan kumpulan nilai yang tersusun berurutan.' },
+        ]
+      },
+      {
+        id:'js-6', title:'Object', level:'Menengah', duration:'4 menit',
+        body:`<p>Object menyimpan data sebagai pasangan <code>key: value</code> — cocok untuk merepresentasikan satu entitas dengan banyak properti, seperti satu pengguna atau satu produk.</p>`,
+        code:{lang:'js', text:`const siswa = {
+  nama: "Rani",
+  umur: 20,
+  jurusan: "Informatika"
+};
+
+console.log(siswa.nama);
+console.log(siswa["jurusan"]);`},
+        playground:{ type:'js', starter:`const siswa = { nama: "Rani", umur: 20, jurusan: "Informatika" };
+console.log(siswa.nama);
+console.log(siswa.jurusan);` },
+        quiz:[
+          { q:'Object menyimpan data dalam bentuk pasangan?', options:['key: value','index: value','class: id','tag: atribut'], correct:0, explain:'Object terdiri dari pasangan key (nama properti) dan value (nilainya), seperti nama: "Rani".' },
+          { q:'Cara mengakses properti "nama" pada object siswa adalah?', options:['siswa.nama atau siswa["nama"]','siswa->nama','siswa(nama)','siswa::nama'], correct:0, explain:'Properti object bisa diakses dengan notasi titik (siswa.nama) atau notasi kurung siku (siswa["nama"]).' },
+          { q:'Object paling cocok digunakan untuk merepresentasikan?', options:['Satu entitas dengan banyak properti','Daftar angka sederhana','Satu nilai boolean saja','Kode HTML'], correct:0, explain:'Object ideal untuk menggambarkan satu entitas (misalnya satu siswa) yang punya beberapa atribut sekaligus.' },
+        ]
+      },
+      {
+        id:'js-7', title:'DOM: memilih elemen', level:'Menengah', duration:'5 menit',
+        body:`<p>DOM (<code>Document Object Model</code>) adalah representasi halaman HTML yang bisa diakses dan diubah lewat JavaScript. <code>document.querySelector()</code> memilih elemen pertama yang cocok dengan selector CSS.</p>`,
+        code:{lang:'js', text:`const judul = document.querySelector("h1");
+console.log(judul.textContent);
+
+judul.textContent = "Judul Baru";
+judul.style.color = "teal";`},
+        playground:{ type:'html', starter:`<h1 id="judul">Judul Asli</h1>
+<script>
+  const judul = document.querySelector("#judul");
+  judul.textContent = "Judul Diubah JS!";
+  judul.style.color = "teal";
+<\/script>` },
+        quiz:[
+          { q:'Method untuk memilih elemen pertama yang cocok dengan selector CSS adalah?', options:['document.querySelector()','document.getElement()','document.find()','document.select()'], correct:0, explain:'document.querySelector() menerima selector CSS (seperti class, id, atau tag) dan mengembalikan elemen pertama yang cocok.' },
+          { q:'DOM adalah singkatan dari?', options:['Document Object Model','Data Object Management','Document Order Model','Digital Output Model'], correct:0, explain:'DOM (Document Object Model) adalah representasi terstruktur dari dokumen HTML yang bisa dimanipulasi lewat JavaScript.' },
+          { q:'Untuk mengubah teks sebuah elemen lewat JavaScript, properti yang digunakan adalah?', options:['textContent','innerHref','textValue','content'], correct:0, explain:'textContent digunakan untuk membaca atau mengubah teks di dalam sebuah elemen.' },
+        ]
+      },
+      {
+        id:'js-8', title:'DOM: event listener', level:'Menengah', duration:'5 menit',
+        body:`<p><code>addEventListener()</code> menjalankan fungsi ketika suatu peristiwa terjadi — klik, ketikan, submit form. Inilah yang membuat halaman terasa hidup dan responsif terhadap aksi pengguna.</p>`,
+        code:{lang:'js', text:`const tombol = document.querySelector("#tombolku");
+
+tombol.addEventListener("click", () => {
+  alert("Tombol diklik!");
+});`},
+        playground:{ type:'html', starter:`<button id="tombolku">Klik saya</button>
+<p id="hasil"></p>
+<script>
+  document.querySelector("#tombolku").addEventListener("click", () => {
+    document.querySelector("#hasil").textContent = "Tombol baru saja diklik!";
+  });
+<\/script>` },
+        quiz:[
+          { q:'Method untuk menjalankan fungsi saat elemen diklik adalah?', options:['addEventListener("click", fn)','onClick(fn)','clickEvent(fn)','triggerClick(fn)'], correct:0, explain:'addEventListener("click", fn) mendaftarkan fungsi fn agar dijalankan setiap kali elemen tersebut diklik.' },
+          { q:'Event listener membuat halaman terasa hidup karena?', options:['Merespons aksi pengguna','Mengubah warna otomatis tanpa aksi','Menjalankan animasi otomatis','Memuat ulang halaman terus-menerus'], correct:0, explain:'Event listener memungkinkan halaman bereaksi terhadap interaksi pengguna, seperti klik atau ketikan, tanpa perlu reload.' },
+          { q:'Selain "click", contoh nama event lain di JavaScript adalah?', options:['"submit"','"px"','"flex"','"grid"'], correct:0, explain:'"submit" adalah event yang terjadi saat sebuah form dikirim, salah satu dari banyak jenis event lainnya seperti "input" atau "keydown".' },
+        ]
+      },
+      {
+        id:'js-9', title:'Mengubah isi halaman secara dinamis', level:'Menengah', duration:'5 menit',
+        body:`<p>Menggabungkan seleksi elemen, event, dan manipulasi DOM memungkinkan membuat fitur interaktif seperti penghitung, daftar tugas, atau validasi form — semua tanpa reload halaman.</p>`,
+        code:{lang:'js', text:`let jumlah = 0;
+const tampilan = document.querySelector("#angka");
+
+document.querySelector("#tambah").addEventListener("click", () => {
+  jumlah++;
+  tampilan.textContent = jumlah;
+});`},
+        playground:{ type:'html', starter:`<h2 id="angka">0</h2>
+<button id="tambah">+1</button>
+<script>
+  let jumlah = 0;
+  const tampilan = document.querySelector("#angka");
+  document.querySelector("#tambah").addEventListener("click", () => {
+    jumlah++;
+    tampilan.textContent = jumlah;
+  });
+<\/script>` },
+        quiz:[
+          { q:'Menggabungkan seleksi elemen, event, dan manipulasi DOM memungkinkan kita membuat?', options:['Fitur interaktif seperti penghitung','Halaman yang sepenuhnya statis','File CSS baru','Struktur HTML baru'], correct:0, explain:'Kombinasi ketiganya adalah dasar dari hampir semua fitur interaktif di web, seperti penghitung, validasi form, atau daftar tugas.' },
+          { q:'Untuk menambah nilai variabel sebanyak 1, operator yang digunakan adalah?', options:['++','--','+= 0','=='], correct:0, explain:'Operator ++ menambah nilai variabel numerik sebesar 1, singkatan dari jumlah = jumlah + 1.' },
+          { q:'Agar tampilan angka di halaman ikut berubah saat variabel berubah, kita perlu?', options:['Memperbarui textContent elemen secara manual','Menunggu reload halaman','Mengubah file CSS','Menulis ulang seluruh HTML'], correct:0, explain:'JavaScript tidak otomatis memperbarui tampilan — kita harus secara eksplisit mengatur ulang textContent elemen setelah variabel berubah.' },
+        ]
+      },
+      {
+        id:'js-10', title:'Proyek kecil: daftar tugas', level:'Lanjutan', duration:'6 menit',
+        body:`<p>Sebagai latihan penutup, gabungkan semua konsep — array, DOM, dan event — untuk membangun daftar tugas sederhana. Coba tambahkan item baru lewat kotak input di preview.</p>`,
+        code:{lang:'html', text:`<input id="tugasInput">
+<button id="tambahBtn">Tambah</button>
+<ul id="daftar"></ul>
+
+<script>
+document.querySelector("#tambahBtn").addEventListener("click", () => {
+  const input = document.querySelector("#tugasInput");
+  if (input.value.trim() === "") return;
+  const li = document.createElement("li");
+  li.textContent = input.value;
+  document.querySelector("#daftar").appendChild(li);
+  input.value = "";
+});
+<\/script>`},
+        playground:{ type:'html', starter:`<input id="tugasInput" placeholder="Tugas baru...">
+<button id="tambahBtn">Tambah</button>
+<ul id="daftar"></ul>
+<script>
+document.querySelector("#tambahBtn").addEventListener("click", () => {
+  const input = document.querySelector("#tugasInput");
+  if (input.value.trim() === "") return;
+  const li = document.createElement("li");
+  li.textContent = input.value;
+  document.querySelector("#daftar").appendChild(li);
+  input.value = "";
+});
+<\/script>` },
+        quiz:[
+          { q:'Untuk membuat elemen <li> baru secara dinamis, method yang digunakan adalah?', options:['document.createElement()','document.newElement()','document.addElement()','document.makeElement()'], correct:0, explain:'document.createElement("li") membuat elemen baru di memori, yang kemudian bisa ditambahkan ke halaman.' },
+          { q:'Method untuk menambahkan elemen baru ke dalam elemen induk adalah?', options:['appendChild()','addChild()','insertNode()','pushChild()'], correct:0, explain:'appendChild() menambahkan sebuah node/elemen sebagai anak terakhir dari elemen induk yang dipilih.' },
+          { q:'Pengecekan input.value.trim() === "" berguna untuk?', options:['Mencegah menambah tugas kosong','Menghapus semua tugas','Mengubah warna tombol','Membuat variabel baru'], correct:0, explain:'Pengecekan ini memastikan tugas baru hanya ditambahkan jika input tidak kosong (setelah spasi di awal/akhir dihapus).' },
+        ]
+      },
+    ]
+  }
+];
+
+/* ======================= STATE ======================= */
+const allLessons = TRACKS.flatMap(t => t.lessons.map(l => ({...l, trackId:t.id, trackName:t.name, trackColor:t.color})));
+const totalQuizQuestions = allLessons.reduce((sum,l) => sum + (l.quiz ? l.quiz.length : 0), 0);
+let currentLessonId = null;
+let doneSet = new Set();
+
+/* ======================= RENDER: SIDEBAR ======================= */
+const navEl = document.getElementById('nav');
+
+function renderNav(){
+  navEl.innerHTML = '';
+  TRACKS.forEach(track => {
+    const group = document.createElement('div');
+    group.className = 'track-group open';
+    group.dataset.track = track.id;
+
+    const head = document.createElement('button');
+    head.className = 'track-head';
+    head.innerHTML = `
+      <span class="track-dot" style="background:${track.color}"></span>
+      <span>${track.name}</span>
+      <span class="track-count">${track.lessons.length}</span>
+      <span class="track-chev">▸</span>
+    `;
+    head.addEventListener('click', () => {
+      group.classList.toggle('open');
+    });
+    group.appendChild(head);
+
+    const list = document.createElement('div');
+    list.className = 'lesson-list';
+    track.lessons.forEach((lesson, i) => {
+      const item = document.createElement('button');
+      item.className = 'lesson-item';
+      item.dataset.id = lesson.id;
+      item.innerHTML = `<span class="lesson-check">✓</span><span>${i+1}. ${lesson.title}</span>`;
+      item.addEventListener('click', () => {
+        goToLesson(lesson.id);
+        if (window.innerWidth <= 860) closeSidebar();
+      });
+      list.appendChild(item);
+    });
+    group.appendChild(list);
+    navEl.appendChild(group);
+  });
+  syncNavState();
+}
+
+function syncNavState(){
+  document.querySelectorAll('.lesson-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === currentLessonId);
+    el.classList.toggle('done', doneSet.has(el.dataset.id));
+  });
+  const total = allLessons.length;
+  const done = doneSet.size;
+  document.getElementById('progressText').textContent = `${done} / ${total}`;
+  document.getElementById('progressFill').style.width = total ? `${(done/total)*100}%` : '0%';
+}
+
+/* ======================= RENDER: MAIN CONTENT ======================= */
+const viewport = document.getElementById('viewport');
+const crumb = document.getElementById('crumb');
+
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+function renderWelcome(){
+  crumb.textContent = 'kodelab / beranda';
+  viewport.innerHTML = `
+    <div class="welcome">
+      <div class="welcome-eyebrow">Platform belajar coding</div>
+      <h1>Belajar membangun web, satu blok kecil sekaligus.</h1>
+      <p>Tiga jalur materi, dari struktur halaman sampai membuat halaman merespons klik. Setiap pelajaran punya editor kecil untuk coba langsung, dan kuis singkat untuk menguji pemahamanmu.</p>
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num">${allLessons.length}</div>
+          <div class="stat-label">Pelajaran</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">${totalQuizQuestions}</div>
+          <div class="stat-label">Soal latihan</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Jalur materi</div>
+        </div>
+      </div>
+      <div class="track-cards">
+        ${TRACKS.map(t => `
+          <div class="track-card" data-track="${t.id}">
+            <div class="track-card-dot" style="background:${t.color}"></div>
+            <h3>${t.name}</h3>
+            <p>${t.desc}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  viewport.querySelectorAll('.track-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const track = TRACKS.find(t => t.id === card.dataset.track);
+      goToLesson(track.lessons[0].id);
+    });
+  });
+}
+
+function goToLesson(id){
+  currentLessonId = id;
+  const lesson = allLessons.find(l => l.id === id);
+  renderLesson(lesson);
+  syncNavState();
+  const mainEl = document.getElementById('main');
+  if (mainEl.scrollTo) mainEl.scrollTo(0,0); else mainEl.scrollTop = 0;
+}
+
+function renderLesson(lesson){
+  const idx = allLessons.findIndex(l => l.id === lesson.id);
+  const prev = allLessons[idx-1];
+  const next = allLessons[idx+1];
+
+  crumb.innerHTML = `kodelab / <b>${lesson.trackName}</b> / ${lesson.title}`;
+
+  viewport.innerHTML = `
+    <div class="content">
+      <div class="lesson-eyebrow" style="color:${lesson.trackColor}">${lesson.trackName}</div>
+      <h1 class="lesson-title">${lesson.title}</h1>
+      <div class="lesson-meta">
+        <span class="meta-pill level">${lesson.level || 'Pemula'}</span>
+        <span class="meta-pill">${lesson.duration || '3 menit'} baca</span>
+      </div>
+      <div class="lesson-body">
+        ${lesson.body}
+        <div class="code-block">
+          <div class="code-block-head">
+            <span>${lesson.code.lang}</span>
+            <button class="copy-btn" data-copy>salin</button>
+          </div>
+          <pre><code>${escapeHtml(lesson.code.text)}</code></pre>
+        </div>
+        ${lesson.after || ''}
+        ${lesson.callout ? `<div class="callout">${lesson.callout}</div>` : ''}
+      </div>
+
+      ${lesson.playground ? renderPlaygroundHtml(lesson) : ''}
+      ${lesson.quiz && lesson.quiz.length ? renderQuizHtml(lesson) : ''}
+
+      <button class="mark-done ${doneSet.has(lesson.id) ? 'done' : ''}" id="markDoneBtn">
+        <span>${doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai'}</span>
+      </button>
+
+      <div class="lesson-nav">
+        <button class="nav-btn prev" ${prev ? '' : 'disabled'}>
+          <div class="nav-btn-label">← Sebelumnya</div>
+          <div class="nav-btn-title">${prev ? prev.title : '—'}</div>
+        </button>
+        <button class="nav-btn next" ${next ? '' : 'disabled'}>
+          <div class="nav-btn-label">Selanjutnya →</div>
+          <div class="nav-btn-title">${next ? next.title : '—'}</div>
+        </button>
+      </div>
+    </div>
+  `;
+
+  // copy button
+  const copyBtn = viewport.querySelector('[data-copy]');
+  if (copyBtn){
+    copyBtn.addEventListener('click', async () => {
+      const text = lesson.code.text;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.focus();
+          temp.select();
+          document.execCommand('copy');
+          temp.remove();
+        }
+        copyBtn.textContent = 'tersalin!';
+      } catch (err) {
+        copyBtn.textContent = 'gagal menyalin';
+        console.error('Gagal menyalin kode:', err);
+      }
+      setTimeout(() => copyBtn.textContent = 'salin', 1500);
+    });
+  }
+
+  // mark done
+  document.getElementById('markDoneBtn').addEventListener('click', (e) => {
+    if (doneSet.has(lesson.id)) doneSet.delete(lesson.id);
+    else doneSet.add(lesson.id);
+    e.currentTarget.classList.toggle('done');
+    e.currentTarget.querySelector('span').textContent = doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai';
+    syncNavState();
+  });
+
+  // prev/next
+  if (prev) viewport.querySelector('.nav-btn.prev').addEventListener('click', () => goToLesson(prev.id));
+  if (next) viewport.querySelector('.nav-btn.next').addEventListener('click', () => goToLesson(next.id));
+
+  if (lesson.playground) setupPlayground(lesson);
+  if (lesson.quiz && lesson.quiz.length) setupQuiz(lesson);
+}
+
+function renderPlaygroundHtml(lesson){
+  const isJs = lesson.playground.type === 'js';
+  return `
+    <div class="playground">
+      <div class="pg-head">
+        <span class="pg-label">Coba sendiri</span>
+        <button class="run-btn" id="runBtn">Jalankan ▸</button>
+      </div>
+      <div class="pg-body">
+        <div class="pg-editor">
+          <textarea id="pgEditor" spellcheck="false">${escapeHtml(lesson.playground.starter)}</textarea>
+        </div>
+        ${isJs
+          ? `<div class="pg-console" id="pgConsole"><span class="arrow">// output console.log akan muncul di sini</span></div>`
+          : `<div class="pg-output"><iframe id="pgFrame" sandbox="allow-scripts allow-forms allow-modals"></iframe></div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+function setupPlayground(lesson){
+  const editor = document.getElementById('pgEditor');
+  const runBtn = document.getElementById('runBtn');
+  const isJs = lesson.playground.type === 'js';
+
+  function run(){
+    const code = editor.value;
+    if (isJs){
+      const consoleEl = document.getElementById('pgConsole');
+      consoleEl.innerHTML = '';
+      const logs = [];
+      const fakeConsole = {
+        log: (...args) => logs.push({type:'log', text: args.map(a => typeof a==='object' ? JSON.stringify(a) : String(a)).join(' ')})
+      };
+      try {
+        const fn = new Function('console', code);
+        fn(fakeConsole);
+      } catch(err){
+        logs.push({type:'err', text: err.message});
+      }
+      if (logs.length === 0){
+        consoleEl.innerHTML = '<span class="arrow">// tidak ada output</span>';
+      } else {
+        consoleEl.innerHTML = logs.map(l => `<div class="${l.type==='err'?'err':''}">${l.type==='err' ? '✕ ' : '→ '}${escapeHtml(l.text)}</div>`).join('');
+      }
+    } else {
+      const frame = document.getElementById('pgFrame');
+      frame.srcdoc = code;
+    }
+  }
+
+  runBtn.addEventListener('click', run);
+  run();
+}
+
+/* ---------- Quiz rendering & logic ---------- */
+function quizItemsHtml(lesson){
+  return lesson.quiz.map((q,i) => `
+    <div class="quiz-q" data-qi="${i}">
+      <p class="quiz-q-text">${i+1}. ${escapeHtml(q.q)}</p>
+      <div class="quiz-options">
+        ${q.options.map((opt,oi) => `<button class="quiz-opt" type="button" data-oi="${oi}">${escapeHtml(opt)}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  `).join('');
+}
+
+function renderQuizHtml(lesson){
+  return `
+    <div class="quiz-section">
+      <div class="quiz-head">
+        <div>
+          <div class="quiz-eyebrow">Uji pemahaman</div>
+          <h3 class="quiz-title">Sudah paham materi ini?</h3>
+        </div>
+        <div class="quiz-progress" id="quizProgress">0 / ${lesson.quiz.length} dijawab</div>
+      </div>
+      <div id="quizList">${quizItemsHtml(lesson)}</div>
+      <div class="quiz-summary" id="quizSummary">
+        <div class="quiz-summary-score" id="quizSummaryScore"></div>
+        <button class="quiz-retry-btn" id="quizRetryBtn">Ulangi kuis</button>
+      </div>
+    </div>
+  `;
+}
+
+function setupQuiz(lesson){
+  const total = lesson.quiz.length;
+  let answered = {};
+
+  function bindQuestions(){
+    document.querySelectorAll('.quiz-q').forEach(qEl => {
+      const qi = +qEl.dataset.qi;
+      const q = lesson.quiz[qi];
+      const opts = qEl.querySelectorAll('.quiz-opt');
+      opts.forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          if (answered[qi] !== undefined) return;
+          const oi = +optEl.dataset.oi;
+          answered[qi] = oi;
+          const correct = oi === q.correct;
+          opts.forEach((o, idx) => {
+            o.disabled = true;
+            if (idx === q.correct) o.classList.add('correct');
+            else if (idx === oi && !correct) o.classList.add('incorrect');
+          });
+          const fb = qEl.querySelector('.quiz-feedback');
+          fb.style.display = 'block';
+          fb.className = 'quiz-feedback ' + (correct ? 'ok' : 'bad');
+          fb.innerHTML = (correct ? '<b>Benar.</b> ' : '<b>Belum tepat.</b> ') + escapeHtml(q.explain);
+          updateProgress();
+        });
+      });
+    });
+  }
+
+  function updateProgress(){
+    const doneCount = Object.keys(answered).length;
+    const progressEl = document.getElementById('quizProgress');
+    if (progressEl) progressEl.textContent = `${doneCount} / ${total} dijawab`;
+    if (doneCount === total){
+      let correctCount = 0;
+      Object.keys(answered).forEach(qi => { if (lesson.quiz[qi].correct === answered[qi]) correctCount++; });
+      const summary = document.getElementById('quizSummary');
+      if (summary){
+        summary.classList.add('show-flex');
+        summary.style.display = 'flex';
+        document.getElementById('quizSummaryScore').textContent = `Skor kamu: ${correctCount} dari ${total} jawaban benar`;
+      }
+    }
+  }
+
+  bindQuestions();
+
+  const retryBtn = document.getElementById('quizRetryBtn');
+  if (retryBtn){
+    retryBtn.addEventListener('click', () => {
+      answered = {};
+      document.getElementById('quizList').innerHTML = quizItemsHtml(lesson);
+      document.getElementById('quizSummary').style.display = 'none';
+      document.getElementById('quizProgress').textContent = `0 / ${total} dijawab`;
+      bindQuestions();
+    });
+  }
+}
+
+/* ======================= MOBILE SIDEBAR ======================= */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+document.getElementById('menuBtn').addEventListener('click', () => {
+  sidebar.classList.add('open');
+  overlay.classList.add('show');
+});
+function closeSidebar(){
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+}
+overlay.addEventListener('click', closeSidebar);
+
+/* ======================= INIT ======================= */
+renderNav();
+renderWelcome();
+</script>
+</body>
+</html>
