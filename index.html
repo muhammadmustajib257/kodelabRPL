@@ -608,7 +608,6 @@ body{
   padding-top:26px;
   border-top:1px solid var(--line);
 }
-.stat-item{ }
 .stat-num{
   font-family:var(--font-mono);
   font-size:26px;
@@ -675,6 +674,16 @@ body{
 .project-nav{margin:14px 10px 20px;padding:14px 15px;border:1px solid #3a414e;border-radius:12px;background:#1a1e25;cursor:pointer;color:inherit;text-align:left;width:calc(100% - 20px)}
 .project-nav.locked{opacity:.55;cursor:not-allowed}.project-nav.done{border-color:#67c9b5}
 @media(max-width:700px){.project-grid{grid-template-columns:1fr}.certificate{padding:30px 18px}.certificate h2{font-size:27px}.certificate .student-name{font-size:23px}}
+
+/* ======================= MINI PROJECTS & CODING LAB ======================= */
+.mini-project-nav{margin:6px 10px 8px;padding:12px 14px;border:1px dashed #4a5362;border-radius:11px;background:#171b22;color:inherit;cursor:pointer;text-align:left;width:calc(100% - 20px);font-family:var(--font-ui)}
+.mini-project-nav.locked{opacity:.45;cursor:not-allowed}.mini-project-nav.done{border-color:#67c9b5;background:#182824}.mini-project-nav small{display:block;color:var(--text-dim);margin-top:3px;line-height:1.4}
+.project-divider{height:1px;background:var(--line);margin:10px 10px 8px}.project-section-label{padding:8px 10px 4px;color:var(--text-dim);font:700 11px var(--font-mono);text-transform:uppercase;letter-spacing:.08em}
+.learning-extra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}.learning-extra-card{border:1px solid #343a46;border-radius:13px;padding:16px;background:#191c23}.learning-extra-card h3{font:700 14px var(--font-ui);margin:0 0 8px;color:var(--paper)}.learning-extra-card p{margin:0;color:var(--text-dim);font:13px/1.7 var(--font-ui)}
+.coding-lab{border:1px solid #343a46;border-radius:16px;overflow:hidden;background:#171a20;margin-top:20px}.coding-lab-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid #343a46}.coding-lab-head strong{font:700 14px var(--font-ui)}.coding-lab-actions{display:flex;gap:8px;flex-wrap:wrap}.coding-lab-btn{border:1px solid #46505e;background:#222731;color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer;font:700 12px var(--font-ui)}.coding-lab-btn.primary{border-color:#67c9b5;background:#20332f;color:#a7e2d4}.coding-lab-grid{display:grid;grid-template-columns:1fr 1fr}.coding-editors{border-right:1px solid #343a46}.code-tab{display:flex;gap:6px;padding:10px;border-bottom:1px solid #343a46}.code-tab button{border:0;background:transparent;color:var(--text-dim);padding:7px 10px;border-radius:7px;cursor:pointer;font:700 12px var(--font-ui)}.code-tab button.active{background:#2a2f39;color:var(--paper)}.code-pane{display:none}.code-pane.active{display:block}.code-pane textarea{display:block;width:100%;height:360px;resize:vertical;border:0;outline:0;padding:16px;background:#101319;color:#e7e5de;font:13px/1.6 var(--font-mono)}.coding-preview{min-height:420px;background:#fff}.coding-preview iframe{width:100%;height:420px;border:0;background:#fff}.mini-instructions{margin:18px 0;padding:16px;border:1px solid #343a46;border-radius:13px;background:#191c23}.mini-instructions ul{margin:8px 0 0 20px;color:var(--text-dim);line-height:1.7}.project-complete-btn{margin-top:18px;border:1px solid #67c9b5;background:#20332f;color:#a7e2d4;padding:11px 16px;border-radius:9px;font:700 13px var(--font-ui);cursor:pointer}.project-complete-btn:disabled{opacity:.45;cursor:not-allowed}.project-done-box{margin-top:18px;padding:16px;border-radius:12px;background:#182824;border:1px solid #3b806f;color:#a7e2d4}
+.final-coding{margin-top:22px}.final-coding .coding-lab-grid{grid-template-columns:1fr}.final-coding .coding-editors{border-right:0;border-bottom:1px solid #343a46}.final-coding .code-pane textarea{height:250px}.final-coding .coding-preview iframe{height:500px}.final-requirements{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.final-requirement{padding:12px;border:1px solid #303641;border-radius:10px;background:#1d2028;color:var(--text-dim);font:13px/1.5 var(--font-ui)}
+@media(max-width:800px){.learning-extra,.final-requirements{grid-template-columns:1fr}.coding-lab-grid{grid-template-columns:1fr}.coding-editors{border-right:0;border-bottom:1px solid #343a46}.coding-preview{min-height:360px}}
+
 </style>
 </head>
 <body>
@@ -3087,16 +3096,237 @@ const TRACKS = [
 /* ======================= STATE ======================= */
 const allLessons = TRACKS.flatMap(t => t.lessons.map(l => ({...l, trackId:t.id, trackName:t.name, trackColor:t.color})));
 const totalQuizQuestions = allLessons.reduce((sum,l) => sum + (l.quiz ? l.quiz.length : 0), 0);
+const MINI_PROJECTS = {
+  html: { id:'mini-html', trackId:'html', title:'Mini Project HTML', subtitle:'Membuat Halaman Profil Siswa', intro:'Gabungkan struktur HTML yang telah dipelajari menjadi satu halaman profil yang rapi dan semantik.', tasks:['Gunakan struktur HTML lengkap dan semantic HTML.','Tampilkan nama, foto, biodata, hobi, dan tautan.','Gunakan heading, paragraph, list, link, image, dan table/form minimal salah satu.'] },
+  css: { id:'mini-css', trackId:'css', title:'Mini Project CSS', subtitle:'Membuat Website Profil Kelas', intro:'Gunakan HTML sederhana lalu fokus membuat tampilan yang rapi, modern, dan responsive dengan CSS.', tasks:['Gunakan Flexbox atau Grid.','Buat card, navbar, tombol, warna, typography, spacing, dan hover.','Pastikan layout nyaman pada desktop dan smartphone.'] },
+  js: { id:'mini-js', trackId:'js', title:'Mini Project JavaScript', subtitle:'Membuat Aplikasi Data Nilai Siswa', intro:'Gabungkan DOM, event, array, object, function, percabangan, perulangan, dan LocalStorage.', tasks:['Tambah data siswa melalui form.','Tampilkan data pada tabel dan sediakan pencarian.','Gunakan JavaScript untuk interaksi dan simpan data dengan LocalStorage.'] }
+};
+const MINI_PROJECT_ORDER = ['html','css','js'];
 let currentLessonId = null;
+let currentProjectId = null;
 let doneSet = new Set(JSON.parse(localStorage.getItem('kodelab_done') || '[]'));
 let quizScores = JSON.parse(localStorage.getItem('kodelab_quiz_scores') || '{}');
+let miniDone = new Set(JSON.parse(localStorage.getItem('kodelab_mini_done') || '[]'));
 
 /* ======================= RENDER: SIDEBAR ======================= */
 const navEl = document.getElementById('nav');
 
+
+const LESSON_GUIDES = {
+  "html-1": [
+    "HTML seperti rangka rumah: menentukan bagian dan susunan isi, bukan menghiasnya.",
+    "Contoh nyata: judul berita, paragraf artikel, gambar, dan tombol semuanya diberi struktur HTML."
+  ],
+  "html-2": [
+    "Struktur HTML seperti susunan rumah: head adalah informasi rumah, body adalah ruangan yang dipakai penghuni.",
+    "Contoh: title berada di head, sedangkan h1 dan p berada di body."
+  ],
+  "html-3": [
+    "Tag seperti label pembungkus, element seperti benda lengkapnya, dan attribute seperti keterangan tambahan pada benda.",
+    "Contoh: <a href=\"...\">Link</a> memiliki tag a dan attribute href."
+  ],
+  "html-4": [
+    "Heading seperti judul bab buku, sedangkan paragraf seperti isi penjelasannya.",
+    "Contoh: h1 untuk judul halaman, h2 untuk bagian, p untuk uraian."
+  ],
+  "html-5": [
+    "Formatting HTML seperti memberi penekanan pada kata penting di buku tanpa mengubah isi kalimatnya.",
+    "Contoh: strong untuk informasi penting dan em untuk penekanan."
+  ],
+  "html-6": [
+    "Link seperti jalan menuju tempat lain; gambar seperti foto yang ditempel di halaman.",
+    "Contoh: menu Profil menuju profil.html dan img menampilkan foto sekolah."
+  ],
+  "html-7": [
+    "List seperti daftar belanja: item disusun berurutan atau tidak berurutan.",
+    "Contoh: daftar jurusan, langkah membuat akun, atau daftar perlengkapan."
+  ],
+  "html-8": [
+    "Table seperti buku daftar nilai: baris adalah data dan kolom adalah jenis informasi.",
+    "Contoh: kolom NIS, Nama, Kelas, dan Nilai."
+  ],
+  "html-9": [
+    "Form seperti formulir pendaftaran di sekolah: pengguna mengisi data lalu mengirimkannya.",
+    "Contoh: form pendaftaran siswa berisi nama, email, dan kelas."
+  ],
+  "html-10": [
+    "Input adalah kotak dengan fungsi berbeda, seperti formulir kertas yang punya kolom nama, tanggal, pilihan, dan centang.",
+    "Contoh: email memakai input email, tanggal memakai date, dan pilihan memakai radio/checkbox/select."
+  ],
+  "html-11": [
+    "Div seperti kotak besar untuk mengelompokkan barang, span seperti menandai satu bagian kecil kalimat, semantic HTML seperti memberi nama ruangan sesuai fungsinya.",
+    "Contoh: header untuk kepala halaman, nav untuk navigasi, main untuk isi utama, footer untuk bagian bawah."
+  ],
+  "html-12": [
+    "Struktur halaman seperti denah sekolah: setiap bagian punya tempat dan fungsi agar mudah dipahami.",
+    "Contoh: header → nav → main → section/article → aside → footer."
+  ],
+  "html-13": [
+    "Project HTML seperti merakit kerangka rumah dari komponen yang sudah dipelajari.",
+    "Contoh: satu halaman profil siswa yang lengkap dan semantik."
+  ],
+  "css-1": [
+    "CSS seperti pakaian dan dekorasi rumah: HTML sudah ada, CSS membuatnya nyaman dilihat.",
+    "Contoh: mengubah warna, jarak, ukuran teks, dan tampilan kartu."
+  ],
+  "css-2": [
+    "Cara menggunakan CSS seperti memilih cara memberi instruksi dekorasi: langsung pada benda, di halaman, atau melalui file style terpisah.",
+    "Contoh: file style.css dapat dipakai oleh banyak halaman."
+  ],
+  "css-3": [
+    "Selector seperti alamat rumah: memberi tahu CSS elemen mana yang harus diberi aturan.",
+    "Contoh: .card memilih semua elemen dengan class card."
+  ],
+  "css-4": [
+    "Pseudo-class seperti kondisi benda: tombol bisa punya tampilan berbeda ketika disentuh atau diklik.",
+    "Contoh: button:hover mengubah tampilan saat pointer berada di atas tombol."
+  ],
+  "css-5": [
+    "Warna dan typography seperti pilihan cat dan jenis huruf pada papan informasi.",
+    "Contoh: color, font-size, font-family, font-weight, dan line-height."
+  ],
+  "css-6": [
+    "Box model seperti kardus: content di dalam, padding ruang di dalam kardus, border dindingnya, margin jarak dengan kardus lain.",
+    "Contoh: card yang punya padding agar teks tidak menempel ke tepi."
+  ],
+  "css-7": [
+    "Display seperti aturan penataan barang: ada yang memenuhi satu baris, ada yang bisa berjajar, ada yang disembunyikan.",
+    "Contoh: display:flex membuat beberapa item mudah disusun berdampingan."
+  ],
+  "css-8": [
+    "Position seperti menentukan cara sebuah benda ditempatkan di ruangan, apakah mengikuti alur normal atau diposisikan khusus.",
+    "Contoh: position:sticky membuat navbar dapat menempel saat halaman digulir."
+  ],
+  "css-9": [
+    "Flexbox seperti menyusun siswa dalam satu barisan dan mengatur jarak serta posisi mereka.",
+    "Contoh: justify-content:center menempatkan item di tengah sumbu utama."
+  ],
+  "css-10": [
+    "Grid seperti papan kotak-kotak: kita menentukan baris dan kolom untuk menata banyak komponen.",
+    "Contoh: gallery 3 kolom dapat dibuat dengan grid-template-columns."
+  ],
+  "css-11": [
+    "Unit CSS seperti satuan ukuran pada penggaris; setiap satuan cocok untuk kebutuhan berbeda.",
+    "Contoh: px untuk ukuran tetap, % untuk ukuran relatif, rem untuk ukuran berbasis root, vw/vh untuk viewport."
+  ],
+  "css-12": [
+    "Background, border, dan shadow seperti finishing sebuah kartu: warna latar, garis tepi, dan bayangan memberi karakter.",
+    "Contoh: card dengan background, border-radius, border, dan box-shadow."
+  ],
+  "css-13": [
+    "Responsive seperti seragam yang ukurannya menyesuaikan siswa: tampilan harus nyaman di layar besar maupun kecil.",
+    "Contoh: media query mengubah grid menjadi satu kolom pada smartphone."
+  ],
+  "css-14": [
+    "Project CSS seperti mendandani kerangka halaman menjadi website yang enak digunakan.",
+    "Contoh: website profil kelas dengan navbar, card siswa, dan layout responsive."
+  ],
+  "js-1": [
+    "JavaScript seperti petugas yang membuat website bereaksi: tombol ditekan, data berubah, dan tampilan diperbarui.",
+    "Contoh: tombol klik menampilkan pesan atau mengubah isi halaman."
+  ],
+  "js-2": [
+    "Menjalankan JavaScript seperti memberi instruksi kepada komputer melalui halaman web atau console.",
+    "Contoh: console.log(\"Halo\") membantu melihat hasil program."
+  ],
+  "js-3": [
+    "Variable seperti kotak berlabel: kita memberi nama kotak lalu menyimpan nilai di dalamnya.",
+    "Contoh: let nama = \"Alya\" menyimpan nama Alya."
+  ],
+  "js-4": [
+    "Tipe data seperti jenis isi kotak: teks, angka, benar/salah, daftar, atau objek.",
+    "Contoh: \"RPL\" adalah string, 90 adalah number, true adalah boolean."
+  ],
+  "js-5": [
+    "Operator seperti simbol matematika dan perbandingan yang dipakai untuk mengolah atau membandingkan nilai.",
+    "Contoh: + menjumlahkan, > membandingkan, === mengecek kesamaan nilai dan tipe."
+  ],
+  "js-6": [
+    "Percabangan seperti petugas gerbang: jika syarat terpenuhi masuk jalur A, jika tidak masuk jalur B.",
+    "Contoh: jika nilai >= 75 maka siswa lulus, selain itu perlu remedial."
+  ],
+  "js-7": [
+    "Perulangan seperti guru memeriksa daftar siswa satu per satu tanpa menulis instruksi yang sama berkali-kali.",
+    "Contoh: for dapat digunakan untuk mengulang 10 data."
+  ],
+  "js-8": [
+    "Array seperti daftar nama di buku absensi: satu variabel menampung banyak nilai.",
+    "Contoh: const siswa = [\"Alya\", \"Bima\", \"Citra\"];"
+  ],
+  "js-9": [
+    "Array dan perulangan seperti guru memproses seluruh daftar siswa satu per satu.",
+    "Contoh: forEach dapat menjalankan fungsi untuk setiap item array."
+  ],
+  "js-10": [
+    "Function seperti mesin dengan nama: kita masukkan data, mesin menjalankan langkah tertentu, lalu bisa mengembalikan hasil.",
+    "Contoh: function hitungLuas(p,l){ return p*l; }."
+  ],
+  "js-11": [
+    "Object seperti kartu identitas siswa yang memiliki beberapa informasi bernama.",
+    "Contoh: {nama:\"Alya\", kelas:\"XI RPL\", nilai:90}."
+  ],
+  "js-12": [
+    "DOM seperti jembatan antara JavaScript dan HTML: JavaScript dapat menemukan dan mengubah elemen halaman.",
+    "Contoh: mengubah textContent sebuah h1 melalui JavaScript."
+  ],
+  "js-13": [
+    "querySelector seperti mencari satu benda dengan alamat CSS; querySelectorAll seperti mengambil semua benda yang cocok.",
+    "Contoh: document.querySelector(\".card\") dan querySelectorAll(\".card\")."
+  ],
+  "js-14": [
+    "Event seperti kejadian di sekolah: bel berbunyi, siswa merespons. Browser juga punya kejadian seperti click, input, submit, dan change.",
+    "Contoh: addEventListener(\"click\", fungsi) menjalankan fungsi saat tombol diklik."
+  ],
+  "js-15": [
+    "Manipulasi DOM seperti mengubah papan pengumuman secara langsung: teks, elemen, atribut, dan isi dapat diperbarui.",
+    "Contoh: membuat li baru dengan document.createElement dan menambahkannya ke ul."
+  ],
+  "js-16": [
+    "classList seperti mengganti kartu status dengan stiker: tambah, hapus, atau ubah class sesuai keadaan.",
+    "Contoh: classList.toggle(\"aktif\") untuk membuka/menutup tampilan."
+  ],
+  "js-17": [
+    "Validasi form seperti petugas pendaftaran yang mengecek apakah formulir sudah lengkap sebelum diterima.",
+    "Contoh: nama wajib diisi dan email harus memiliki format yang benar."
+  ],
+  "js-18": [
+    "Debugging seperti mencari kesalahan pada rangkaian listrik: kita melihat pesan error, memeriksa bagian yang bermasalah, lalu memperbaikinya.",
+    "Contoh: console.log membantu mengetahui nilai variabel pada titik tertentu."
+  ],
+  "js-19": [
+    "Todo List seperti papan tugas harian: tugas dapat ditambah, ditandai selesai, dan dihapus.",
+    "Contoh: array of objects menyimpan teks tugas dan status selesai."
+  ],
+  "js-20": [
+    "Project JavaScript seperti menggabungkan semua alat menjadi satu aplikasi kecil yang benar-benar bisa digunakan.",
+    "Contoh: aplikasi data siswa menerima input, memvalidasi, merender tabel, mencari, menghapus, dan menyimpan data."
+  ]
+};
+
+function getTrackIndex(trackId){ return TRACKS.findIndex(t => t.id === trackId); }
+function isMiniDone(trackId){ return miniDone.has(MINI_PROJECTS[trackId].id); }
+function isTrackUnlocked(trackIndex){
+  if(trackIndex <= 0) return true;
+  return isMiniDone(TRACKS[trackIndex-1].id);
+}
+function allMiniProjectsDone(){ return MINI_PROJECT_ORDER.every(id => isMiniDone(id)); }
+function getNextStageForLesson(lesson){
+  const idx = allLessons.findIndex(l => l.id === lesson.id);
+  const next = allLessons[idx+1];
+  if(next && next.trackId === lesson.trackId) return {type:'lesson', id:next.id, title:next.title};
+  return {type:'project', id:MINI_PROJECTS[lesson.trackId].id, title:MINI_PROJECTS[lesson.trackId].title};
+}
+function getPreviousStageForLesson(lesson){
+  const idx = allLessons.findIndex(l => l.id === lesson.id);
+  const prev = allLessons[idx-1];
+  if(prev && prev.trackId === lesson.trackId) return {type:'lesson', id:prev.id, title:prev.title};
+  if(!prev) return null;
+  return {type:'project', id:MINI_PROJECTS[prev.trackId].id, title:MINI_PROJECTS[prev.trackId].title};
+}
+
 function renderNav(){
   navEl.innerHTML = '';
-  TRACKS.forEach(track => {
+  TRACKS.forEach((track, trackIndex) => {
     const group = document.createElement('div');
     group.className = 'track-group open';
     group.dataset.track = track.id;
@@ -3109,34 +3339,43 @@ function renderNav(){
       <span class="track-count">${track.lessons.length}</span>
       <span class="track-chev">▸</span>
     `;
-    head.addEventListener('click', () => {
-      group.classList.toggle('open');
-    });
+    head.addEventListener('click', () => group.classList.toggle('open'));
     group.appendChild(head);
 
     const list = document.createElement('div');
     list.className = 'lesson-list';
+    const unlocked = isTrackUnlocked(trackIndex);
     track.lessons.forEach((lesson, i) => {
       const item = document.createElement('button');
-      item.className = 'lesson-item';
+      const locked = !unlocked;
+      item.className = 'lesson-item' + (locked ? ' locked' : '');
       item.dataset.id = lesson.id;
-      item.innerHTML = `<span class="lesson-check">✓</span><span>${i+1}. ${lesson.title}</span>`;
-      item.addEventListener('click', () => {
-        goToLesson(lesson.id);
-        if (window.innerWidth <= 860) closeSidebar();
-      });
+      item.innerHTML = `<span class="lesson-check">${locked ? '🔒' : '✓'}</span><span>${i+1}. ${lesson.title}</span>`;
+      item.disabled = locked;
+      if(!locked) item.addEventListener('click', () => { goToLesson(lesson.id); if(window.innerWidth <= 860) closeSidebar(); });
       list.appendChild(item);
     });
     group.appendChild(list);
     navEl.appendChild(group);
+
+    const mini = MINI_PROJECTS[track.id];
+    const miniUnlocked = track.lessons.every(l => doneSet.has(l.id));
+    const miniButton = document.createElement('button');
+    miniButton.className = 'mini-project-nav' + (!miniUnlocked ? ' locked' : '') + (isMiniDone(track.id) ? ' done' : '');
+    miniButton.dataset.trackId = track.id;
+    miniButton.innerHTML = `<b>${isMiniDone(track.id) ? '✓' : '🏗️'} ${mini.title}</b><small>${isMiniDone(track.id) ? 'Selesai' : miniUnlocked ? mini.subtitle : 'Selesaikan semua materi '+track.name+' terlebih dahulu'}</small>`;
+    miniButton.disabled = !miniUnlocked;
+    if(miniUnlocked) miniButton.addEventListener('click', () => renderMiniProject(track.id));
+    navEl.appendChild(miniButton);
   });
 
-  const projectBtn = document.createElement('button');
-  const projectUnlocked = doneSet.size >= allLessons.length;
+  const finalUnlocked = allMiniProjectsDone();
   const projectPassed = localStorage.getItem('kodelab_project_passed') === 'true';
-  projectBtn.className = 'project-nav' + (projectPassed ? ' done' : '') + (!projectUnlocked ? ' locked' : '');
-  projectBtn.innerHTML = `<b>${projectPassed ? '🏆' : '💻'} Project Akhir</b><br><small>${projectPassed ? 'Lulus & sertifikat tersedia' : projectUnlocked ? 'Project kelulusan' : 'Selesaikan 47 materi terlebih dahulu'}</small>`;
-  projectBtn.addEventListener('click', () => { if (projectUnlocked) renderProjectFinal(); });
+  const projectBtn = document.createElement('button');
+  projectBtn.className = 'project-nav' + (projectPassed ? ' done' : '') + (!finalUnlocked ? ' locked' : '');
+  projectBtn.innerHTML = `<b>${projectPassed ? '🏆' : '💻'} Project Akhir</b><br><small>${projectPassed ? 'Lulus & sertifikat tersedia' : finalUnlocked ? 'Project kelulusan' : 'Selesaikan 3 Mini Project terlebih dahulu'}</small>`;
+  projectBtn.disabled = !finalUnlocked;
+  if(finalUnlocked) projectBtn.addEventListener('click', () => renderProjectFinal());
   navEl.appendChild(projectBtn);
   syncNavState();
 }
@@ -3146,17 +3385,22 @@ function syncNavState(){
     el.classList.toggle('active', el.dataset.id === currentLessonId);
     el.classList.toggle('done', doneSet.has(el.dataset.id));
   });
+  document.querySelectorAll('.mini-project-nav').forEach(el => {
+    const trackId = el.dataset.trackId;
+    if(trackId) el.classList.toggle('done', isMiniDone(trackId));
+  });
   const total = allLessons.length;
   const done = doneSet.size;
   document.getElementById('progressText').textContent = `${done} / ${total}`;
   document.getElementById('progressFill').style.width = total ? `${(done/total)*100}%` : '0%';
   const projectBtn = document.querySelector('.project-nav');
   if(projectBtn){
-    const unlocked = done >= total;
+    const unlocked = allMiniProjectsDone();
     const passed = localStorage.getItem('kodelab_project_passed') === 'true';
     projectBtn.classList.toggle('locked', !unlocked);
     projectBtn.classList.toggle('done', passed);
-    projectBtn.innerHTML = `<b>${passed ? '🏆' : '💻'} Project Akhir</b><br><small>${passed ? 'Lulus & sertifikat tersedia' : unlocked ? 'Project kelulusan' : 'Selesaikan 47 materi terlebih dahulu'}</small>`;
+    projectBtn.disabled = !unlocked;
+    projectBtn.innerHTML = `<b>${passed ? '🏆' : '💻'} Project Akhir</b><br><small>${passed ? 'Lulus & sertifikat tersedia' : unlocked ? 'Project kelulusan' : 'Selesaikan 3 Mini Project terlebih dahulu'}</small>`;
   }
 }
 
@@ -3179,7 +3423,7 @@ function renderWelcome(){
     <div class="welcome">
       <div class="welcome-eyebrow">Platform belajar coding</div>
       <h1>Belajar membangun web, satu blok kecil sekaligus.</h1>
-      <p>Tiga jalur materi, dari struktur halaman sampai membuat halaman merespons klik. Setiap pelajaran punya editor kecil untuk coba langsung, dan kuis singkat untuk menguji pemahamanmu.</p>
+      <p>Tiga jalur materi dari HTML, CSS, dan JavaScript. Setelah setiap jalur selesai ada Mini Project, lalu Project Akhir dengan Coding Lab langsung di halaman.</p>
       <div class="stat-row">
         <div class="stat-item">
           <div class="stat-num">${allLessons.length}</div>
@@ -3213,222 +3457,122 @@ function renderWelcome(){
   });
 }
 
-function renderProjectFinal(){
-  currentLessonId = null;
-  crumb.innerHTML = 'kodelab / <b>Project Akhir</b>';
-  const passed = localStorage.getItem('kodelab_project_passed') === 'true';
-  const savedLink = localStorage.getItem('kodelab_project_link') || '';
-  const savedName = localStorage.getItem('kodelab_student_name') || '';
-  const checks = JSON.parse(localStorage.getItem('kodelab_project_checks') || '[]');
-  const requirements = [
-    ['HTML semantik', 'Gunakan header, nav, main, section/article, footer serta struktur HTML yang rapi.'],
-    ['Form & tabel', 'Buat form data dan tabel yang dapat digunakan untuk menampilkan data.'],
-    ['CSS profesional', 'Gunakan Flexbox/Grid, spacing, typography, warna, card, dan hover state.'],
-    ['Responsive', 'Website harus nyaman digunakan pada laptop dan smartphone.'],
-    ['JavaScript interaktif', 'Gunakan DOM, event, function, array/object, percabangan dan perulangan.'],
-    ['CRUD sederhana', 'Pengguna dapat menambah, mengubah, menghapus dan mencari data.'],
-    ['LocalStorage', 'Data utama tetap tersedia setelah halaman di-refresh.'],
-    ['Validasi & debugging', 'Form tervalidasi dan project bebas dari error utama di console.']
-  ];
-  viewport.innerHTML = `<div class="content">
-    <div class="project-hero">
-      <span class="project-badge">SYARAT KELULUSAN</span>
-      <h1>Project Akhir RPL</h1>
-      <p><b>Membangun Website Sistem Informasi Sekolah</b></p>
-      <p>Project ini adalah tahap pembuktian bahwa kamu mampu menerapkan materi HTML, CSS, dan JavaScript yang telah dipelajari.</p>
-    </div>
-
-    <div class="project-card">
-      <h2>🎯 Ketentuan Project</h2>
-      <p>Buat satu website yang memiliki halaman beranda, profil sekolah, data guru/siswa, jurusan, berita atau informasi, form kontak, pencarian/filter, dan interaksi JavaScript.</p>
-      <div class="project-grid">
-        ${requirements.map((r,i)=>`<label class="project-requirement"><input type="checkbox" class="project-check" data-i="${i}" ${checks.includes(i)?'checked':''}><span><strong>${r[0]}</strong>${r[1]}</span></label>`).join('')}
+function renderCodingLab(config){
+  const saved = JSON.parse(localStorage.getItem(config.storageKey || 'kodelab_final_draft') || '{}');
+  const html = saved.html ?? config.html;
+  const css = saved.css ?? config.css;
+  const js = saved.js ?? config.js;
+  return `<div class="coding-lab ${config.final ? 'final-coding' : ''}" id="codingLab">
+    <div class="coding-lab-head"><strong>💻 Coding Lab — ${escapeHtml(config.title)}</strong><div class="coding-lab-actions"><button class="coding-lab-btn primary" id="runProjectCode">▶ Jalankan</button><button class="coding-lab-btn" id="saveProjectCode">💾 Simpan Draft</button><button class="coding-lab-btn" id="resetProjectCode">↺ Reset</button></div></div>
+    <div class="coding-lab-grid">
+      <div class="coding-editors">
+        <div class="code-tab"><button class="active" data-tab="html">HTML</button><button data-tab="css">CSS</button><button data-tab="js">JavaScript</button></div>
+        <div class="code-pane active" data-pane="html"><textarea id="projectHtml" spellcheck="false">${escapeHtml(html)}</textarea></div>
+        <div class="code-pane" data-pane="css"><textarea id="projectCss" spellcheck="false">${escapeHtml(css)}</textarea></div>
+        <div class="code-pane" data-pane="js"><textarea id="projectJs" spellcheck="false">${escapeHtml(js)}</textarea></div>
       </div>
+      <div class="coding-preview"><iframe id="projectPreview" sandbox="allow-scripts allow-forms allow-modals"></iframe></div>
     </div>
-
-    <div class="project-card">
-      <h2>📤 Pengumpulan Project</h2>
-      <p>Masukkan nama siswa dan link project yang sudah kamu kerjakan.</p>
-      <div class="project-form">
-        <label>Nama siswa</label>
-        <input id="studentNameInput" type="text" value="${escapeHtml(savedName)}" placeholder="Contoh: Ahmad Fauzan">
-        <label>Link project</label>
-        <input id="projectLinkInput" type="text" value="${escapeHtml(savedLink)}" placeholder="https://... atau link GitHub Pages">
-        <label><input id="projectDeclaration" type="checkbox"> Saya menyatakan project ini saya kerjakan sendiri dan seluruh persyaratan di atas telah dipenuhi.</label>
-        <button class="project-submit" id="submitProjectBtn" ${passed?'disabled':''}>${passed?'✓ Project sudah dinyatakan lulus':'Kirim Project untuk Penilaian'}</button>
-      </div>
-      <div id="projectStatus"></div>
-    </div>
-
-    ${passed ? `<div class="graduate-card"><div style="font-size:48px">🏆</div><h2>SELAMAT, ANDA LULUS!</h2><p>Project akhir telah diselesaikan dan status kelulusan Kodelab RPL telah aktif.</p><p><b>Nilai Project: LULUS</b></p><div class="certificate" id="certificate"><div>KODELAB RPL</div><h2>SERTIFIKAT KELULUSAN</h2><p>Diberikan kepada</p><div class="student-name">${escapeHtml(savedName || 'Nama Siswa')}</div><p>atas keberhasilannya menyelesaikan pembelajaran HTML, CSS, dan JavaScript serta Project Akhir Kodelab RPL.</p><div class="cert-meta"><b>Project:</b> Sistem Informasi Sekolah<br><b>Status:</b> LULUS<br><b>Tanggal:</b> ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</div></div><div class="cert-actions"><button class="cert-btn" id="printCertificate">🖨️ Cetak / Simpan PDF</button></div></div>` : ''}
   </div>`;
-
-  viewport.querySelectorAll('.project-check').forEach(cb => cb.addEventListener('change', () => {
-    const arr = [...viewport.querySelectorAll('.project-check')].filter(x=>x.checked).map(x=>+x.dataset.i);
-    localStorage.setItem('kodelab_project_checks', JSON.stringify(arr));
+}
+function setupCodingLab(config){
+  const htmlEl=document.getElementById('projectHtml'), cssEl=document.getElementById('projectCss'), jsEl=document.getElementById('projectJs'), frame=document.getElementById('projectPreview');
+  if(!htmlEl||!cssEl||!jsEl||!frame) return;
+  const storageKey=config.storageKey || 'kodelab_final_draft';
+  function run(){
+    const html=htmlEl.value, css=cssEl.value, js=jsEl.value;
+    const doc=`<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style></head><body>${html}<script>${js.replace(/<\/script/gi,'<\\/script')}<\/script></body></html>`;
+    frame.srcdoc=doc;
+  }
+  document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));
+    document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('active',p.dataset.pane===btn.dataset.tab));
   }));
-  const submit = document.getElementById('submitProjectBtn');
-  if(submit && !passed) submit.addEventListener('click', () => {
-    const name = document.getElementById('studentNameInput').value.trim();
-    const link = document.getElementById('projectLinkInput').value.trim();
-    const declaration = document.getElementById('projectDeclaration').checked;
-    const allChecked = viewport.querySelectorAll('.project-check:checked').length === requirements.length;
-    const status = document.getElementById('projectStatus');
-    if(!name || !link || !declaration || !allChecked){
-      status.className='project-status';
-      status.innerHTML='<b>Belum dapat dinyatakan lulus.</b><br>Lengkapi seluruh checklist, nama, link project, dan pernyataan terlebih dahulu.';
-      return;
-    }
-    localStorage.setItem('kodelab_student_name',name);
-    localStorage.setItem('kodelab_project_link',link);
-    localStorage.setItem('kodelab_project_passed','true');
-    status.className='project-status';
-    status.innerHTML='<b>✓ Project berhasil diselesaikan.</b><br>Status LULUS dan sertifikat sekarang tersedia.';
-    renderNav();
-    renderProjectFinal();
+  document.getElementById('runProjectCode')?.addEventListener('click',run);
+  document.getElementById('saveProjectCode')?.addEventListener('click',()=>{
+    localStorage.setItem(storageKey,JSON.stringify({html:htmlEl.value,css:cssEl.value,js:jsEl.value,at:new Date().toISOString()}));
+    alert('Draft project berhasil disimpan di browser ini.');
   });
-  const printBtn=document.getElementById('printCertificate');
-  if(printBtn) printBtn.addEventListener('click',()=>{
-    const cert=document.getElementById('certificate');
-    const w=window.open('','_blank');
-    w.document.write(`<html><head><title>Sertifikat Kodelab RPL</title><style>body{font-family:Arial,sans-serif;padding:30px}.certificate{background:#fff;color:#1d2430;padding:60px 40px;border:12px double #b89435;text-align:center;max-width:900px;margin:auto}.certificate h2{font-size:34px}.student-name{font-size:30px;font-weight:800;margin:25px}</style></head><body>${cert.outerHTML}</body></html>`);
-    w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
+  document.getElementById('resetProjectCode')?.addEventListener('click',()=>{
+    if(!confirm('Reset kode ke contoh awal?')) return;
+    htmlEl.value=config.html; cssEl.value=config.css; jsEl.value=config.js; run();
   });
+  run();
+}
+
+function renderMiniProject(trackId){
+  currentLessonId=null; currentProjectId=MINI_PROJECTS[trackId].id;
+  const track=TRACKS.find(t=>t.id===trackId), project=MINI_PROJECTS[trackId], done=isMiniDone(trackId);
+  crumb.innerHTML=`kodelab / <b>${track.name}</b> / ${project.title}`;
+  const examples={
+    html:{html:'<main class="profile">\n  <h1>Profil Siswa</h1>\n  <p>Nama: Alya</p>\n  <img src="https://picsum.photos/180" alt="Foto profil">\n  <h2>Hobi</h2>\n  <ul><li>Membaca</li><li>Coding</li></ul>\n</main>',css:'body{font-family:Arial;background:#f3f4f6}.profile{max-width:520px;margin:40px auto;padding:24px;background:white;border-radius:16px}.profile img{max-width:180px;border-radius:12px}',js:'console.log("Mini Project HTML siap!");'},
+    css:{html:'<header><h1>Profil Kelas XI RPL</h1><p>Belajar coding bersama.</p></header>\n<section class="cards"><article>HTML</article><article>CSS</article><article>JavaScript</article></section>',css:'body{margin:0;font-family:Arial;background:#eef2f7}header{text-align:center;padding:40px 20px;background:#202631;color:white}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:30px auto;padding:20px}.cards article{padding:30px;text-align:center;background:white;border-radius:14px;box-shadow:0 8px 25px #0001}@media(max-width:600px){.cards{grid-template-columns:1fr}}',js:'console.log("Mini Project CSS siap!");'},
+    js:{html:'<h1>Aplikasi Nilai Siswa</h1>\n<form id="form"><input id="nama" placeholder="Nama" required><input id="nilai" type="number" min="0" max="100" placeholder="Nilai" required><button>Tambah</button></form>\n<table border="1" width="100%"><thead><tr><th>Nama</th><th>Nilai</th></tr></thead><tbody id="data"></tbody></table>',css:'body{font-family:Arial;max-width:800px;margin:30px auto;padding:20px}input,button{padding:10px;margin:4px}',js:'const data=[];const form=document.getElementById("form");const tbody=document.getElementById("data");function render(){tbody.innerHTML=data.map(s=>`<tr><td>${s.nama}</td><td>${s.nilai}</td></tr>`).join("")}form.addEventListener("submit",e=>{e.preventDefault();data.push({nama:nama.value,nilai:Number(nilai.value)});form.reset();render()});'}
+  }[trackId];
+  viewport.innerHTML=`<div class="content"><div class="project-hero"><span class="project-badge">MINI PROJECT ${track.name}</span><h1>${project.title}</h1><p><b>${project.subtitle}</b></p><p>${project.intro}</p></div><div class="mini-instructions"><h2>🎯 Tugas yang harus dibuat</h2><ul>${project.tasks.map(x=>`<li>${x}</li>`).join('')}</ul></div>${renderCodingLab({title:project.title,html:examples.html,css:examples.css,js:examples.js,storageKey:'kodelab_draft_'+trackId})}<button class="project-complete-btn" id="completeMiniProject" ${done?'disabled':''}>${done?'✓ Mini Project sudah selesai':'✓ Saya sudah menyelesaikan Mini Project'}</button><div id="miniProjectStatus"></div><div class="lesson-nav" style="margin-top:24px"><button class="nav-btn next" id="miniNextBtn" ${done?'':'disabled'}><div class="nav-btn-label">Selanjutnya →</div><div class="nav-btn-title">${trackId==='html'?'CSS':trackId==='css'?'JavaScript':'Project Akhir RPL'}</div></button></div></div>`;
+  document.getElementById('completeMiniProject')?.addEventListener('click',()=>{
+    miniDone.add(project.id); localStorage.setItem('kodelab_mini_done',JSON.stringify([...miniDone]));
+    renderNav(); renderMiniProject(trackId);
+  });
+  document.getElementById('miniNextBtn')?.addEventListener('click',()=>{
+    if(!isMiniDone(trackId)) return;
+    if(trackId==='html') goToLesson('css-1');
+    else if(trackId==='css') goToLesson('js-1');
+    else renderProjectFinal();
+  });
+  setupCodingLab({title:project.title,html:examples.html,css:examples.css,js:examples.js,storageKey:'kodelab_draft_'+trackId});
+}
+
+function renderProjectFinal(){
+  currentLessonId=null; currentProjectId='project-final';
+  crumb.innerHTML='kodelab / <b>Project Akhir</b>';
+  const passed=localStorage.getItem('kodelab_project_passed')==='true';
+  const savedName=localStorage.getItem('kodelab_student_name')||'';
+  const savedLink=localStorage.getItem('kodelab_project_link')||'';
+  const checks=JSON.parse(localStorage.getItem('kodelab_project_checks')||'[]');
+  const requirements=['Beranda dan navigasi','Profil sekolah','Data guru/siswa','Data jurusan','Berita/informasi','Form kontak + validasi','Pencarian/filter data','JavaScript interaktif','LocalStorage','Responsive desktop & mobile'];
+  const starter={html:'<header><nav><h1>SMK N 1 KERUMUTAN</h1><button id="menu">Menu</button></nav></header>\n<main>\n  <section class="hero"><h2>Selamat Datang</h2><p>Website Sistem Informasi Sekolah</p></section>\n  <section><h2>Data Siswa</h2><form id="form"><input id="nama" placeholder="Nama siswa" required><input id="kelas" placeholder="Kelas" required><button>Tambah</button></form><input id="cari" placeholder="Cari siswa...">\n  <table><thead><tr><th>Nama</th><th>Kelas</th></tr></thead><tbody id="data"></tbody></table></section>\n</main>\n<footer>© 2026 Kodelab RPL</footer>',css:'body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#202631}nav,footer{padding:18px 24px;background:#202631;color:white}.hero{padding:70px 24px;text-align:center;background:#e8b44c}.hero h2{font-size:42px;margin:0 0 8px}.hero p{font-size:18px}.hero~section,main section:not(.hero){max-width:1000px;margin:30px auto;padding:24px;background:white;border-radius:16px}input,button{padding:11px;margin:4px;border-radius:8px;border:1px solid #ccd2da}button{cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}@media(max-width:600px){.hero h2{font-size:30px}input{width:100%;box-sizing:border-box}}',js:'const siswa=[];const form=document.getElementById("form"),tbody=document.getElementById("data"),cari=document.getElementById("cari");function render(){const q=cari.value.toLowerCase();tbody.innerHTML=siswa.filter(s=>s.nama.toLowerCase().includes(q)).map(s=>`<tr><td>${s.nama}</td><td>${s.kelas}</td></tr>`).join("")}form.addEventListener("submit",e=>{e.preventDefault();siswa.push({nama:nama.value.trim(),kelas:kelas.value.trim()});form.reset();render()});cari.addEventListener("input",render);render();'};
+  viewport.innerHTML=`<div class="content"><div class="project-hero"><span class="project-badge">SYARAT KELULUSAN</span><h1>🏆 Project Akhir RPL</h1><p><b>Membangun Website Sistem Informasi Sekolah</b></p><p>Gunakan kemampuan dari HTML, CSS, dan JavaScript untuk membangun website secara langsung di halaman ini.</p></div><div class="project-card"><h2>🎯 Persyaratan Project</h2><div class="final-requirements">${requirements.map((r,i)=>`<label class="final-requirement"><input type="checkbox" class="project-check" data-i="${i}" ${checks.includes(i)?'checked':''}> ${r}</label>`).join('')}</div></div>${renderCodingLab({title:'Website Sistem Informasi Sekolah',...starter,final:true,storageKey:'kodelab_final_draft'})}<div class="project-form"><label>Nama siswa</label><input id="studentNameInput" type="text" value="${escapeHtml(savedName)}" placeholder="Nama lengkap"><label>Link project (opsional jika menggunakan hosting)</label><input id="projectLinkInput" type="text" value="${escapeHtml(savedLink)}" placeholder="https://..."><label><input id="projectDeclaration" type="checkbox"> Saya menyatakan project sudah saya kerjakan dan siap dinilai.</label><button class="project-submit" id="submitProjectBtn" ${passed?'disabled':''}>${passed?'✓ Project sudah dinyatakan lulus':'Kirim Project'}</button></div><div id="projectStatus"></div>${passed?`<div class="graduate-card"><div style="font-size:48px">🏆</div><h2>SELAMAT, ANDA LULUS!</h2><p>Project akhir telah diselesaikan.</p><div class="certificate" id="certificate"><div>KODELAB RPL</div><h2>SERTIFIKAT KELULUSAN</h2><p>Diberikan kepada</p><div class="student-name">${escapeHtml(savedName||'Nama Siswa')}</div><p>atas keberhasilannya menyelesaikan pembelajaran HTML, CSS, dan JavaScript serta Project Akhir Kodelab RPL.</p><div class="cert-meta"><b>Project:</b> Sistem Informasi Sekolah<br><b>Status:</b> LULUS<br><b>Tanggal:</b> ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</div></div><div class="cert-actions"><button class="cert-btn" id="printCertificate">🖨️ Cetak / Simpan PDF</button></div></div>`:''}</div>`;
+  viewport.querySelectorAll('.project-check').forEach(cb=>cb.addEventListener('change',()=>{const arr=[...viewport.querySelectorAll('.project-check')].filter(x=>x.checked).map(x=>+x.dataset.i);localStorage.setItem('kodelab_project_checks',JSON.stringify(arr));}));
+  setupCodingLab({title:'Website Sistem Informasi Sekolah',...starter,final:true,storageKey:'kodelab_final_draft'});
+  document.getElementById('submitProjectBtn')?.addEventListener('click',()=>{
+    const name=document.getElementById('studentNameInput').value.trim(),link=document.getElementById('projectLinkInput').value.trim(),decl=document.getElementById('projectDeclaration').checked,allChecked=viewport.querySelectorAll('.project-check:checked').length===requirements.length,status=document.getElementById('projectStatus');
+    if(!name||!decl||!allChecked){status.className='project-status';status.innerHTML='<b>Belum dapat dinyatakan lulus.</b><br>Lengkapi semua persyaratan, nama, dan pernyataan terlebih dahulu.';return;}
+    localStorage.setItem('kodelab_student_name',name);localStorage.setItem('kodelab_project_link',link);localStorage.setItem('kodelab_project_passed','true');renderNav();renderProjectFinal();
+  });
+  document.getElementById('printCertificate')?.addEventListener('click',()=>{const cert=document.getElementById('certificate');const w=window.open('','_blank');if(!w)return;w.document.write(`<html><head><title>Sertifikat Kodelab RPL</title><style>body{font-family:Arial;padding:30px}.certificate{background:#fff;color:#1d2430;padding:60px 40px;border:12px double #b89435;text-align:center}.student-name{font-size:30px;font-weight:800;margin:25px}</style></head><body>${cert.outerHTML}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),300);});
 }
 
 function goToLesson(id){
-  currentLessonId = id;
-  const lesson = allLessons.find(l => l.id === id);
-  renderLesson(lesson);
-  syncNavState();
-  const mainEl = document.getElementById('main');
-  if (mainEl.scrollTo) mainEl.scrollTo(0,0); else mainEl.scrollTop = 0;
+  const lesson=allLessons.find(l=>l.id===id);
+  if(!lesson) return;
+  const trackIndex=getTrackIndex(lesson.trackId);
+  if(!isTrackUnlocked(trackIndex)){ alert('Selesaikan Mini Project jalur sebelumnya terlebih dahulu.'); return; }
+  currentLessonId=id; currentProjectId=null; renderLesson(lesson); syncNavState();
+  const mainEl=document.getElementById('main'); if(mainEl.scrollTo) mainEl.scrollTo(0,0); else mainEl.scrollTop=0;
 }
-
+function goToStage(stage){
+  if(!stage) return;
+  if(stage.type==='lesson') goToLesson(stage.id);
+  else renderMiniProject(stage.trackId || stage.id.replace('mini-',''));
+}
 function renderLesson(lesson){
-  const idx = allLessons.findIndex(l => l.id === lesson.id);
-  const prev = allLessons[idx-1];
-  const next = allLessons[idx+1];
+  const prevStage=getPreviousStageForLesson(lesson);
+  const nextStage=getNextStageForLesson(lesson);
+  const guide=LESSON_GUIDES[lesson.id]||['Bayangkan konsep ini sebagai alat untuk menyusun website.','Contoh penerapan dapat dilihat pada kode latihan di bawah.'];
+  crumb.innerHTML=`kodelab / <b>${lesson.trackName}</b> / ${lesson.title}`;
+  const isDone=doneSet.has(lesson.id);
+  const quizReady=!lesson.quiz||!lesson.quiz.length||isDone||quizScores[lesson.id]?.score===100;
+  viewport.innerHTML=`<div class="content"><div class="lesson-eyebrow" style="color:${lesson.trackColor}">${lesson.trackName}</div><h1 class="lesson-title">${lesson.title}</h1><div class="lesson-meta"><span class="meta-pill level">${lesson.level||'Pemula'}</span><span class="meta-pill">${lesson.duration||'3 menit'} baca</span></div><div class="lesson-body">${lesson.body}<div class="learning-extra"><div class="learning-extra-card"><h3>🧠 Analogi sederhana</h3><p>${escapeHtml(guide[0])}</p></div><div class="learning-extra-card"><h3>💡 Contoh penerapan</h3><p>${escapeHtml(guide[1])}</p></div></div><div class="code-block"><div class="code-block-head"><span>${lesson.code.lang}</span><button class="copy-btn" data-copy>salin</button></div><pre><code>${escapeHtml(lesson.code.text)}</code></pre></div>${lesson.after||''}${lesson.callout?`<div class="callout">${lesson.callout}</div>`:''}</div>${lesson.playground?renderPlaygroundHtml(lesson):''}${lesson.quiz&&lesson.quiz.length?renderQuizHtml(lesson):''}<button class="mark-done ${isDone?'done':''}" id="markDoneBtn" data-quiz-complete="${quizReady?'true':'false'}" ${lesson.quiz&&lesson.quiz.length&&!quizReady?'disabled title="Selesaikan semua soal kuis dengan benar terlebih dahulu"':''}><span>${isDone?'✓ Selesai dipelajari':'Tandai selesai'}</span></button><div class="lesson-nav"><button class="nav-btn prev" ${prevStage?'':'disabled'}><div class="nav-btn-label">← Sebelumnya</div><div class="nav-btn-title">${prevStage?prevStage.title:'—'}</div></button><button class="nav-btn next" ${(!nextStage||!isDone)?'disabled':''} title="${nextStage&&!isDone?'Tandai materi ini selesai terlebih dahulu':''}"><div class="nav-btn-label">Selanjutnya →</div><div class="nav-btn-title">${nextStage?nextStage.title:'—'}</div></button></div></div>`;
 
-  crumb.innerHTML = `kodelab / <b>${lesson.trackName}</b> / ${lesson.title}`;
-
-  viewport.innerHTML = `
-    <div class="content">
-      <div class="lesson-eyebrow" style="color:${lesson.trackColor}">${lesson.trackName}</div>
-      <h1 class="lesson-title">${lesson.title}</h1>
-      <div class="lesson-meta">
-        <span class="meta-pill level">${lesson.level || 'Pemula'}</span>
-        <span class="meta-pill">${lesson.duration || '3 menit'} baca</span>
-      </div>
-      <div class="lesson-body">
-        ${lesson.body}
-        <div class="code-block">
-          <div class="code-block-head">
-            <span>${lesson.code.lang}</span>
-            <button class="copy-btn" data-copy>salin</button>
-          </div>
-          <pre><code>${escapeHtml(lesson.code.text)}</code></pre>
-        </div>
-        ${lesson.after || ''}
-        ${lesson.callout ? `<div class="callout">${lesson.callout}</div>` : ''}
-      </div>
-
-      ${lesson.playground ? renderPlaygroundHtml(lesson) : ''}
-      ${lesson.quiz && lesson.quiz.length ? renderQuizHtml(lesson) : ''}
-
-      <button class="mark-done ${doneSet.has(lesson.id) ? 'done' : ''}" id="markDoneBtn"
-        data-quiz-complete="${(!lesson.quiz || !lesson.quiz.length || doneSet.has(lesson.id) || quizScores[lesson.id]?.score === 100) ? 'true' : 'false'}"
-        ${lesson.quiz && lesson.quiz.length && !doneSet.has(lesson.id) && quizScores[lesson.id]?.score !== 100 ? 'disabled title="Selesaikan semua soal kuis dengan benar terlebih dahulu"' : ''}>
-        <span>${doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai'}</span>
-      </button>
-
-      <div class="lesson-nav">
-        <button class="nav-btn prev" ${prev ? '' : 'disabled'}>
-          <div class="nav-btn-label">← Sebelumnya</div>
-          <div class="nav-btn-title">${prev ? prev.title : '—'}</div>
-        </button>
-        <button class="nav-btn next" ${(!next || !doneSet.has(lesson.id)) ? 'disabled' : ''}
-          title="${next && !doneSet.has(lesson.id) ? 'Tandai materi ini selesai terlebih dahulu' : ''}">
-          <div class="nav-btn-label">Selanjutnya →</div>
-          <div class="nav-btn-title">${next ? next.title : '—'}</div>
-        </button>
-      </div>
-    </div>
-  `;
-
-  // copy button
-  const copyBtn = viewport.querySelector('[data-copy]');
-  if (copyBtn){
-    copyBtn.addEventListener('click', async () => {
-      const text = lesson.code.text;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          const temp = document.createElement('textarea');
-          temp.value = text;
-          temp.style.position = 'fixed';
-          temp.style.opacity = '0';
-          document.body.appendChild(temp);
-          temp.focus();
-          temp.select();
-          document.execCommand('copy');
-          temp.remove();
-        }
-        copyBtn.textContent = 'tersalin!';
-      } catch (err) {
-        copyBtn.textContent = 'gagal menyalin';
-        console.error('Gagal menyalin kode:', err);
-      }
-      setTimeout(() => copyBtn.textContent = 'salin', 1500);
-    });
-  }
-
-  // mark done
-  const markDoneBtn = document.getElementById('markDoneBtn');
-  markDoneBtn.addEventListener('click', (e) => {
-    // Jika materi memiliki kuis, siswa wajib menyelesaikan semua soal dengan benar.
-    // Gunakan status tombol + skor tersimpan agar tidak ada kondisi tombol terlihat aktif
-    // tetapi kliknya ditolak oleh pemeriksaan state yang berbeda.
-    const quizComplete = !lesson.quiz || !lesson.quiz.length ||
-      e.currentTarget.dataset.quizComplete === 'true' ||
-      quizScores[lesson.id]?.score === 100 ||
-      doneSet.has(lesson.id);
-    if (!quizComplete) return;
-
-    if (doneSet.has(lesson.id)) doneSet.delete(lesson.id);
-    else doneSet.add(lesson.id);
-
-    // Simpan progress agar materi yang sudah selesai tidak hilang saat halaman di-reload.
-    localStorage.setItem('kodelab_done', JSON.stringify([...doneSet]));
-
-    e.currentTarget.classList.toggle('done');
-    e.currentTarget.querySelector('span').textContent = doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai';
-
-    // Jika dibatalkan, wajib mengerjakan kuis lagi sebelum bisa menandai selesai.
-    if (lesson.quiz && lesson.quiz.length && !doneSet.has(lesson.id)) {
-      e.currentTarget.disabled = true;
-      e.currentTarget.title = 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
-    }
-
-    // Tombol "Selanjutnya" hanya aktif setelah materi ini benar-benar ditandai selesai.
-    const nextBtn = viewport.querySelector('.nav-btn.next');
-    if (nextBtn) {
-      nextBtn.disabled = !next || !doneSet.has(lesson.id);
-      nextBtn.title = (next && !doneSet.has(lesson.id))
-        ? 'Tandai materi ini selesai terlebih dahulu'
-        : '';
-    }
-
-    syncNavState();
-  });
-
-  // prev/next
-  if (prev) viewport.querySelector('.nav-btn.prev').addEventListener('click', () => goToLesson(prev.id));
-  if (next) viewport.querySelector('.nav-btn.next').addEventListener('click', () => goToLesson(next.id));
-
-  if (lesson.playground) setupPlayground(lesson);
-  if (lesson.quiz && lesson.quiz.length) setupQuiz(lesson);
+  const copyBtn=viewport.querySelector('[data-copy]');
+  if(copyBtn) copyBtn.addEventListener('click',async()=>{const text=lesson.code.text;try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);else{const temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.focus();temp.select();document.execCommand('copy');temp.remove();}copyBtn.textContent='tersalin!';}catch(err){copyBtn.textContent='gagal menyalin';}setTimeout(()=>copyBtn.textContent='salin',1500);});
+  const markDoneBtn=document.getElementById('markDoneBtn');
+  markDoneBtn.addEventListener('click',e=>{const complete=!lesson.quiz||!lesson.quiz.length||e.currentTarget.dataset.quizComplete==='true'||quizScores[lesson.id]?.score===100||doneSet.has(lesson.id);if(!complete)return;if(doneSet.has(lesson.id))doneSet.delete(lesson.id);else doneSet.add(lesson.id);localStorage.setItem('kodelab_done',JSON.stringify([...doneSet]));e.currentTarget.classList.toggle('done');e.currentTarget.querySelector('span').textContent=doneSet.has(lesson.id)?'✓ Selesai dipelajari':'Tandai selesai';if(lesson.quiz&&lesson.quiz.length&&!doneSet.has(lesson.id)){e.currentTarget.disabled=true;e.currentTarget.dataset.quizComplete='false';}const nextBtn=viewport.querySelector('.nav-btn.next');if(nextBtn)nextBtn.disabled=!nextStage||!doneSet.has(lesson.id);syncNavState();});
+  if(prevStage) viewport.querySelector('.nav-btn.prev').addEventListener('click',()=>{if(prevStage.type==='lesson')goToLesson(prevStage.id);else renderMiniProject(lesson.trackId==='css'?'html':lesson.trackId==='js'?'css':'html');});
+  if(nextStage) viewport.querySelector('.nav-btn.next').addEventListener('click',()=>{if(!doneSet.has(lesson.id))return;if(nextStage.type==='lesson')goToLesson(nextStage.id);else renderMiniProject(lesson.trackId);});
+  if(lesson.playground)setupPlayground(lesson);
+  if(lesson.quiz&&lesson.quiz.length)setupQuiz(lesson);
 }
 
 function renderPlaygroundHtml(lesson){
@@ -3543,121 +3687,51 @@ function renderQuizHtml(lesson){
 
 function setupQuiz(lesson){
   const total = lesson.quiz.length;
-  const progressKey = `kodelab_quiz_progress_${lesson.id}`;
   let answered = {};
-
-  // Pulihkan soal yang sebelumnya sudah dijawab BENAR.
-  try {
-    const saved = JSON.parse(localStorage.getItem(progressKey) || '[]');
-    saved.forEach(qi => { answered[qi] = true; });
-  } catch(e) {
-    answered = {};
-  }
-
-  function saveProgress(){
-    localStorage.setItem(progressKey, JSON.stringify(Object.keys(answered).map(Number)));
-  }
-
-  function updateProgress(){
-    const doneCount = Object.keys(answered).length;
-    const progressEl = document.getElementById('quizProgress');
-    if (progressEl) progressEl.textContent = `${doneCount} / ${total} benar`;
-
-    const quizComplete = doneCount >= total;
-    const markDoneBtn = document.getElementById('markDoneBtn');
-
-    // PENTING: tombol Tandai selesai hanya aktif setelah SEMUA soal benar.
-    if (markDoneBtn) {
-      markDoneBtn.dataset.quizComplete = quizComplete ? 'true' : 'false';
-      markDoneBtn.disabled = !quizComplete && !doneSet.has(lesson.id);
-      markDoneBtn.title = quizComplete
-        ? 'Semua soal benar. Klik untuk menandai materi selesai.'
-        : 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
-    }
-
-    // Selanjutnya hanya aktif setelah Tandai selesai benar-benar ditekan.
-    const nextBtn = viewport.querySelector('.nav-btn.next');
-    if (nextBtn) {
-      const unlocked = !!next && doneSet.has(lesson.id);
-      nextBtn.disabled = !unlocked;
-      nextBtn.title = (next && !unlocked)
-        ? 'Tandai materi ini selesai terlebih dahulu'
-        : '';
-    }
-
-    // Jika semua soal benar, simpan skor 100.
-    if (quizComplete) {
-      quizScores[lesson.id] = {
-        correct: total,
-        total,
-        score: 100,
-        at: new Date().toISOString()
-      };
-      localStorage.setItem('kodelab_quiz_scores', JSON.stringify(quizScores));
-    }
-
-    const summary = document.getElementById('quizSummary');
-    if (summary) {
-      summary.style.display = quizComplete ? 'flex' : 'none';
-      if (quizComplete) {
-        summary.classList.add('show-flex');
-        const scoreEl = document.getElementById('quizSummaryScore');
-        if (scoreEl) scoreEl.textContent = `Semua soal benar: ${total} dari ${total}`;
-      }
-    }
-  }
+  // Status kelulusan kuis disimpan secara eksplisit agar tombol
+  // "Tandai selesai" tidak bergantung pada timing/localStorage.
+  let quizPassed = quizScores[lesson.id]?.score === 100;
 
   function bindQuestions(){
     document.querySelectorAll('.quiz-q').forEach(qEl => {
-      const qi = Number(qEl.dataset.qi);
+      const qi = +qEl.dataset.qi;
       const q = lesson.quiz[qi];
       const opts = qEl.querySelectorAll('.quiz-opt');
       const feedback = qEl.querySelector('.quiz-feedback');
       const retryQuestionBtn = qEl.querySelector('.quiz-question-retry');
 
-      function showCorrectState(){
-        opts.forEach(o => {
-          o.disabled = true;
-          const oi = Number(o.dataset.originalIndex);
-          o.classList.remove('correct','incorrect');
-          if (oi === q.correct) o.classList.add('correct');
-        });
-        feedback.style.display = 'block';
-        feedback.className = 'quiz-feedback ok';
-        feedback.innerHTML = '<b>Benar.</b> ' + escapeHtml(q.explain);
-        if (retryQuestionBtn) retryQuestionBtn.style.display = 'none';
-      }
-
-      // Tampilkan kembali jawaban benar jika siswa pernah menjawabnya sebelumnya.
-      if (answered[qi] !== undefined) showCorrectState();
-
       opts.forEach(optEl => {
         optEl.addEventListener('click', () => {
+          // Setelah jawaban salah, tombol Coba lagi akan mengaktifkan soal ini kembali.
           if (answered[qi] !== undefined) return;
 
-          const originalIndex = Number(optEl.dataset.originalIndex);
+          const originalIndex = +optEl.dataset.originalIndex;
           const correct = originalIndex === q.correct;
+
+          if (correct){
+            answered[qi] = originalIndex;
+          }
 
           opts.forEach(o => {
             o.disabled = true;
+            const oOriginalIndex = +o.dataset.originalIndex;
             o.classList.remove('correct','incorrect');
-            const oi = Number(o.dataset.originalIndex);
-            if (oi === q.correct) o.classList.add('correct');
-            else if (o === optEl && !correct) o.classList.add('incorrect');
+
+            if (oOriginalIndex === q.correct) {
+              o.classList.add('correct');
+            } else if (o === optEl && !correct) {
+              o.classList.add('incorrect');
+            }
           });
 
           feedback.style.display = 'block';
           feedback.className = 'quiz-feedback ' + (correct ? 'ok' : 'bad');
-          feedback.innerHTML = correct
+          feedback.innerHTML = (correct
             ? '<b>Benar.</b> ' + escapeHtml(q.explain)
-            : '<b>Belum tepat.</b> Jawabanmu belum benar. Klik <b>🔄 Coba lagi</b> untuk menjawab soal ini kembali.';
+            : '<b>Belum tepat.</b> Jawabanmu belum benar. Silakan coba lagi.');
 
-          if (correct) {
-            answered[qi] = true;
-            saveProgress();
-            if (retryQuestionBtn) retryQuestionBtn.style.display = 'none';
-          } else {
-            if (retryQuestionBtn) retryQuestionBtn.style.display = 'inline-flex';
+          if (retryQuestionBtn){
+            retryQuestionBtn.style.display = correct ? 'none' : 'inline-flex';
           }
 
           updateProgress();
@@ -3666,8 +3740,8 @@ function setupQuiz(lesson){
 
       if (retryQuestionBtn){
         retryQuestionBtn.addEventListener('click', () => {
+          // Hanya mengulang soal yang salah. Materi, soal lain, dan progress tidak dihapus.
           delete answered[qi];
-          saveProgress();
           opts.forEach(o => {
             o.disabled = false;
             o.classList.remove('correct','incorrect');
@@ -3682,26 +3756,86 @@ function setupQuiz(lesson){
     });
   }
 
+  function updateProgress(){
+    const doneCount = Object.keys(answered).length;
+    const progressEl = document.getElementById('quizProgress');
+    if (progressEl) progressEl.textContent = `${doneCount} / ${total} benar`;
+
+    // Begitu seluruh soal benar, tandai kuis lulus SEBELUM memperbarui tombol.
+    // Ini memastikan tombol langsung dapat diklik tanpa perlu reload halaman.
+    if (doneCount === total) {
+      quizPassed = true;
+      quizScores[lesson.id] = {
+        correct: total,
+        total,
+        score: 100,
+        at: new Date().toISOString()
+      };
+      localStorage.setItem('kodelab_quiz_scores', JSON.stringify(quizScores));
+    }
+
+    // Tombol "Tandai selesai" aktif hanya jika semua soal sudah benar.
+    const markDoneBtn = document.getElementById('markDoneBtn');
+    if (markDoneBtn) {
+      const complete = quizPassed || doneCount === total;
+      markDoneBtn.dataset.quizComplete = complete ? 'true' : 'false';
+
+      if (!doneSet.has(lesson.id)) {
+        markDoneBtn.disabled = !complete;
+        markDoneBtn.title = complete
+          ? 'Materi siap ditandai selesai'
+          : 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
+      } else {
+        markDoneBtn.disabled = false;
+        markDoneBtn.title = 'Materi sudah ditandai selesai';
+      }
+    }
+
+    // Selanjutnya tetap terkunci sampai siswa menekan "Tandai selesai".
+    const nextBtn = viewport.querySelector('.nav-btn.next');
+    if (nextBtn) {
+      const nextStage = getNextStageForLesson(lesson);
+      nextBtn.disabled = !nextStage || !doneSet.has(lesson.id);
+      nextBtn.title = (nextStage && !doneSet.has(lesson.id)) ? 'Tandai materi ini selesai terlebih dahulu' : '';
+    }
+
+    const summary = document.getElementById('quizSummary');
+    if (summary) summary.style.display = 'none';
+
+    if (quizPassed){
+      if (summary){
+        summary.classList.add('show-flex');
+        summary.style.display = 'flex';
+        document.getElementById('quizSummaryScore').textContent = `Skor kamu: ${total} dari ${total} jawaban benar`;
+      }
+    }
+  }
+
   bindQuestions();
-  updateProgress();
 
   const retryBtn = document.getElementById('quizRetryBtn');
   if (retryBtn){
     retryBtn.addEventListener('click', () => {
+      // Ulangi seluruh kuis hanya jika siswa memang ingin mengulang semuanya.
       answered = {};
-      localStorage.removeItem(progressKey);
+      quizPassed = false;
       delete quizScores[lesson.id];
       localStorage.setItem('kodelab_quiz_scores', JSON.stringify(quizScores));
-
       document.getElementById('quizList').innerHTML = quizItemsHtml(lesson);
       document.getElementById('quizSummary').style.display = 'none';
       document.getElementById('quizProgress').textContent = `0 / ${total} benar`;
 
+      const markDoneBtn = document.getElementById('markDoneBtn');
+      if (markDoneBtn && !doneSet.has(lesson.id)) {
+        markDoneBtn.disabled = true;
+        markDoneBtn.title = 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
+      }
+
       bindQuestions();
-      updateProgress();
     });
   }
 }
+
 /* ======================= MOBILE SIDEBAR ======================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
