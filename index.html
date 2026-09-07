@@ -497,6 +497,7 @@ body{
 }
 .quiz-feedback.ok{ background:rgba(111,183,168,0.08); color:var(--teal); }
 .quiz-feedback.bad{ background:rgba(217,105,95,0.08); color:var(--red); }
+.quiz-question-retry{display:none;margin-top:10px;background:transparent;border:1px solid var(--amber-dim);color:var(--amber);font-family:var(--font-ui);font-size:12.5px;font-weight:600;padding:8px 12px;border-radius:7px;cursor:pointer}.quiz-question-retry:hover{background:rgba(232,180,76,0.08)}
 .quiz-feedback b{ font-weight:700; }
 .quiz-summary{
   display:none;
@@ -563,6 +564,10 @@ body{
   font-family:var(--font-ui);
   font-size:13.5px;
   font-weight:600;
+}
+.mark-done:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 .mark-done.done{
   background:rgba(111,183,168,0.15);
@@ -647,6 +652,29 @@ body{
   line-height:1.5;
   margin:0;
 }
+
+/* ======================= PROJECT AKHIR ======================= */
+.project-card{border:1px solid #343a46;border-radius:18px;padding:28px;background:#191c23;margin-top:18px}
+.project-hero{padding:30px;border-radius:18px;background:linear-gradient(135deg,#202631,#171a20);border:1px solid #343a46}
+.project-hero h1{margin:8px 0 10px;font-size:clamp(28px,4vw,44px)}
+.project-badge{display:inline-flex;padding:7px 12px;border-radius:999px;border:1px solid #d8a93d;color:#e8bf55;font-weight:700;font-size:12px}
+.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.project-requirement{display:flex;gap:12px;align-items:flex-start;padding:15px;border:1px solid #303641;border-radius:12px;background:#1d2028}
+.project-requirement input{margin-top:4px;accent-color:#67c9b5}
+.project-requirement strong{display:block;margin-bottom:4px}
+.project-form{display:grid;gap:12px;margin-top:18px}
+.project-form label{font-weight:700;font-size:14px}
+.project-form input[type=text]{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:10px;border:1px solid #3a414e;background:#11141a;color:inherit}
+.project-submit{border:0;border-radius:10px;padding:13px 18px;font-weight:800;cursor:pointer;background:#67c9b5;color:#10151a}
+.project-submit:disabled{opacity:.45;cursor:not-allowed}
+.project-status{margin-top:18px;padding:18px;border-radius:14px;border:1px solid #3b806f;background:#182824}
+.graduate-card{margin-top:22px;padding:30px;border-radius:18px;text-align:center;border:1px solid #d8a93d;background:#201e18}
+.certificate{background:#fff;color:#1d2430;padding:48px 35px;border:12px double #b89435;border-radius:8px;margin-top:22px;text-align:center}
+.certificate h2{font-size:34px;margin:10px 0}.certificate .student-name{font-size:28px;font-weight:800;margin:20px 0}.certificate .cert-meta{margin-top:20px;line-height:1.8}
+.cert-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.cert-btn{padding:11px 16px;border-radius:9px;border:1px solid #555;background:#20242c;color:#fff;cursor:pointer}
+.project-nav{margin:14px 10px 20px;padding:14px 15px;border:1px solid #3a414e;border-radius:12px;background:#1a1e25;cursor:pointer;color:inherit;text-align:left;width:calc(100% - 20px)}
+.project-nav.locked{opacity:.55;cursor:not-allowed}.project-nav.done{border-color:#67c9b5}
+@media(max-width:700px){.project-grid{grid-template-columns:1fr}.certificate{padding:30px 18px}.certificate h2{font-size:27px}.certificate .student-name{font-size:23px}}
 </style>
 </head>
 <body>
@@ -681,592 +709,2377 @@ body{
 /* ======================= DATA MATERI ======================= */
 const TRACKS = [
   {
-    id:'html', name:'HTML', color:'#e8b44c',
-    desc:'Struktur & elemen dasar halaman web.',
-    lessons: [
+    "id": "html",
+    "name": "HTML",
+    "color": "#e8b44c",
+    "desc": "Struktur, konten, formulir, dan semantic HTML.",
+    "lessons": [
       {
-        id:'html-1', title:'Apa itu HTML?', level:'Pemula', duration:'4 menit',
-        body:`
-          <p>HTML (<code>HyperText Markup Language</code>) adalah bahasa markup yang membentuk kerangka setiap halaman web. Bukan bahasa pemrograman — HTML tidak punya logika atau perhitungan, tugasnya hanya menandai bagian mana yang judul, mana yang paragraf, mana yang gambar, dan seterusnya.</p>
-          <p>Setiap elemen HTML ditulis sebagai <code>tag</code>. Kebanyakan tag punya pasangan pembuka dan penutup, membungkus konten di antaranya:</p>
-        `,
-        code:{lang:'html', text:`<p>Ini sebuah paragraf.</p>
-<h1>Ini judul utama</h1>`},
-        after:`<p>Browser membaca file <code>.html</code> dari atas ke bawah, lalu merender setiap tag sesuai maknanya. <code>&lt;h1&gt;</code> ditampilkan besar dan tebal, <code>&lt;p&gt;</code> ditampilkan sebagai teks biasa — bukan karena gayanya, tapi karena maknanya sebagai "judul" dan "paragraf".</p>`,
-        callout:'HTML mengatur <b>struktur & makna</b> konten. Tampilan visual (warna, jarak, tata letak) itu tugas CSS — akan kita bahas di track selanjutnya.',
-        playground:{
-          type:'html',
-          starter:`<h1>Halo, dunia!</h1>
-<p>Ini adalah paragraf pertama saya.</p>`
+        "id": "html-1",
+        "title": "Apa itu HTML?",
+        "level": "Pemula",
+        "duration": "5 menit",
+        "body": "<p><code>HTML</code> adalah bahasa markup untuk menyusun struktur dan makna konten halaman web. HTML bukan bahasa pemrograman karena tidak dipakai untuk membuat logika seperti perulangan atau perhitungan.</p><p>Bayangkan website seperti rumah: HTML adalah rangka bangunannya, CSS adalah desain interiornya, dan JavaScript membuat rumah dapat merespons tindakan pengguna.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<h1>Halo, dunia!</h1>\n<p>Ini paragraf pertama saya.</p>"
         },
-        quiz:[
-          { q:'HTML adalah singkatan dari?', options:['HyperText Markup Language','High Text Markdown Language','Hyperlink Text Management Language','Home Tool Markup Language'], correct:0, explain:'HTML adalah singkatan dari HyperText Markup Language, bahasa markup untuk struktur halaman web.' },
-          { q:'HTML tergolong sebagai bahasa apa?', options:['Bahasa markup','Bahasa pemrograman','Bahasa query','Bahasa scripting'], correct:0, explain:'HTML adalah bahasa markup — ia menandai struktur konten, bukan menjalankan logika atau perhitungan seperti bahasa pemrograman.' },
-          { q:'Apa fungsi utama HTML pada sebuah halaman web?', options:['Menentukan struktur dan makna konten','Mengatur warna dan tata letak','Menangani logika interaktif','Menyimpan data ke database'], correct:0, explain:'HTML fokus pada struktur & makna konten. Tampilan diatur oleh CSS, dan interaktivitas oleh JavaScript.' },
-        ]
+        "quiz": [
+          {
+            "q": "HTML digunakan terutama untuk apa?",
+            "options": [
+              "Mengatur struktur dan makna konten",
+              "Menghitung nilai matematika",
+              "Membuat database",
+              "Mengedit foto"
+            ],
+            "correct": 0,
+            "explain": "HTML memberi struktur dan makna pada konten halaman web."
+          },
+          {
+            "q": "Ekstensi file HTML yang umum adalah?",
+            "options": [
+              ".css",
+              ".js",
+              ".html",
+              ".php"
+            ],
+            "correct": 2,
+            "explain": "Dokumen HTML umumnya disimpan dengan ekstensi .html."
+          },
+          {
+            "q": "Manakah yang merupakan elemen HTML?",
+            "options": [
+              "<p>Halo</p>",
+              "color: red;",
+              "console.log(1);",
+              "SELECT * FROM siswa"
+            ],
+            "correct": 0,
+            "explain": "<p>Halo</p> adalah contoh elemen HTML."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<h1>Belajar HTML</h1>\n<p>Saya sedang belajar membuat website.</p>"
+        }
       },
       {
-        id:'html-2', title:'Struktur dokumen HTML', level:'Pemula', duration:'4 menit',
-        body:`<p>Setiap file HTML punya kerangka wajib. <code>&lt;!DOCTYPE html&gt;</code> memberitahu browser bahwa ini dokumen HTML5. Semuanya dibungkus <code>&lt;html&gt;</code>, lalu dipecah menjadi dua bagian besar: <code>&lt;head&gt;</code> untuk informasi tak terlihat (judul tab, link CSS), dan <code>&lt;body&gt;</code> untuk konten yang benar-benar tampil.</p>`,
-        code:{lang:'html', text:`<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Halaman Saya</title>
-</head>
-<body>
-  <h1>Konten muncul di sini</h1>
-</body>
-</html>`},
-        after:`<p>Atribut <code>lang="id"</code> membantu mesin pencari dan pembaca layar mengenali bahasa halaman. <code>meta charset="UTF-8"</code> memastikan karakter seperti "é" atau emoji tampil dengan benar.</p>`,
-        playground:{ type:'html', starter:`<!DOCTYPE html>
-<html lang="id">
-<head><title>Halaman Saya</title></head>
-<body>
-  <h1>Coba ubah judul ini</h1>
-</body>
-</html>` },
-        quiz:[
-          { q:'Tag apa yang membungkus konten yang benar-benar tampil di layar?', options:['<body>','<head>','<title>','<meta>'], correct:0, explain:'<body> membungkus semua konten yang tampil di layar, sedangkan <head> berisi informasi yang tidak terlihat langsung.' },
-          { q:'Apa fungsi <meta charset="UTF-8">?', options:['Menentukan encoding karakter','Menentukan warna latar','Menentukan versi CSS','Menentukan ukuran font'], correct:0, explain:'meta charset="UTF-8" memastikan karakter khusus (seperti é atau emoji) ditampilkan dengan benar oleh browser.' },
-          { q:'Apa manfaat atribut lang="id" pada tag <html>?', options:['Membantu mesin pencari & pembaca layar mengenali bahasa halaman','Mengubah warna teks','Menentukan versi HTML','Menyembunyikan konten'], correct:0, explain:'Atribut lang membantu aksesibilitas (pembaca layar) dan SEO dengan menandai bahasa yang digunakan pada halaman.' },
-        ]
+        "id": "html-2",
+        "title": "Struktur Dokumen HTML",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p>Dokumen HTML memiliki kerangka dasar yang membantu browser memahami dokumen. <code>&lt;!DOCTYPE html&gt;</code> menyatakan HTML modern, <code>&lt;html&gt;</code> menjadi akar dokumen, <code>&lt;head&gt;</code> berisi informasi halaman, dan <code>&lt;body&gt;</code> berisi konten yang tampil.</p><p>Di dalam <code>head</code> kita sering menemukan <code>meta charset</code>, <code>meta viewport</code>, <code>title</code>, dan file CSS melalui <code>link</code>.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<!DOCTYPE html>\n<html lang=\"id\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Website Saya</title>\n</head>\n<body>\n  <h1>Halo!</h1>\n</body>\n</html>"
+        },
+        "quiz": [
+          {
+            "q": "Bagian yang berisi konten utama yang terlihat pengguna adalah?",
+            "options": [
+              "<head>",
+              "<body>",
+              "<meta>",
+              "<title>"
+            ],
+            "correct": 1,
+            "explain": "Konten utama halaman ditempatkan di dalam body."
+          },
+          {
+            "q": "Apa fungsi <!DOCTYPE html>?",
+            "options": [
+              "Menampilkan judul",
+              "Menentukan bahasa pemrograman",
+              "Memberi tahu browser bahwa dokumen menggunakan HTML modern",
+              "Membuat CSS"
+            ],
+            "correct": 2,
+            "explain": "DOCTYPE membantu browser merender dokumen sebagai HTML modern."
+          },
+          {
+            "q": "Tag title biasanya memengaruhi apa?",
+            "options": [
+              "Judul tab browser",
+              "Isi database",
+              "Warna tombol",
+              "Ukuran gambar"
+            ],
+            "correct": 0,
+            "explain": "Title digunakan sebagai judul dokumen yang umumnya terlihat pada tab browser."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<!DOCTYPE html>\n<html lang=\"id\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Latihan</title>\n</head>\n<body>\n  <h1>Halaman Saya</h1>\n</body>\n</html>"
+        }
       },
       {
-        id:'html-3', title:'Heading & paragraf', level:'Pemula', duration:'3 menit',
-        body:`<p>HTML punya enam level heading, <code>&lt;h1&gt;</code> sampai <code>&lt;h6&gt;</code>, dari yang paling penting ke paling kecil. Gunakan <code>&lt;h1&gt;</code> hanya sekali per halaman untuk judul utama — level di bawahnya untuk sub-bagian, seperti daftar isi buku.</p>`,
-        code:{lang:'html', text:`<h1>Judul Artikel</h1>
-<h2>Bagian Pertama</h2>
-<p>Isi bagian pertama ditulis di sini...</p>
-<h2>Bagian Kedua</h2>
-<p>Isi bagian kedua ditulis di sini...</p>`},
-        callout:'Jangan pilih heading berdasarkan ukuran font yang diinginkan — pilih berdasarkan <b>tingkat kepentingan</b> konten. Ukuran bisa diatur lewat CSS.',
-        playground:{ type:'html', starter:`<h1>Toko Kopi Nusantara</h1>
-<h2>Menu Kami</h2>
-<p>Kopi hitam, kopi susu, dan cokelat panas.</p>` },
-        quiz:[
-          { q:'Heading paling penting dalam sebuah halaman menggunakan tag apa?', options:['<h1>','<h6>','<p>','<head>'], correct:0, explain:'<h1> adalah heading dengan tingkat kepentingan tertinggi, biasanya untuk judul utama halaman.' },
-          { q:'Idealnya, berapa kali <h1> digunakan dalam satu halaman?', options:['Sekali','Sebanyak mungkin','Dua kali','Tidak pernah'], correct:0, explain:'<h1> sebaiknya hanya dipakai sekali sebagai judul utama, agar struktur halaman tetap jelas dan mudah dipahami mesin pencari.' },
-          { q:'Dasar yang tepat untuk memilih level heading adalah?', options:['Tingkat kepentingan konten','Ukuran font yang diinginkan','Warna teks','Panjang teks'], correct:0, explain:'Pemilihan heading harus berdasarkan makna/hierarki konten, bukan tampilan — ukuran visual bisa diatur lewat CSS.' },
-        ]
+        "id": "html-3",
+        "title": "Tag, Element & Attribute",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p><b>Tag</b> adalah penanda seperti <code>&lt;p&gt;</code>. <b>Elemen</b> adalah tag beserta isi dan penutupnya. <b>Atribut</b> memberi informasi tambahan pada elemen, misalnya <code>class</code>, <code>id</code>, atau <code>href</code>.</p><p>Pola sederhana: <code>&lt;tag atribut=\"nilai\"&gt;konten&lt;/tag&gt;</code>. Tidak semua elemen memiliki tag penutup, contohnya <code>&lt;img&gt;</code> dan <code>&lt;input&gt;</code>.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<p class=\"teks-utama\" id=\"intro\">Selamat belajar!</p>\n<img src=\"foto.jpg\" alt=\"Foto siswa\">"
+        },
+        "quiz": [
+          {
+            "q": "Pada <p class=\"teks\">Halo</p>, class adalah...",
+            "options": [
+              "Konten",
+              "Atribut",
+              "Tag penutup",
+              "Dokumen"
+            ],
+            "correct": 1,
+            "explain": "class adalah atribut yang memberikan informasi tambahan pada elemen."
+          },
+          {
+            "q": "Atribut href biasa digunakan pada...",
+            "options": [
+              "Link",
+              "Paragraf",
+              "Tabel",
+              "Judul"
+            ],
+            "correct": 0,
+            "explain": "href menentukan alamat tujuan pada elemen link <a>."
+          },
+          {
+            "q": "Mana contoh elemen lengkap?",
+            "options": [
+              "class=\"box\"",
+              "<div>Halo</div>",
+              "href=\"index.html\"",
+              "color: blue;"
+            ],
+            "correct": 1,
+            "explain": "Elemen lengkap terdiri dari tag dan kontennya, misalnya <div>Halo</div>."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<p class=\"teks\">Paragraf dengan class.</p>\n<a href=\"https://example.com\">Kunjungi situs</a>"
+        }
       },
       {
-        id:'html-4', title:'Link & gambar', level:'Pemula', duration:'3 menit',
-        body:`<p>Tag <code>&lt;a&gt;</code> membuat tautan menggunakan atribut <code>href</code>. Tag <code>&lt;img&gt;</code> menampilkan gambar lewat atribut <code>src</code> — tag ini tidak punya penutup karena tidak membungkus konten apa pun.</p>`,
-        code:{lang:'html', text:`<a href="https://developer.mozilla.org">Kunjungi MDN</a>
-<img src="https://picsum.photos/300/160" alt="Gambar acak">`},
-        after:`<p>Atribut <code>alt</code> pada gambar wajib diisi — ia menjadi teks pengganti saat gambar gagal dimuat, dan dibacakan oleh pembaca layar untuk pengguna tunanetra.</p>`,
-        playground:{ type:'html', starter:`<a href="https://developer.mozilla.org" target="_blank">Belajar lebih lanjut di MDN</a>
-<br><br>
-<img src="https://picsum.photos/280/150" alt="Foto pemandangan acak">` },
-        quiz:[
-          { q:'Atribut untuk menentukan tujuan tautan pada tag <a> adalah?', options:['href','src','alt','target'], correct:0, explain:'href (hyperlink reference) menentukan URL tujuan dari sebuah tautan.' },
-          { q:'Atribut wajib pada <img> untuk teks pengganti gambar adalah?', options:['alt','href','title','caption'], correct:0, explain:'alt menyediakan teks pengganti saat gambar gagal dimuat, dan penting untuk aksesibilitas (dibaca oleh pembaca layar).' },
-          { q:'Mengapa tag <img> tidak memiliki tag penutup?', options:['Karena tidak membungkus konten apa pun','Karena itu kesalahan penulisan umum','Karena gambar bukan elemen HTML','Karena harus ditulis dua kali'], correct:0, explain:'<img> adalah elemen "self-closing" karena tidak membungkus konten di dalamnya — cukup atribut seperti src dan alt.' },
-        ]
+        "id": "html-4",
+        "title": "Heading & Paragraf",
+        "level": "Pemula",
+        "duration": "5 menit",
+        "body": "<p>Gunakan heading <code>h1</code> sampai <code>h6</code> untuk hierarki judul. Pilih heading berdasarkan struktur dan makna, bukan hanya karena ukuran tampilannya. Gunakan <code>p</code> untuk paragraf.</p><p>Heading yang teratur membuat halaman lebih mudah dipahami manusia maupun teknologi bantu.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<h1>Profil Sekolah</h1>\n<h2>Program Keahlian</h2>\n<h3>Rekayasa Perangkat Lunak</h3>\n<p>RPL mempelajari pengembangan perangkat lunak.</p>"
+        },
+        "quiz": [
+          {
+            "q": "Tag untuk judul tingkat paling utama adalah?",
+            "options": [
+              "<h6>",
+              "<p>",
+              "<h1>",
+              "<title>"
+            ],
+            "correct": 2,
+            "explain": "h1 merupakan heading tingkat paling tinggi."
+          },
+          {
+            "q": "Tag yang tepat untuk paragraf adalah?",
+            "options": [
+              "<p>",
+              "<para>",
+              "<text>",
+              "<paragraph>"
+            ],
+            "correct": 0,
+            "explain": "Elemen paragraf HTML adalah p."
+          },
+          {
+            "q": "Heading sebaiknya dipilih berdasarkan...",
+            "options": [
+              "Warna",
+              "Hierarki dan makna",
+              "Ukuran layar",
+              "Nama file"
+            ],
+            "correct": 1,
+            "explain": "Heading sebaiknya mengikuti hierarki isi dokumen."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<h1>Belajar Web</h1>\n<h2>HTML Dasar</h2>\n<p>HTML menyusun struktur halaman.</p>"
+        }
       },
       {
-        id:'html-5', title:'List (daftar)', level:'Pemula', duration:'2 menit',
-        body:`<p>Dua jenis daftar utama: <code>&lt;ul&gt;</code> (unordered — pakai bullet) dan <code>&lt;ol&gt;</code> (ordered — pakai nomor). Setiap item ditulis dengan <code>&lt;li&gt;</code>.</p>`,
-        code:{lang:'html', text:`<ul>
-  <li>Telur</li>
-  <li>Tepung</li>
-  <li>Gula</li>
-</ul>
-
-<ol>
-  <li>Panaskan oven</li>
-  <li>Campur bahan kering</li>
-  <li>Panggang 20 menit</li>
-</ol>`},
-        playground:{ type:'html', starter:`<h3>Bahan-bahan</h3>
-<ul>
-  <li>Telur</li>
-  <li>Tepung</li>
-</ul>
-<h3>Langkah</h3>
-<ol>
-  <li>Campur semua bahan</li>
-  <li>Panggang 20 menit</li>
-</ol>` },
-        quiz:[
-          { q:'Tag untuk membuat daftar bernomor adalah?', options:['<ol>','<ul>','<li>','<dl>'], correct:0, explain:'<ol> (ordered list) menghasilkan daftar bernomor, sedangkan <ul> menghasilkan daftar dengan bullet.' },
-          { q:'Tag <ul> menghasilkan daftar dengan tanda apa secara default?', options:['Bullet','Nomor','Huruf','Tanpa tanda'], correct:0, explain:'<ul> singkatan dari unordered list, tampil dengan bullet karena urutannya tidak penting.' },
-          { q:'Setiap item dalam <ol> atau <ul> ditulis dengan tag?', options:['<li>','<item>','<list>','<ol>'], correct:0, explain:'<li> (list item) digunakan untuk menandai setiap item, baik di dalam <ol> maupun <ul>.' },
-        ]
+        "id": "html-5",
+        "title": "Text Formatting",
+        "level": "Pemula",
+        "duration": "5 menit",
+        "body": "<p>HTML menyediakan elemen untuk memberi makna pada teks. Contohnya <code>&lt;strong&gt;</code> untuk penekanan penting, <code>&lt;em&gt;</code> untuk penekanan, <code>&lt;mark&gt;</code> untuk menandai teks, dan <code>&lt;small&gt;</code> untuk keterangan kecil.</p><p>Jangan memilih elemen hanya karena tampilan tebal/miringnya. Makna elemen lebih penting; tampilan bisa diatur nanti dengan CSS.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<p><strong>Penting:</strong> kumpulkan tugas tepat waktu.</p>\n<p><em>Catatan:</em> baca instruksi sebelum mengerjakan.</p>\n<p><mark>Materi ujian</mark></p>"
+        },
+        "quiz": [
+          {
+            "q": "Elemen yang menunjukkan teks penting adalah?",
+            "options": [
+              "<strong>",
+              "<big>",
+              "<bold>",
+              "<important>"
+            ],
+            "correct": 0,
+            "explain": "strong menyatakan pentingnya teks."
+          },
+          {
+            "q": "Elemen untuk penekanan teks adalah?",
+            "options": [
+              "<italic>",
+              "<em>",
+              "<i-text>",
+              "<accent>"
+            ],
+            "correct": 1,
+            "explain": "em digunakan untuk emphasis atau penekanan."
+          },
+          {
+            "q": "Untuk menandai teks yang disorot, gunakan...",
+            "options": [
+              "<mark>",
+              "<highlight>",
+              "<select>",
+              "<focus>"
+            ],
+            "correct": 0,
+            "explain": "mark menandai bagian teks yang relevan atau disorot."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<p><strong>Perhatian!</strong> Ini penting.</p>\n<p><em>Catatan:</em> kerjakan dengan teliti.</p>\n<p><mark>Target belajar</mark></p>"
+        }
       },
       {
-        id:'html-6', title:'Form input', level:'Menengah', duration:'5 menit',
-        body:`<p>Form mengumpulkan input dari pengguna. Tag <code>&lt;input&gt;</code> punya banyak <code>type</code> — <code>text</code>, <code>email</code>, <code>password</code>, <code>checkbox</code>, dan lainnya. Tag <code>&lt;label&gt;</code> menghubungkan teks penjelas dengan input lewat atribut <code>for</code> yang cocok dengan <code>id</code> input.</p>`,
-        code:{lang:'html', text:`<form>
-  <label for="nama">Nama:</label>
-  <input type="text" id="nama" name="nama">
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email">
-
-  <button type="submit">Kirim</button>
-</form>`},
-        playground:{ type:'html', starter:`<form>
-  <label for="nama">Nama:</label><br>
-  <input type="text" id="nama"><br><br>
-  <button type="submit">Kirim</button>
-</form>` },
-        quiz:[
-          { q:'Tag <label> dihubungkan ke input tertentu lewat atribut?', options:['for, yang cocok dengan id input','name','value','type'], correct:0, explain:'Atribut for pada <label> harus sama dengan id input yang dituju, sehingga label dan input saling terhubung.' },
-          { q:'Type input yang digunakan untuk alamat email adalah?', options:['email','text','mail','address'], correct:0, explain:'type="email" memberi validasi dasar format email dan tampilan keyboard khusus di perangkat mobile.' },
-          { q:'Tombol untuk mengirimkan form biasanya bertipe?', options:['submit','send','go','post'], correct:0, explain:'type="submit" pada <button> atau <input> memicu pengiriman data form.' },
-        ]
+        "id": "html-6",
+        "title": "Link & Gambar",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Link menggunakan elemen <code>&lt;a&gt;</code> dengan atribut <code>href</code>. Gambar menggunakan <code>&lt;img&gt;</code> dengan <code>src</code> sebagai sumber dan <code>alt</code> sebagai teks alternatif.</p><p>Untuk file lokal, simpan gambar di folder yang jelas, misalnya <code>images/foto.jpg</code>. Atribut <code>alt</code> penting agar informasi gambar tetap dapat dipahami ketika gambar gagal dimuat atau digunakan teknologi bantu.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener\">Buka contoh situs</a>\n<br>\n<img src=\"images/sekolah.jpg\" alt=\"Gedung sekolah\" width=\"300\">"
+        },
+        "quiz": [
+          {
+            "q": "Atribut untuk alamat tujuan link adalah?",
+            "options": [
+              "src",
+              "href",
+              "link",
+              "url"
+            ],
+            "correct": 1,
+            "explain": "href menentukan URL tujuan link."
+          },
+          {
+            "q": "Atribut alt pada gambar berfungsi sebagai...",
+            "options": [
+              "Teks alternatif gambar",
+              "Warna gambar",
+              "Ukuran file",
+              "Alamat CSS"
+            ],
+            "correct": 0,
+            "explain": "alt menyediakan teks alternatif untuk gambar."
+          },
+          {
+            "q": "Atribut src pada img menunjukkan...",
+            "options": [
+              "Ukuran gambar",
+              "Sumber gambar",
+              "Judul halaman",
+              "Nama class"
+            ],
+            "correct": 1,
+            "explain": "src berisi lokasi atau sumber file gambar."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<h2>Website Favorit</h2>\n<a href=\"https://www.google.com\" target=\"_blank\" rel=\"noopener\">Kunjungi Google</a>\n<br><br>\n<img src=\"https://placehold.co/300x150\" alt=\"Gambar contoh\">"
+        }
       },
       {
-        id:'html-7', title:'Tabel', level:'Menengah', duration:'3 menit',
-        body:`<p>Tabel dibangun dari <code>&lt;table&gt;</code>, baris <code>&lt;tr&gt;</code>, sel header <code>&lt;th&gt;</code>, dan sel data <code>&lt;td&gt;</code>. Gunakan tabel untuk data tabular sungguhan — bukan untuk mengatur tata letak halaman.</p>`,
-        code:{lang:'html', text:`<table>
-  <tr>
-    <th>Nama</th>
-    <th>Skor</th>
-  </tr>
-  <tr>
-    <td>Andi</td>
-    <td>88</td>
-  </tr>
-</table>`},
-        playground:{ type:'html', starter:`<table border="1">
-  <tr><th>Nama</th><th>Skor</th></tr>
-  <tr><td>Andi</td><td>88</td></tr>
-  <tr><td>Sari</td><td>92</td></tr>
-</table>` },
-        quiz:[
-          { q:'Sel header pada tabel ditulis dengan tag?', options:['<th>','<td>','<tr>','<thead>'], correct:0, explain:'<th> (table header) digunakan untuk sel judul kolom/baris, biasanya tampil tebal dan rata tengah secara default.' },
-          { q:'Baris tabel ditulis dengan tag?', options:['<tr>','<td>','<th>','<table>'], correct:0, explain:'<tr> (table row) membungkus satu baris tabel, berisi sel-sel <td> atau <th>.' },
-          { q:'Tabel HTML sebaiknya digunakan untuk?', options:['Menampilkan data tabular','Mengatur tata letak halaman','Membuat menu navigasi','Menyimpan gambar'], correct:0, explain:'Tabel dirancang untuk data tabular sungguhan (seperti nilai, statistik). Tata letak halaman sebaiknya diatur dengan CSS (flexbox/grid).' },
-        ]
+        "id": "html-7",
+        "title": "List",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p>Gunakan <code>ul</code> untuk daftar tidak berurutan, <code>ol</code> untuk daftar berurutan, dan <code>li</code> sebagai item. HTML juga menyediakan <code>dl</code>, <code>dt</code>, dan <code>dd</code> untuk daftar istilah dan definisi.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<h2>Alat Belajar</h2>\n<ul>\n  <li>Laptop</li>\n  <li>Buku catatan</li>\n  <li>Internet</li>\n</ul>\n<h2>Langkah</h2>\n<ol>\n  <li>Buka editor</li>\n  <li>Tulis kode</li>\n  <li>Uji di browser</li>\n</ol>"
+        },
+        "quiz": [
+          {
+            "q": "Daftar tanpa urutan menggunakan...",
+            "options": [
+              "<ol>",
+              "<ul>",
+              "<list>",
+              "<items>"
+            ],
+            "correct": 1,
+            "explain": "ul digunakan untuk unordered list."
+          },
+          {
+            "q": "Item dalam list ditulis dengan...",
+            "options": [
+              "<item>",
+              "<li>",
+              "<list-item>",
+              "<i>"
+            ],
+            "correct": 1,
+            "explain": "li adalah list item."
+          },
+          {
+            "q": "Daftar yang urutannya penting sebaiknya memakai...",
+            "options": [
+              "<ol>",
+              "<ul>",
+              "<dl>",
+              "<div>"
+            ],
+            "correct": 0,
+            "explain": "ol digunakan untuk ordered list."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<h2>Materi RPL</h2>\n<ul>\n  <li>HTML</li>\n  <li>CSS</li>\n  <li>JavaScript</li>\n</ul>"
+        }
       },
       {
-        id:'html-8', title:'Div, span & semantik', level:'Menengah', duration:'4 menit',
-        body:`<p><code>&lt;div&gt;</code> dan <code>&lt;span&gt;</code> adalah wadah generik tanpa makna khusus — dipakai untuk mengelompokkan elemen agar mudah diberi gaya lewat CSS. HTML5 menambahkan tag semantik seperti <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, dan <code>&lt;footer&gt;</code> yang menjelaskan peran bagian tersebut.</p>`,
-        code:{lang:'html', text:`<header>
-  <h1>Nama Situs</h1>
-  <nav>...</nav>
-</header>
-<main>
-  <article>Konten utama</article>
-</main>
-<footer>© 2026</footer>`},
-        callout:'Gunakan tag semantik saat maknanya cocok — ini membantu SEO dan aksesibilitas. Gunakan <code>div</code>/<code>span</code> untuk sisanya.',
-        playground:{ type:'html', starter:`<header><h1>Blog Saya</h1></header>
-<main>
-  <article>
-    <h2>Judul Artikel</h2>
-    <p>Isi artikel di sini.</p>
-  </article>
-</main>
-<footer>© 2026 Blog Saya</footer>` },
-        quiz:[
-          { q:'<div> dan <span> disebut elemen apa?', options:['Generik tanpa makna khusus','Semantik','Interaktif','Formulir'], correct:0, explain:'<div> dan <span> tidak membawa makna tertentu — keduanya wadah generik untuk pengelompokan dan styling lewat CSS.' },
-          { q:'Tag semantik untuk bagian navigasi halaman adalah?', options:['<nav>','<div>','<span>','<data>'], correct:0, explain:'<nav> secara semantik menandai kumpulan tautan navigasi utama pada halaman.' },
-          { q:'Kapan sebaiknya menggunakan tag semantik seperti <article> dibanding <div>?', options:['Saat maknanya memang cocok dengan konten','Selalu, tanpa pengecualian','Tidak pernah','Hanya untuk halaman kecil'], correct:0, explain:'Gunakan tag semantik ketika makna konten memang sesuai — ini membantu SEO dan aksesibilitas tanpa mengubah tampilan secara default.' },
-        ]
+        "id": "html-8",
+        "title": "Table",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Tabel cocok untuk data yang memang berbentuk baris dan kolom, misalnya jadwal atau nilai. Elemen dasarnya adalah <code>table</code>, <code>tr</code>, <code>th</code>, dan <code>td</code>. Untuk struktur yang lebih jelas, gunakan <code>thead</code>, <code>tbody</code>, dan <code>tfoot</code>.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<table border=\"1\">\n  <thead>\n    <tr><th>Nama</th><th>Nilai</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Ani</td><td>90</td></tr>\n    <tr><td>Budi</td><td>85</td></tr>\n  </tbody>\n</table>"
+        },
+        "quiz": [
+          {
+            "q": "Baris tabel menggunakan...",
+            "options": [
+              "<row>",
+              "<tr>",
+              "<td>",
+              "<line>"
+            ],
+            "correct": 1,
+            "explain": "tr berarti table row."
+          },
+          {
+            "q": "Sel judul/header tabel menggunakan...",
+            "options": [
+              "<td>",
+              "<th>",
+              "<thead-cell>",
+              "<header>"
+            ],
+            "correct": 1,
+            "explain": "th digunakan untuk sel header."
+          },
+          {
+            "q": "Bagian isi utama tabel dapat dikelompokkan dengan...",
+            "options": [
+              "<tbody>",
+              "<body>",
+              "<main>",
+              "<content>"
+            ],
+            "correct": 0,
+            "explain": "tbody mengelompokkan baris isi tabel."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<table border=\"1\" cellpadding=\"8\">\n<thead><tr><th>Mapel</th><th>Nilai</th></tr></thead>\n<tbody><tr><td>HTML</td><td>90</td></tr><tr><td>CSS</td><td>88</td></tr></tbody>\n</table>"
+        }
       },
+      {
+        "id": "html-9",
+        "title": "Form",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Form digunakan untuk menerima input pengguna. Elemen pentingnya adalah <code>form</code>, <code>label</code>, <code>input</code>, dan <code>button</code>. Atribut <code>action</code> dan <code>method</code> digunakan saat data akan dikirim ke server.</p><p>Biasakan memasangkan label dengan input menggunakan <code>for</code> dan <code>id</code> yang sesuai.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<form>\n  <label for=\"nama\">Nama:</label>\n  <input id=\"nama\" name=\"nama\" type=\"text\">\n  <button type=\"submit\">Kirim</button>\n</form>"
+        },
+        "quiz": [
+          {
+            "q": "Elemen pembungkus form adalah...",
+            "options": [
+              "<form>",
+              "<input>",
+              "<field>",
+              "<submit>"
+            ],
+            "correct": 0,
+            "explain": "form membungkus kontrol dan data yang akan diisi pengguna."
+          },
+          {
+            "q": "Label terhubung ke input melalui pasangan...",
+            "options": [
+              "for dan id",
+              "src dan alt",
+              "href dan target",
+              "class dan style"
+            ],
+            "correct": 0,
+            "explain": "for pada label harus sesuai dengan id input."
+          },
+          {
+            "q": "Tombol untuk mengirim form biasanya bertipe...",
+            "options": [
+              "send",
+              "submit",
+              "post",
+              "enter"
+            ],
+            "correct": 1,
+            "explain": "button type=\"submit\" memicu pengiriman form."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<form>\n  <label for=\"nama\">Nama siswa</label><br>\n  <input id=\"nama\" name=\"nama\" type=\"text\" placeholder=\"Nama lengkap\">\n  <br><button type=\"submit\">Simpan</button>\n</form>"
+        }
+      },
+      {
+        "id": "html-10",
+        "title": "Input & Form Lengkap",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Form nyata biasanya memakai beberapa tipe input: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>date</code>, <code>radio</code>, dan <code>checkbox</code>. Kita juga dapat memakai <code>select</code>, <code>option</code>, dan <code>textarea</code>.</p><p>Atribut seperti <code>name</code>, <code>required</code>, <code>placeholder</code>, dan <code>value</code> membuat form lebih siap digunakan.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<form>\n  <label for=\"email\">Email</label>\n  <input id=\"email\" name=\"email\" type=\"email\" required>\n\n  <label for=\"kelas\">Kelas</label>\n  <select id=\"kelas\" name=\"kelas\">\n    <option>XI RPL 1</option>\n    <option>XI RPL 2</option>\n  </select>\n\n  <label for=\"pesan\">Pesan</label>\n  <textarea id=\"pesan\" name=\"pesan\"></textarea>\n  <button type=\"submit\">Kirim</button>\n</form>"
+        },
+        "quiz": [
+          {
+            "q": "Tipe input yang cocok untuk email adalah...",
+            "options": [
+              "email",
+              "mailbox",
+              "text-email",
+              "address"
+            ],
+            "correct": 0,
+            "explain": "type=\"email\" memberi input khusus untuk alamat email."
+          },
+          {
+            "q": "Atribut required berarti...",
+            "options": [
+              "Input harus diisi sebelum form dikirim",
+              "Input disembunyikan",
+              "Input menjadi angka",
+              "Input otomatis dihapus"
+            ],
+            "correct": 0,
+            "explain": "required membuat field wajib diisi."
+          },
+          {
+            "q": "Untuk pilihan dari beberapa opsi gunakan...",
+            "options": [
+              "select dan option",
+              "choose dan item",
+              "list dan li",
+              "radio saja"
+            ],
+            "correct": 0,
+            "explain": "select dan option cocok untuk pilihan berbentuk dropdown."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<form>\n<label for=\"nama\">Nama</label><br><input id=\"nama\" name=\"nama\" required><br><br>\n<label for=\"jurusan\">Jurusan</label><br><select id=\"jurusan\"><option>RPL</option><option>TKJ</option></select><br><br>\n<label for=\"pesan\">Pesan</label><br><textarea id=\"pesan\"></textarea><br><button type=\"submit\">Daftar</button>\n</form>"
+        }
+      },
+      {
+        "id": "html-11",
+        "title": "Div, Span & Semantic HTML",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p><code>div</code> adalah wadah generik untuk mengelompokkan bagian halaman, sedangkan <code>span</code> cocok untuk bagian kecil di dalam aliran teks. Keduanya tidak membawa makna khusus.</p><p>Elemen semantik seperti <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>article</code>, <code>aside</code>, dan <code>footer</code> memberi makna pada struktur halaman.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<header><h1>Portal Sekolah</h1></header>\n<nav><a href=\"#berita\">Berita</a></nav>\n<main>\n  <section id=\"berita\"><h2>Berita</h2><p>Pengumuman sekolah.</p></section>\n  <aside>Info tambahan</aside>\n</main>\n<footer>&copy; 2026 Sekolah</footer>"
+        },
+        "quiz": [
+          {
+            "q": "Elemen generik untuk wadah blok adalah...",
+            "options": [
+              "<div>",
+              "<box>",
+              "<container>",
+              "<group>"
+            ],
+            "correct": 0,
+            "explain": "div adalah generic container."
+          },
+          {
+            "q": "Elemen semantik untuk navigasi adalah...",
+            "options": [
+              "<menu>",
+              "<nav>",
+              "<links>",
+              "<navigation>"
+            ],
+            "correct": 1,
+            "explain": "nav menandai area navigasi."
+          },
+          {
+            "q": "Manfaat semantic HTML adalah...",
+            "options": [
+              "Memberi makna pada struktur dokumen",
+              "Menggantikan CSS",
+              "Membuat database",
+              "Mempercepat internet secara otomatis"
+            ],
+            "correct": 0,
+            "explain": "Semantic HTML membantu struktur dipahami manusia dan teknologi."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<header><h1>Profil Sekolah</h1></header>\n<nav><a href=\"#home\">Home</a> <a href=\"#kontak\">Kontak</a></nav>\n<main><section><h2>Tentang Kami</h2><p>Sekolah kejuruan bidang teknologi.</p></section></main>\n<footer>Footer</footer>"
+        }
+      },
+      {
+        "id": "html-12",
+        "title": "Struktur Halaman Website",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Halaman website yang rapi biasanya memiliki pola: <code>header</code> untuk identitas, <code>nav</code> untuk navigasi, <code>main</code> untuk konten utama, beberapa <code>section</code>/<code>article</code>, <code>aside</code> untuk informasi pendukung, dan <code>footer</code>.</p><p>Fokus HTML adalah membuat struktur logis terlebih dahulu. CSS nantinya mengatur tata letak dan visual.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<header>\n  <h1>Kodelab RPL</h1>\n  <nav><a href=\"#materi\">Materi</a> | <a href=\"#kontak\">Kontak</a></nav>\n</header>\n<main>\n  <section id=\"materi\"><h2>Materi Belajar</h2><p>HTML, CSS, dan JavaScript.</p></section>\n  <section><h2>Proyek</h2><article><h3>Website Sekolah</h3><p>Proyek akhir siswa.</p></article></section>\n</main>\n<footer id=\"kontak\">Belajar RPL dengan praktik.</footer>"
+        },
+        "quiz": [
+          {
+            "q": "Konten utama sebaiknya berada di...",
+            "options": [
+              "<main>",
+              "<body-only>",
+              "<content>",
+              "<center>"
+            ],
+            "correct": 0,
+            "explain": "main menandai konten utama halaman."
+          },
+          {
+            "q": "Bagian navigasi utama sebaiknya memakai...",
+            "options": [
+              "<links>",
+              "<nav>",
+              "<navigate>",
+              "<menu-bar>"
+            ],
+            "correct": 1,
+            "explain": "nav adalah elemen semantik untuk navigasi."
+          },
+          {
+            "q": "Article cocok untuk...",
+            "options": [
+              "Konten mandiri yang dapat berdiri sendiri",
+              "Hanya warna halaman",
+              "File CSS",
+              "Semua input form"
+            ],
+            "correct": 0,
+            "explain": "article cocok untuk konten yang relatif mandiri seperti berita atau posting."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<header><h1>Portal RPL</h1></header>\n<main>\n<section><h2>Materi</h2><p>Belajar coding dari dasar.</p></section>\n<article><h2>Proyek Siswa</h2><p>Website profil sekolah.</p></article>\n</main>\n<footer>SMK</footer>"
+        }
+      },
+      {
+        "id": "html-13",
+        "title": "Project HTML",
+        "level": "Menengah",
+        "duration": "15 menit",
+        "body": "<p>Project ini menggabungkan materi HTML menjadi sebuah halaman <b>Profil Siswa</b>. Fokus pada struktur, heading, teks, list, tabel, link, gambar, form, dan semantic HTML. Jangan khawatir jika tampilannya belum bagus; tahap visual akan dikerjakan pada track CSS.</p><p><b>Tantangan:</b> buat halaman profil siswa yang memiliki biodata, daftar keahlian, tabel nilai, link media sosial, dan form kontak.</p>",
+        "code": {
+          "lang": "html",
+          "text": "<!DOCTYPE html>\n<html lang=\"id\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Profil Siswa</title>\n</head>\n<body>\n<header><h1>Profil Siswa</h1></header>\n<main>\n<section><h2>Nama Siswa</h2><p>Saya siswa RPL yang sedang belajar web.</p></section>\n<section><h2>Keahlian</h2><ul><li>HTML</li><li>Desain</li><li>Problem solving</li></ul></section>\n<section><h2>Nilai</h2><table border=\"1\"><tr><th>Mapel</th><th>Nilai</th></tr><tr><td>Web</td><td>90</td></tr></table></section>\n<section><h2>Kontak</h2><form><label for=\"pesan\">Pesan</label><br><textarea id=\"pesan\"></textarea><br><button type=\"submit\">Kirim</button></form></section>\n</main>\n<footer>Belajar RPL</footer>\n</body>\n</html>"
+        },
+        "quiz": [
+          {
+            "q": "Fokus utama Project HTML adalah...",
+            "options": [
+              "Membuat struktur halaman yang semantik",
+              "Membuat animasi kompleks",
+              "Membuat API",
+              "Mengatur database"
+            ],
+            "correct": 0,
+            "explain": "Project HTML menilai kemampuan menyusun struktur halaman dengan HTML."
+          },
+          {
+            "q": "Elemen yang tepat untuk konten utama proyek adalah...",
+            "options": [
+              "<main>",
+              "<center>",
+              "<content>",
+              "<page>"
+            ],
+            "correct": 0,
+            "explain": "main menandai konten utama."
+          },
+          {
+            "q": "Langkah berikutnya setelah Project HTML adalah mempelajari...",
+            "options": [
+              "CSS untuk memperbaiki tampilan",
+              "SQL untuk database",
+              "Java untuk Android",
+              "Linux kernel"
+            ],
+            "correct": 0,
+            "explain": "Setelah struktur HTML selesai, CSS digunakan untuk styling dan layout."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<!DOCTYPE html>\n<html lang=\"id\">\n<head><meta charset=\"UTF-8\"><title>Profil Saya</title></head>\n<body>\n<header><h1>Profil Saya</h1></header>\n<main>\n<section><h2>Tentang Saya</h2><p>Tulis deskripsi singkat.</p></section>\n<section><h2>Keahlian</h2><ul><li>HTML</li><li>CSS</li></ul></section>\n</main>\n<footer>Kontak saya</footer>\n</body></html>"
+        }
+      }
     ]
   },
   {
-    id:'css', name:'CSS', color:'#6fb7a8',
-    desc:'Mengatur tampilan, warna, dan tata letak.',
-    lessons:[
+    "id": "css",
+    "name": "CSS",
+    "color": "#5aa9d6",
+    "desc": "Tampilan, layout, komponen, dan responsive design.",
+    "lessons": [
       {
-        id:'css-1', title:'Apa itu CSS?', level:'Pemula', duration:'3 menit',
-        body:`<p>CSS (<code>Cascading Style Sheets</code>) mengatur bagaimana elemen HTML tampil: warna, ukuran, jarak, posisi. CSS terdiri dari <b>selector</b> (elemen mana yang diatur) dan <b>deklarasi</b> di dalam kurung kurawal (properti apa yang diubah).</p>`,
-        code:{lang:'css', text:`p {
-  color: darkslategray;
-  font-size: 18px;
-}`},
-        after:`<p>Ada tiga cara memasang CSS: <code>style</code> inline di tag, tag <code>&lt;style&gt;</code> di <code>&lt;head&gt;</code>, atau file <code>.css</code> terpisah yang ditautkan dengan <code>&lt;link&gt;</code>. Cara ketiga paling disarankan karena memisahkan struktur dan tampilan.</p>`,
-        playground:{ type:'html', starter:`<style>
-p {
-  color: teal;
-  font-size: 20px;
-}
-</style>
-<p>Ubah warna teks ini lewat CSS di atas.</p>` },
-        quiz:[
-          { q:'CSS adalah singkatan dari?', options:['Cascading Style Sheets','Creative Style System','Computer Style Sheets','Colorful Style Syntax'], correct:0, explain:'CSS singkatan dari Cascading Style Sheets, digunakan untuk mengatur tampilan halaman HTML.' },
-          { q:'Dua bagian utama dari sebuah aturan CSS adalah?', options:['Selector dan deklarasi','Tag dan atribut','Head dan body','Class dan id saja'], correct:0, explain:'Sebuah aturan CSS terdiri dari selector (elemen yang dituju) dan deklarasi di dalam kurung kurawal (properti yang diubah).' },
-          { q:'Cara memasang CSS yang paling disarankan untuk proyek besar adalah?', options:['File .css terpisah yang ditautkan dengan <link>','Inline style di setiap tag','Tag <style> di setiap halaman','Menulis langsung di JavaScript'], correct:0, explain:'File CSS terpisah memisahkan struktur (HTML) dan tampilan (CSS), sehingga lebih mudah dikelola dan digunakan ulang di banyak halaman.' },
-        ]
+        "id": "css-1",
+        "title": "Apa itu CSS?",
+        "level": "Pemula",
+        "duration": "5 menit",
+        "body": "<p>CSS (<code>Cascading Style Sheets</code>) mengatur tampilan dan tata letak dokumen HTML: warna, font, jarak, ukuran, posisi, dan responsivitas.</p><p>Jika HTML adalah struktur rumah, CSS adalah desain visual rumah tersebut.</p>",
+        "code": {
+          "lang": "css",
+          "text": "h1 { color: #2563eb; }\np { font-size: 18px; }"
+        },
+        "quiz": [
+          {
+            "q": "CSS digunakan terutama untuk...",
+            "options": [
+              "Mengatur tampilan dan layout",
+              "Menyimpan data",
+              "Membuat tabel database",
+              "Menjalankan server"
+            ],
+            "correct": 0,
+            "explain": "CSS mengatur presentasi visual dan tata letak."
+          },
+          {
+            "q": "Kepanjangan CSS adalah...",
+            "options": [
+              "Cascading Style Sheets",
+              "Computer Style System",
+              "Creative Sheet Syntax",
+              "Code Styling Standard"
+            ],
+            "correct": 0,
+            "explain": "CSS adalah Cascading Style Sheets."
+          },
+          {
+            "q": "HTML dan CSS biasanya bekerja dengan cara...",
+            "options": [
+              "HTML memberi struktur, CSS memberi tampilan",
+              "CSS menggantikan HTML",
+              "HTML hanya untuk database",
+              "CSS hanya untuk JavaScript"
+            ],
+            "correct": 0,
+            "explain": "HTML dan CSS memiliki peran berbeda namun saling melengkapi."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nh1 { color: #2563eb; }\np { font-size: 18px; }\n</style>\n<div class=\"kartu\">Contoh Apa itu CSS?</div>"
+        }
       },
       {
-        id:'css-2', title:'Selector', level:'Pemula', duration:'4 menit',
-        body:`<p>Selector menentukan elemen mana yang terkena gaya. Selector tag (<code>p</code>) mengenai semua elemen itu. Selector class (<code>.judul</code>) mengenai elemen dengan atribut <code>class="judul"</code>. Selector id (<code>#header</code>) mengenai satu elemen unik dengan <code>id="header"</code>.</p>`,
-        code:{lang:'css', text:`.judul { color: crimson; }
-#header { background: #eee; }
-p { line-height: 1.6; }`},
-        callout:'Gunakan <b>class</b> untuk gaya yang dipakai berulang, dan <b>id</b> hanya untuk elemen tunggal yang benar-benar unik di halaman.',
-        playground:{ type:'html', starter:`<style>
-.judul { color: crimson; }
-#kotak { background: #f0e6d2; padding: 10px; }
-</style>
-<h2 class="judul">Judul berwarna</h2>
-<div id="kotak">Kotak dengan latar</div>` },
-        quiz:[
-          { q:'Selector class ditulis dengan awalan?', options:['titik (.)','pagar (#)','bintang (*)','garis miring (/)'], correct:0, explain:'Selector class diawali tanda titik, misalnya .judul untuk elemen dengan class="judul".' },
-          { q:'Selector id ditulis dengan awalan?', options:['pagar (#)','titik (.)','at (@)','dolar ($)'], correct:0, explain:'Selector id diawali tanda pagar, misalnya #header untuk elemen dengan id="header".' },
-          { q:'Kapan sebaiknya menggunakan id dibanding class?', options:['Untuk satu elemen tunggal yang unik di halaman','Untuk gaya yang dipakai berulang','Untuk semua elemen','Tidak pernah dipakai'], correct:0, explain:'id seharusnya unik dan hanya dipakai sekali per halaman, sedangkan class cocok untuk gaya yang dipakai berulang.' },
-        ]
+        "id": "css-2",
+        "title": "Cara Menggunakan CSS",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p>CSS dapat ditulis sebagai inline style, internal stylesheet di <code>&lt;style&gt;</code>, atau external stylesheet melalui <code>&lt;link&gt;</code>. Untuk proyek nyata, external CSS biasanya lebih rapi dan mudah dirawat.</p>",
+        "code": {
+          "lang": "css",
+          "text": "<link rel=\"stylesheet\" href=\"style.css\">\n\n<style>\np { color: steelblue; }\n</style>\n\n<p style=\"font-weight: bold;\">Contoh teks</p>"
+        },
+        "quiz": [
+          {
+            "q": "File CSS eksternal biasanya dihubungkan dengan...",
+            "options": [
+              "<script>",
+              "<link>",
+              "<style-file>",
+              "<css>"
+            ],
+            "correct": 1,
+            "explain": "link rel=\"stylesheet\" digunakan untuk menghubungkan file CSS."
+          },
+          {
+            "q": "CSS internal ditulis di dalam...",
+            "options": [
+              "<style>",
+              "<css>",
+              "<design>",
+              "<format>"
+            ],
+            "correct": 0,
+            "explain": "CSS internal berada dalam elemen style."
+          },
+          {
+            "q": "Untuk proyek yang banyak halaman, external CSS membantu...",
+            "options": [
+              "Konsistensi dan pemeliharaan",
+              "Menghapus HTML",
+              "Membuat database",
+              "Menjalankan JavaScript"
+            ],
+            "correct": 0,
+            "explain": "Satu file CSS dapat dipakai bersama beberapa halaman."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\n<link rel=\"stylesheet\" href=\"style.css\">\n\n<style>\np { color: steelblue; }\n</style>\n\n<p style=\"font-weight: bold;\">Contoh teks</p>\n</style>\n<div class=\"kartu\">Contoh Cara Menggunakan CSS</div>"
+        }
       },
       {
-        id:'css-3', title:'Box model', level:'Pemula', duration:'4 menit',
-        body:`<p>Setiap elemen HTML adalah sebuah kotak, tersusun dari dalam ke luar: <code>content</code> → <code>padding</code> (jarak dalam) → <code>border</code> (garis tepi) → <code>margin</code> (jarak luar). Memahami box model kunci untuk mengatur tata letak dengan presisi.</p>`,
-        code:{lang:'css', text:`.kotak {
-  width: 200px;
-  padding: 16px;
-  border: 2px solid #333;
-  margin: 20px;
-}`},
-        playground:{ type:'html', starter:`<style>
-.kotak {
-  width: 180px;
-  padding: 16px;
-  border: 3px solid #333;
-  margin: 20px;
-  background: #f0e6d2;
-}
-</style>
-<div class="kotak">Kotak ini</div>
-<div class="kotak">Dan ini</div>` },
-        quiz:[
-          { q:'Urutan box model dari dalam ke luar adalah?', options:['content → padding → border → margin','content → border → padding → margin','margin → border → padding → content','padding → content → border → margin'], correct:0, explain:'Susunan box model: konten di paling dalam, lalu padding, border, dan margin di paling luar.' },
-          { q:'Jarak di dalam elemen sebelum border disebut?', options:['padding','margin','border','outline'], correct:0, explain:'padding adalah ruang di antara konten dan border elemen tersebut.' },
-          { q:'Jarak di luar elemen, di antara elemen dan tetangganya disebut?', options:['margin','padding','border','gap'], correct:0, explain:'margin adalah ruang di luar border, memisahkan elemen dari elemen lain di sekitarnya.' },
-        ]
+        "id": "css-3",
+        "title": "Selector",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Selector menentukan elemen yang akan diberi gaya. Dasar yang wajib dikuasai adalah selector tag, class, dan id. Selector class diawali titik, id diawali tanda pagar.</p><p>Mulai dari selector sederhana sebelum mempelajari specificity yang lebih kompleks.</p>",
+        "code": {
+          "lang": "css",
+          "text": "p { color: #333; }\n.kartu { padding: 20px; }\n#judul { font-size: 32px; }"
+        },
+        "quiz": [
+          {
+            "q": "Selector class diawali dengan...",
+            "options": [
+              "#",
+              ".",
+              "@",
+              "&"
+            ],
+            "correct": 1,
+            "explain": "Class selector menggunakan titik, misalnya .kartu."
+          },
+          {
+            "q": "Selector id diawali dengan...",
+            "options": [
+              ".",
+              "#",
+              "*",
+              "%"
+            ],
+            "correct": 1,
+            "explain": "ID selector menggunakan #."
+          },
+          {
+            "q": "Selector p memilih...",
+            "options": [
+              "Semua elemen p yang sesuai selector",
+              "Hanya id p",
+              "Semua class p",
+              "File p.css"
+            ],
+            "correct": 0,
+            "explain": "p adalah selector berdasarkan nama tag."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\np { color: #333; }\n.kartu { padding: 20px; }\n#judul { font-size: 32px; }\n</style>\n<div class=\"kartu\">Contoh Selector</div>"
+        }
       },
       {
-        id:'css-4', title:'Flexbox', level:'Menengah', duration:'5 menit',
-        body:`<p>Flexbox mengatur elemen dalam satu baris atau kolom secara fleksibel. Terapkan <code>display: flex</code> pada wadah (parent), lalu atur susunan anak-anaknya dengan <code>justify-content</code> (sumbu utama) dan <code>align-items</code> (sumbu silang).</p>`,
-        code:{lang:'css', text:`.wadah {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}`},
-        playground:{ type:'html', starter:`<style>
-.wadah {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  background: #eee;
-  padding: 10px;
-}
-.item { background: #6fb7a8; color: white; padding: 12px; border-radius: 6px; }
-</style>
-<div class="wadah">
-  <div class="item">Satu</div>
-  <div class="item">Dua</div>
-  <div class="item">Tiga</div>
-</div>` },
-        quiz:[
-          { q:'Untuk mengaktifkan flexbox pada sebuah wadah, properti yang digunakan adalah?', options:['display: flex','display: block','position: flex','flex: true'], correct:0, explain:'display: flex pada elemen wadah (parent) mengaktifkan flexbox untuk mengatur anak-anaknya.' },
-          { q:'Properti untuk mengatur susunan pada sumbu utama flexbox adalah?', options:['justify-content','align-items','flex-wrap','gap'], correct:0, explain:'justify-content mengatur posisi item sepanjang sumbu utama (biasanya horizontal).' },
-          { q:'Properti untuk mengatur susunan pada sumbu silang flexbox adalah?', options:['align-items','justify-content','flex-direction','order'], correct:0, explain:'align-items mengatur posisi item sepanjang sumbu silang (biasanya vertikal).' },
-        ]
+        "id": "css-4",
+        "title": "Pseudo-class",
+        "level": "Menengah",
+        "duration": "6 menit",
+        "body": "<p>Pseudo-class memilih kondisi tertentu dari elemen. Contoh yang sering dipakai adalah <code>:hover</code>, <code>:focus</code>, <code>:active</code>, dan <code>:first-child</code>.</p>",
+        "code": {
+          "lang": "css",
+          "text": "button { padding: 10px 16px; }\nbutton:hover { transform: translateY(-2px); }\ninput:focus { outline: 2px solid royalblue; }"
+        },
+        "quiz": [
+          {
+            "q": "Pseudo-class untuk kondisi kursor berada di atas elemen adalah...",
+            "options": [
+              ":hover",
+              ":mouse",
+              ":over",
+              ":cursor"
+            ],
+            "correct": 0,
+            "explain": ":hover digunakan untuk kondisi pointer berada di atas elemen."
+          },
+          {
+            "q": "Pseudo-class untuk input sedang aktif/fokus adalah...",
+            "options": [
+              ":focus",
+              ":input",
+              ":selected",
+              ":edit"
+            ],
+            "correct": 0,
+            "explain": ":focus cocok untuk keadaan input sedang fokus."
+          },
+          {
+            "q": "Pseudo-class biasanya ditulis dengan...",
+            "options": [
+              "Satu titik dua setelah selector",
+              "Dua titik dua selalu",
+              "Tanda pagar",
+              "Kurung siku saja"
+            ],
+            "correct": 0,
+            "explain": "Pseudo-class seperti :hover ditulis dengan satu titik dua."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbutton { padding: 10px 16px; }\nbutton:hover { transform: translateY(-2px); }\ninput:focus { outline: 2px solid royalblue; }\n</style>\n<div class=\"kartu\">Contoh Pseudo-class</div>"
+        }
       },
       {
-        id:'css-5', title:'CSS Grid', level:'Menengah', duration:'5 menit',
-        body:`<p>Grid mengatur tata letak dua dimensi (baris <i>dan</i> kolom sekaligus). Tentukan jumlah kolom dengan <code>grid-template-columns</code>, misalnya <code>repeat(3, 1fr)</code> untuk tiga kolom sama lebar.</p>`,
-        code:{lang:'css', text:`.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}`},
-        playground:{ type:'html', starter:`<style>
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.card { background: #e8b44c; padding: 20px; text-align: center; border-radius: 6px; }
-</style>
-<div class="grid">
-  <div class="card">1</div>
-  <div class="card">2</div>
-  <div class="card">3</div>
-</div>` },
-        quiz:[
-          { q:'Properti untuk menentukan jumlah kolom pada grid adalah?', options:['grid-template-columns','grid-template-rows','grid-gap','grid-area'], correct:0, explain:'grid-template-columns menentukan jumlah dan lebar kolom pada grid container.' },
-          { q:'repeat(3, 1fr) pada grid-template-columns menghasilkan?', options:['3 kolom sama lebar','3 baris sama tinggi','1 kolom lebar 3fr','3 grid terpisah'], correct:0, explain:'repeat(3, 1fr) membuat 3 kolom dengan lebar yang sama, masing-masing mengambil 1 bagian dari ruang tersedia.' },
-          { q:'Perbedaan utama antara grid dan flexbox adalah?', options:['Grid mengatur tata letak dua dimensi, flexbox satu dimensi','Grid hanya untuk teks','Flexbox tidak bisa dipakai untuk tata letak','Tidak ada perbedaan'], correct:0, explain:'Grid dirancang untuk tata letak dua dimensi (baris dan kolom sekaligus), sementara flexbox lebih cocok untuk satu dimensi (baris atau kolom saja).' },
-        ]
+        "id": "css-5",
+        "title": "Warna & Typography",
+        "level": "Pemula",
+        "duration": "8 menit",
+        "body": "<p>Warna dapat ditulis dengan nama, hex, RGB, atau RGBA. Typography mencakup font family, size, weight, line-height, dan alignment.</p>",
+        "code": {
+          "lang": "css",
+          "text": "body { font-family: Arial, sans-serif; }\nh1 { color: #1d4ed8; font-size: 32px; }\np { line-height: 1.7; text-align: left; }"
+        },
+        "quiz": [
+          {
+            "q": "Kode hex warna biasanya diawali...",
+            "options": [
+              "#",
+              "@",
+              "&",
+              "%"
+            ],
+            "correct": 0,
+            "explain": "Hex color CSS menggunakan tanda #."
+          },
+          {
+            "q": "Properti untuk ukuran teks adalah...",
+            "options": [
+              "font-size",
+              "text-size",
+              "size-font",
+              "letter-size"
+            ],
+            "correct": 0,
+            "explain": "font-size mengatur ukuran teks."
+          },
+          {
+            "q": "Properti untuk ketebalan font adalah...",
+            "options": [
+              "font-weight",
+              "font-bold",
+              "text-weight",
+              "weight-font"
+            ],
+            "correct": 0,
+            "explain": "font-weight mengatur ketebalan font."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbody { font-family: Arial, sans-serif; }\nh1 { color: #1d4ed8; font-size: 32px; }\np { line-height: 1.7; text-align: left; }\n</style>\n<div class=\"kartu\">Contoh Warna & Typography</div>"
+        }
       },
       {
-        id:'css-6', title:'Warna & unit', level:'Menengah', duration:'4 menit',
-        body:`<p>Warna bisa ditulis dengan nama (<code>red</code>), hex (<code>#ff0000</code>), atau <code>rgb()</code>/<code>rgba()</code> untuk transparansi. Untuk ukuran, <code>px</code> bersifat tetap, <code>%</code> relatif terhadap parent, dan <code>rem</code> relatif terhadap ukuran font root — cocok untuk desain yang skalabel.</p>`,
-        code:{lang:'css', text:`.box {
-  background: rgba(232, 180, 76, 0.3);
-  width: 80%;
-  font-size: 1.2rem;
-}`},
-        playground:{ type:'html', starter:`<style>
-.box { background: rgba(111,183,168,0.4); padding: 20px; font-size: 1.3rem; }
-</style>
-<div class="box">Kotak semi-transparan</div>` },
-        quiz:[
-          { q:'Unit yang nilainya relatif terhadap ukuran font root disebut?', options:['rem','px','%','vh'], correct:0, explain:'rem (root em) relatif terhadap ukuran font pada elemen root (html), sehingga cocok untuk desain yang mudah diskalakan.' },
-          { q:'Fungsi rgba() digunakan untuk menambahkan?', options:['Transparansi warna','Ukuran font','Ketebalan border','Bayangan'], correct:0, explain:'Parameter keempat pada rgba() adalah alpha (transparansi), dengan nilai 0 (transparan) sampai 1 (pekat).' },
-          { q:'Unit yang bersifat tetap (tidak relatif terhadap apa pun) adalah?', options:['px','%','rem','em'], correct:0, explain:'px adalah unit absolut/tetap, berbeda dengan %, rem, atau em yang nilainya relatif terhadap elemen lain.' },
-        ]
+        "id": "css-6",
+        "title": "Box Model",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Setiap elemen dapat dipahami melalui box model: <code>content → padding → border → margin</code>. Properti <code>box-sizing: border-box</code> sering dipakai agar width/height lebih mudah diprediksi.</p>",
+        "code": {
+          "lang": "css",
+          "text": "* { box-sizing: border-box; }\n.kartu { width: 300px; padding: 20px; border: 2px solid #333; margin: 20px; }"
+        },
+        "quiz": [
+          {
+            "q": "Urutan box model dari dalam ke luar adalah...",
+            "options": [
+              "content, padding, border, margin",
+              "margin, content, border, padding",
+              "border, margin, content, padding",
+              "padding, margin, content, border"
+            ],
+            "correct": 0,
+            "explain": "Box model dibaca content lalu padding, border, dan margin."
+          },
+          {
+            "q": "box-sizing yang umum dipakai agar width termasuk padding dan border adalah...",
+            "options": [
+              "border-box",
+              "content-box",
+              "full-box",
+              "size-box"
+            ],
+            "correct": 0,
+            "explain": "border-box membuat width/height mencakup padding dan border."
+          },
+          {
+            "q": "Jarak di luar border disebut...",
+            "options": [
+              "margin",
+              "padding",
+              "gap",
+              "space"
+            ],
+            "correct": 0,
+            "explain": "margin berada di luar border."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\n* { box-sizing: border-box; }\n.kartu { width: 300px; padding: 20px; border: 2px solid #333; margin: 20px; }\n</style>\n<div class=\"kartu\">Contoh Box Model</div>"
+        }
       },
       {
-        id:'css-7', title:'Responsive design', level:'Menengah', duration:'5 menit',
-        body:`<p>Media query mengubah gaya berdasarkan lebar layar, sehingga tampilan menyesuaikan dari desktop ke ponsel. Pola umum: rancang untuk mobile dulu, lalu tambahkan gaya untuk layar lebih lebar dengan <code>min-width</code>.</p>`,
-        code:{lang:'css', text:`.kolom { width: 100%; }
-
-@media (min-width: 600px) {
-  .kolom { width: 50%; }
-}`},
-        callout:'Coba lebarkan/persempit jendela browser saat menguji halaman untuk melihat efek media query secara langsung.',
-        playground:{ type:'html', starter:`<style>
-.kolom { background: #6fb7a8; padding: 20px; color:white; }
-@media (min-width: 500px) {
-  .kolom { background: #e8b44c; color: black; }
-}
-</style>
-<div class="kolom">Lebarkan preview untuk lihat perubahan warna</div>` },
-        quiz:[
-          { q:'Aturan CSS yang menyesuaikan tampilan berdasarkan lebar layar disebut?', options:['media query','flexbox','grid template','pseudo-class'], correct:0, explain:'Media query memungkinkan penerapan gaya berbeda berdasarkan kondisi tertentu, seperti lebar layar.' },
-          { q:'Pendekatan umum dalam desain responsif modern adalah?', options:['Mobile-first, lalu tambah gaya untuk layar lebih lebar','Desktop-first selalu','Tanpa media query sama sekali','Hanya untuk aplikasi native'], correct:0, explain:'Mobile-first berarti merancang tampilan dasar untuk layar kecil dulu, lalu menambah penyesuaian untuk layar yang lebih besar.' },
-          { q:'min-width dalam media query berarti gaya berlaku saat?', options:['Lebar layar sama atau lebih besar dari nilai tersebut','Lebar layar sama atau lebih kecil','Tinggi layar tertentu','Warna layar tertentu'], correct:0, explain:'min-width memicu gaya ketika lebar viewport sama dengan atau melebihi nilai yang ditentukan.' },
-        ]
+        "id": "css-7",
+        "title": "Display",
+        "level": "Menengah",
+        "duration": "7 menit",
+        "body": "<p>Properti <code>display</code> mengatur bagaimana elemen berpartisipasi dalam layout. Nilai penting: <code>block</code>, <code>inline</code>, <code>inline-block</code>, <code>flex</code>, dan <code>grid</code>.</p>",
+        "code": {
+          "lang": "css",
+          "text": "div { display: block; }\n.badge { display: inline-block; padding: 6px 10px; }\n.barang { display: flex; gap: 10px; }"
+        },
+        "quiz": [
+          {
+            "q": "display:flex membuat elemen menjadi...",
+            "options": [
+              "Flex container",
+              "Grid container",
+              "Database",
+              "Inline script"
+            ],
+            "correct": 0,
+            "explain": "display:flex mengaktifkan flex layout pada container."
+          },
+          {
+            "q": "display:block biasanya membuat elemen...",
+            "options": [
+              "Mengambil baris sendiri",
+              "Selalu inline",
+              "Tidak terlihat",
+              "Menjadi grid"
+            ],
+            "correct": 0,
+            "explain": "Elemen block umumnya mulai pada baris baru dan mengambil lebar yang tersedia."
+          },
+          {
+            "q": "inline-block memungkinkan elemen...",
+            "options": [
+              "Tetap inline tetapi menerima width/height",
+              "Menjadi database",
+              "Selalu memenuhi layar",
+              "Tidak menerima padding"
+            ],
+            "correct": 0,
+            "explain": "inline-block menggabungkan karakteristik inline dan box yang dapat diberi ukuran."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\ndiv { display: block; }\n.badge { display: inline-block; padding: 6px 10px; }\n.barang { display: flex; gap: 10px; }\n</style>\n<div class=\"kartu\">Contoh Display</div>"
+        }
       },
+      {
+        "id": "css-8",
+        "title": "Position",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p><code>position</code> memiliki nilai seperti static, relative, absolute, fixed, dan sticky. Relative sering menjadi acuan untuk absolute; fixed menempel pada viewport; sticky dapat menempel ketika halaman digulir.</p>",
+        "code": {
+          "lang": "css",
+          "text": "body { min-height: 500px; }\n.kartu { position: relative; padding: 30px; border: 1px solid #ccc; }\n.label { position: absolute; top: 8px; right: 8px; }"
+        },
+        "quiz": [
+          {
+            "q": "position:absolute biasanya diposisikan relatif terhadap...",
+            "options": [
+              "Containing block/ancestor yang menjadi acuan",
+              "Selalu layar browser",
+              "File HTML",
+              "Database"
+            ],
+            "correct": 0,
+            "explain": "Absolute mencari containing block yang sesuai, sering ancestor ber-position."
+          },
+          {
+            "q": "position:fixed melekat relatif terhadap...",
+            "options": [
+              "Viewport",
+              "Parent biasa",
+              "Teks",
+              "Grid item"
+            ],
+            "correct": 0,
+            "explain": "fixed diposisikan relatif terhadap viewport."
+          },
+          {
+            "q": "position:sticky berguna untuk...",
+            "options": [
+              "Membuat elemen dapat menempel saat scroll",
+              "Membuat database",
+              "Mengubah font",
+              "Menghapus margin"
+            ],
+            "correct": 0,
+            "explain": "sticky menggabungkan perilaku relatif dan menempel pada batas tertentu saat scroll."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbody { min-height: 500px; }\n.kartu { position: relative; padding: 30px; border: 1px solid #ccc; }\n.label { position: absolute; top: 8px; right: 8px; }\n</style>\n<div class=\"kartu\">Contoh Position</div>"
+        }
+      },
+      {
+        "id": "css-9",
+        "title": "Flexbox",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>Flexbox cocok untuk layout satu dimensi. Properti penting: <code>display:flex</code>, <code>flex-direction</code>, <code>justify-content</code>, <code>align-items</code>, <code>gap</code>, dan <code>flex-wrap</code>.</p>",
+        "code": {
+          "lang": "css",
+          "text": "body { margin: 0; }\n.nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px; }\n.menu { display: flex; gap: 10px; }"
+        },
+        "quiz": [
+          {
+            "q": "Properti untuk meratakan item sepanjang main axis adalah...",
+            "options": [
+              "justify-content",
+              "align-items",
+              "flex-align",
+              "main-content"
+            ],
+            "correct": 0,
+            "explain": "justify-content mengatur distribusi pada main axis."
+          },
+          {
+            "q": "Properti untuk cross axis adalah...",
+            "options": [
+              "align-items",
+              "justify-items",
+              "cross-content",
+              "align-main"
+            ],
+            "correct": 0,
+            "explain": "align-items mengatur item pada cross axis."
+          },
+          {
+            "q": "Jarak antar item Flexbox dapat dibuat dengan...",
+            "options": [
+              "gap",
+              "space-between-only",
+              "margin-all",
+              "distance"
+            ],
+            "correct": 0,
+            "explain": "gap memberi jarak antar item flex/grid."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbody { margin: 0; }\n.nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px; }\n.menu { display: flex; gap: 10px; }\n</style>\n<div class=\"kartu\">Contoh Flexbox</div>"
+        }
+      },
+      {
+        "id": "css-10",
+        "title": "CSS Grid",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>Grid cocok untuk layout dua dimensi: baris dan kolom. Properti penting: <code>grid-template-columns</code>, <code>grid-template-rows</code>, <code>gap</code>, <code>grid-column</code>, dan <code>grid-row</code>.</p>",
+        "code": {
+          "lang": "css",
+          "text": " .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }\n.item { padding: 30px; border: 1px solid #ccc; }"
+        },
+        "quiz": [
+          {
+            "q": "Grid digunakan terutama untuk layout...",
+            "options": [
+              "Dua dimensi baris dan kolom",
+              "Audio",
+              "Database",
+              "Teks saja"
+            ],
+            "correct": 0,
+            "explain": "Grid unggul untuk layout baris dan kolom."
+          },
+          {
+            "q": "Properti untuk menentukan jumlah kolom adalah...",
+            "options": [
+              "grid-template-columns",
+              "grid-columns-only",
+              "column-count-css-only",
+              "grid-cols"
+            ],
+            "correct": 0,
+            "explain": "grid-template-columns menentukan track kolom."
+          },
+          {
+            "q": "repeat(3, 1fr) berarti...",
+            "options": [
+              "Tiga kolom dengan ukuran fr yang sama",
+              "Satu kolom tiga kali",
+              "Tiga pixel",
+              "Lebar tetap 3px"
+            ],
+            "correct": 0,
+            "explain": "repeat membuat tiga track dengan ukuran 1fr masing-masing."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\n .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }\n.item { padding: 30px; border: 1px solid #ccc; }\n</style>\n<div class=\"kartu\">Contoh CSS Grid</div>"
+        }
+      },
+      {
+        "id": "css-11",
+        "title": "Unit CSS",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Unit umum antara lain <code>px</code>, <code>%</code>, <code>rem</code>, <code>em</code>, <code>vw</code>, dan <code>vh</code>. Gunakan unit sesuai kebutuhan; <code>rem</code> nyaman untuk ukuran yang mengikuti ukuran font root, sedangkan vw/vh mengikuti viewport.</p>",
+        "code": {
+          "lang": "css",
+          "text": "html { font-size: 16px; }\n.kartu { width: 80%; padding: 1rem; }\n.hero { min-height: 50vh; }"
+        },
+        "quiz": [
+          {
+            "q": "Unit yang relatif terhadap font-size root adalah...",
+            "options": [
+              "rem",
+              "px",
+              "vh",
+              "%"
+            ],
+            "correct": 0,
+            "explain": "rem relatif terhadap ukuran font elemen root."
+          },
+          {
+            "q": "Unit yang mengikuti lebar viewport adalah...",
+            "options": [
+              "vw",
+              "vh",
+              "rem",
+              "em"
+            ],
+            "correct": 0,
+            "explain": "vw berarti viewport width."
+          },
+          {
+            "q": "Unit yang umum untuk ukuran tetap adalah...",
+            "options": [
+              "px",
+              "vw",
+              "vh",
+              "rem"
+            ],
+            "correct": 0,
+            "explain": "px adalah unit panjang CSS yang bersifat tetap dalam konteks CSS pixel."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nhtml { font-size: 16px; }\n.kartu { width: 80%; padding: 1rem; }\n.hero { min-height: 50vh; }\n</style>\n<div class=\"kartu\">Contoh Unit CSS</div>"
+        }
+      },
+      {
+        "id": "css-12",
+        "title": "Background, Border & Shadow",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Visual komponen dapat dibangun dengan <code>background</code>, <code>border</code>, <code>border-radius</code>, dan <code>box-shadow</code>. Gunakan efek seperlunya agar antarmuka tetap jelas.</p>",
+        "code": {
+          "lang": "css",
+          "text": "body { background: #f4f7fb; }\n.kartu { background: white; border: 1px solid #ddd; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.08); padding: 24px; }"
+        },
+        "quiz": [
+          {
+            "q": "Properti untuk sudut membulat adalah...",
+            "options": [
+              "border-radius",
+              "corner",
+              "radius-border-only",
+              "round"
+            ],
+            "correct": 0,
+            "explain": "border-radius membuat sudut membulat."
+          },
+          {
+            "q": "Properti untuk bayangan kotak adalah...",
+            "options": [
+              "box-shadow",
+              "shadow-box",
+              "drop-box",
+              "box-glow-only"
+            ],
+            "correct": 0,
+            "explain": "box-shadow menambahkan bayangan pada box."
+          },
+          {
+            "q": "background digunakan untuk...",
+            "options": [
+              "Mengatur latar belakang",
+              "Mengatur database",
+              "Membuat fungsi JS",
+              "Mengubah URL"
+            ],
+            "correct": 0,
+            "explain": "background mengatur berbagai aspek latar belakang elemen."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbody { background: #f4f7fb; }\n.kartu { background: white; border: 1px solid #ddd; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.08); padding: 24px; }\n</style>\n<div class=\"kartu\">Contoh Background, Border & Shadow</div>"
+        }
+      },
+      {
+        "id": "css-13",
+        "title": "Responsive Design",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>Responsive design membuat layout tetap nyaman pada berbagai ukuran layar. Pendekatan yang umum adalah mobile-first, kemudian menambahkan media query untuk layar yang lebih lebar.</p>",
+        "code": {
+          "lang": "css",
+          "text": "body { margin: 0; }\n.kolom { width: 100%; padding: 16px; }\n@media (min-width: 700px) { .kolom { width: 50%; } }"
+        },
+        "quiz": [
+          {
+            "q": "Responsive design bertujuan agar...",
+            "options": [
+              "Tampilan menyesuaikan berbagai ukuran layar",
+              "Website hanya untuk desktop",
+              "Semua ukuran harus sama",
+              "CSS tidak diperlukan"
+            ],
+            "correct": 0,
+            "explain": "Responsive design membuat pengalaman tetap baik di berbagai viewport."
+          },
+          {
+            "q": "Media query menggunakan aturan...",
+            "options": [
+              "@media",
+              "@responsive",
+              "@screen-css",
+              "@viewport-only"
+            ],
+            "correct": 0,
+            "explain": "@media digunakan untuk conditional CSS."
+          },
+          {
+            "q": "Mobile-first berarti...",
+            "options": [
+              "Mulai dari layar kecil lalu tambah aturan untuk layar lebih besar",
+              "Selalu mulai desktop",
+              "Tanpa media query",
+              "Hanya membuat aplikasi mobile"
+            ],
+            "correct": 0,
+            "explain": "Mobile-first memulai desain dari kebutuhan layar kecil."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\nbody { margin: 0; }\n.kolom { width: 100%; padding: 16px; }\n@media (min-width: 700px) { .kolom { width: 50%; } }\n</style>\n<div class=\"kartu\">Contoh Responsive Design</div>"
+        }
+      },
+      {
+        "id": "css-14",
+        "title": "Project CSS",
+        "level": "Menengah",
+        "duration": "18 menit",
+        "body": "<p>Pada project ini, ambil struktur Profil Siswa dari HTML lalu ubah menjadi halaman yang rapi menggunakan CSS. Terapkan selector, typography, box model, Flexbox atau Grid, warna, shadow, dan responsive design.</p><p><b>Tantangan:</b> buat halaman profil sekolah dengan navbar, hero, kartu jurusan, tabel sederhana, dan footer. Pastikan tampilannya tetap nyaman di layar kecil.</p>",
+        "code": {
+          "lang": "css",
+          "text": "* { box-sizing: border-box; }\nbody { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #172033; }\n.container { width: min(1100px, 92%); margin: auto; }\n.nav { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 0; }\n.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }\n.card { background: white; padding: 20px; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }\n@media (max-width: 700px) { .cards { grid-template-columns: 1fr; } .nav { flex-direction: column; align-items: flex-start; } }"
+        },
+        "quiz": [
+          {
+            "q": "Project CSS terutama menguji kemampuan...",
+            "options": [
+              "Menerapkan styling dan layout pada HTML",
+              "Membuat server",
+              "Membuat SQL",
+              "Menghapus struktur HTML"
+            ],
+            "correct": 0,
+            "explain": "Project menggabungkan konsep CSS untuk menghasilkan UI yang rapi."
+          },
+          {
+            "q": "Layout kartu yang responsif dapat dibuat dengan...",
+            "options": [
+              "Grid/Flexbox + media query",
+              "Hanya <br>",
+              "JavaScript wajib",
+              "Tabel HTML saja"
+            ],
+            "correct": 0,
+            "explain": "CSS layout modern dan media query cocok untuk responsivitas."
+          },
+          {
+            "q": "Apa yang sebaiknya dipertahankan dari Project HTML?",
+            "options": [
+              "Struktur HTML yang semantik",
+              "Semua style inline",
+              "Tag acak",
+              "Duplikasi konten"
+            ],
+            "correct": 0,
+            "explain": "CSS seharusnya memperindah struktur HTML, bukan menggantikan semantik."
+          }
+        ],
+        "playground": {
+          "type": "html",
+          "starter": "<style>\n*{box-sizing:border-box} body{font-family:Arial;margin:0;background:#f4f6fa}.container{width:min(1000px,92%);margin:auto}.nav{display:flex;justify-content:space-between;padding:20px 0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:white;padding:20px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,.08)}@media(max-width:700px){.cards{grid-template-columns:1fr}.nav{flex-direction:column}}</style>\n<div class=\"container\"><div class=\"nav\"><b>Profil Sekolah</b><span>Home · Program · Kontak</span></div><div class=\"cards\"><div class=\"card\">RPL</div><div class=\"card\">TKJ</div><div class=\"card\">DKV</div></div></div>"
+        }
+      }
     ]
   },
   {
-    id:'js', name:'JavaScript', color:'#d9695f',
-    desc:'Logika, interaktivitas, dan perilaku halaman.',
-    lessons:[
+    "id": "js",
+    "name": "JavaScript",
+    "color": "#d9695f",
+    "desc": "Logika, data, DOM, event, dan aplikasi interaktif.",
+    "lessons": [
       {
-        id:'js-1', title:'Apa itu JavaScript?', level:'Pemula', duration:'3 menit',
-        body:`<p>JavaScript adalah bahasa pemrograman yang membuat halaman web interaktif — merespons klik, memvalidasi form, mengubah konten tanpa reload. Berbeda dari HTML/CSS, JS punya variabel, logika, dan bisa dijalankan langsung di konsol browser.</p>`,
-        code:{lang:'js', text:`console.log("Halo dari JavaScript!");`},
-        playground:{ type:'js', starter:`console.log("Halo dari JavaScript!");
-console.log(2 + 3);` },
-        quiz:[
-          { q:'JavaScript membuat halaman web menjadi?', options:['Interaktif','Statis','Hanya bisa dibaca','Tidak bisa diubah'], correct:0, explain:'JavaScript memungkinkan halaman merespons aksi pengguna, sehingga menjadi interaktif — bukan sekadar tampilan statis.' },
-          { q:'Fungsi console.log() digunakan untuk?', options:['Menampilkan output ke konsol','Menampilkan alert','Mengubah warna teks','Menyimpan data permanen'], correct:0, explain:'console.log() mencetak nilai ke konsol browser, berguna untuk debugging dan memeriksa nilai variabel.' },
-          { q:'Apa yang membedakan JavaScript dari HTML?', options:['JavaScript punya variabel dan logika','JavaScript punya tag dan atribut','JavaScript punya selector dan deklarasi','JavaScript mengatur struktur dokumen'], correct:0, explain:'HTML hanya menandai struktur, sedangkan JavaScript adalah bahasa pemrograman sungguhan dengan variabel, logika, dan alur kendali.' },
-        ]
+        "id": "js-1",
+        "title": "Apa itu JavaScript?",
+        "level": "Pemula",
+        "duration": "5 menit",
+        "body": "<p>JavaScript adalah bahasa pemrograman yang menambahkan perilaku dan interaktivitas pada halaman web. JavaScript dapat merespons klik, membaca input, mengubah DOM, dan mengolah data.</p>",
+        "code": {
+          "lang": "js",
+          "text": "console.log(\"Halo dari JavaScript!\");"
+        },
+        "quiz": [
+          {
+            "q": "JavaScript digunakan terutama untuk...",
+            "options": [
+              "Menambah logika dan interaktivitas",
+              "Mengatur struktur HTML saja",
+              "Menggantikan database",
+              "Membuat kabel jaringan"
+            ],
+            "correct": 0,
+            "explain": "JavaScript menangani logika dan perilaku interaktif."
+          },
+          {
+            "q": "console.log() biasanya digunakan untuk...",
+            "options": [
+              "Menulis output ke console",
+              "Mengubah CSS otomatis",
+              "Membuat file HTML",
+              "Mengirim email"
+            ],
+            "correct": 0,
+            "explain": "console.log membantu melihat nilai saat program berjalan."
+          },
+          {
+            "q": "JavaScript berbeda dari CSS karena...",
+            "options": [
+              "JavaScript memiliki logika pemrograman",
+              "JavaScript hanya mengatur warna",
+              "JavaScript tidak bisa memakai variabel",
+              "JavaScript adalah bahasa markup"
+            ],
+            "correct": 0,
+            "explain": "JavaScript adalah bahasa pemrograman dengan variabel dan kontrol alur."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "console.log(\"Halo dari JavaScript!\");"
+        }
       },
       {
-        id:'js-2', title:'Variabel & tipe data', level:'Pemula', duration:'4 menit',
-        body:`<p>Gunakan <code>let</code> untuk variabel yang nilainya bisa berubah, dan <code>const</code> untuk yang tetap. Tipe data dasar: <code>string</code> (teks), <code>number</code> (angka), <code>boolean</code> (benar/salah), dan <code>array</code>/<code>object</code> untuk data majemuk.</p>`,
-        code:{lang:'js', text:`let nama = "Sari";
-const usia = 21;
-let aktif = true;
-let hobi = ["membaca", "melukis"];
-
-console.log(nama, usia, aktif);`},
-        playground:{ type:'js', starter:`let nama = "Sari";
-const usia = 21;
-console.log("Nama:", nama);
-console.log("Usia:", usia);` },
-        quiz:[
-          { q:'Kata kunci untuk variabel yang nilainya tidak boleh diubah adalah?', options:['const','let','var','static'], correct:0, explain:'const mendeklarasikan variabel dengan nilai tetap yang tidak bisa ditugaskan ulang setelah didefinisikan.' },
-          { q:'Tipe data untuk teks disebut?', options:['string','number','boolean','array'], correct:0, explain:'string adalah tipe data untuk teks, ditulis di antara tanda kutip seperti "Sari".' },
-          { q:'Tanda [] dalam JavaScript merepresentasikan tipe data?', options:['array','object','string','boolean'], correct:0, explain:'[] digunakan untuk membuat array — daftar nilai yang tersusun berurutan.' },
-        ]
+        "id": "js-2",
+        "title": "Menjalankan JavaScript",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p>JavaScript dapat dijalankan melalui console browser, tag <code>&lt;script&gt;</code>, atau file eksternal <code>.js</code>. Untuk proyek yang rapi, kode biasanya dipisahkan ke file JavaScript eksternal.</p>",
+        "code": {
+          "lang": "js",
+          "text": "<script src=\"script.js\" defer><\/script>\n<script>\n  console.log(\"JavaScript berjalan\");\n<\/script>"
+        },
+        "quiz": [
+          {
+            "q": "Tag untuk menjalankan JavaScript di HTML adalah...",
+            "options": [
+              "<script>",
+              "<javascript>",
+              "<code>",
+              "<run>"
+            ],
+            "correct": 0,
+            "explain": "JavaScript ditempatkan atau dihubungkan melalui script."
+          },
+          {
+            "q": "Atribut yang menghubungkan file JS eksternal adalah...",
+            "options": [
+              "src",
+              "href-js",
+              "file",
+              "source-js"
+            ],
+            "correct": 0,
+            "explain": "script src=\"script.js\" memuat file eksternal."
+          },
+          {
+            "q": "defer membantu script eksternal dengan...",
+            "options": [
+              "Menunda eksekusi sampai parsing HTML selesai",
+              "Menghapus JavaScript",
+              "Mengubah CSS",
+              "Menyimpan database"
+            ],
+            "correct": 0,
+            "explain": "defer membuat script dieksekusi setelah parsing dokumen selesai."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "<script src=\"script.js\" defer><\/script>\n<script>\n  console.log(\"JavaScript berjalan\");\n<\/script>"
+        }
       },
       {
-        id:'js-3', title:'Operator & percabangan', level:'Pemula', duration:'4 menit',
-        body:`<p>Operator perbandingan (<code>===</code>, <code>&gt;</code>, <code>&lt;</code>) menghasilkan boolean, dipakai dalam <code>if/else</code> untuk mengambil keputusan berdasarkan kondisi.</p>`,
-        code:{lang:'js', text:`let nilai = 75;
-
-if (nilai >= 80) {
-  console.log("Nilai A");
-} else if (nilai >= 60) {
-  console.log("Nilai B");
-} else {
-  console.log("Nilai C");
-}`},
-        playground:{ type:'js', starter:`let nilai = 75;
-if (nilai >= 80) {
-  console.log("A");
-} else if (nilai >= 60) {
-  console.log("B");
-} else {
-  console.log("C");
-}` },
-        quiz:[
-          { q:'Operator === digunakan untuk?', options:['Membandingkan nilai secara ketat','Menjumlahkan angka','Menggabungkan teks','Mendeklarasikan variabel'], correct:0, explain:'=== membandingkan nilai dan tipe data sekaligus (perbandingan ketat), berbeda dengan = yang digunakan untuk penugasan nilai.' },
-          { q:'Struktur untuk mengambil keputusan berdasarkan kondisi adalah?', options:['if/else','for','function','array'], correct:0, explain:'if/else memungkinkan program menjalankan blok kode berbeda tergantung apakah suatu kondisi benar atau salah.' },
-          { q:'Hasil dari operator perbandingan (misalnya >=) selalu bertipe?', options:['boolean','string','number','object'], correct:0, explain:'Operator perbandingan selalu menghasilkan nilai true atau false, yaitu tipe data boolean.' },
-        ]
+        "id": "js-3",
+        "title": "Variable",
+        "level": "Pemula",
+        "duration": "6 menit",
+        "body": "<p>Variabel menyimpan nilai yang akan digunakan program. Gunakan <code>let</code> jika nilai dapat berubah dan <code>const</code> jika binding tidak perlu diganti. Hindari <code>var</code> pada kode modern kecuali memahami perilaku lamanya.</p>",
+        "code": {
+          "lang": "js",
+          "text": "let nama = \"Siti\";\nlet nilai = 85;\nconst sekolah = \"SMK\";\n\nnilai = 90;\nconsole.log(nama, nilai, sekolah);"
+        },
+        "quiz": [
+          {
+            "q": "Variabel yang nilainya dapat diubah sebaiknya menggunakan...",
+            "options": [
+              "let",
+              "const-only",
+              "fixed",
+              "change"
+            ],
+            "correct": 0,
+            "explain": "let digunakan ketika binding akan di-assign ulang."
+          },
+          {
+            "q": "Keyword untuk binding yang tidak perlu di-assign ulang adalah...",
+            "options": [
+              "const",
+              "let",
+              "static",
+              "final"
+            ],
+            "correct": 0,
+            "explain": "const adalah deklarasi modern untuk binding yang tidak diubah."
+          },
+          {
+            "q": "Operator assignment adalah...",
+            "options": [
+              "=",
+              "===",
+              "==",
+              "=>"
+            ],
+            "correct": 0,
+            "explain": "= memberikan nilai ke variabel."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "let nama = \"Siti\";\nlet nilai = 85;\nconst sekolah = \"SMK\";\n\nnilai = 90;\nconsole.log(nama, nilai, sekolah);"
+        }
       },
       {
-        id:'js-4', title:'Fungsi', level:'Pemula', duration:'4 menit',
-        body:`<p>Fungsi mengelompokkan kode yang bisa dipakai ulang. Bisa dideklarasikan dengan <code>function</code>, atau ditulis singkat sebagai <i>arrow function</i>.</p>`,
-        code:{lang:'js', text:`function sapa(nama) {
-  return "Halo, " + nama + "!";
-}
-
-const tambah = (a, b) => a + b;
-
-console.log(sapa("Budi"));
-console.log(tambah(4, 5));`},
-        playground:{ type:'js', starter:`function sapa(nama) {
-  return "Halo, " + nama + "!";
-}
-console.log(sapa("Budi"));
-
-const tambah = (a, b) => a + b;
-console.log(tambah(4, 5));` },
-        quiz:[
-          { q:'Kata kunci untuk mendeklarasikan fungsi secara umum adalah?', options:['function','func','def','method'], correct:0, explain:'Kata kunci function digunakan untuk mendeklarasikan fungsi biasa di JavaScript.' },
-          { q:'(a, b) => a + b adalah contoh dari?', options:['Arrow function','Object literal','Array literal','Pernyataan kondisional'], correct:0, explain:'Sintaks => menandakan arrow function, cara singkat menulis fungsi di JavaScript modern.' },
-          { q:'Kata kunci return dalam fungsi berguna untuk?', options:['Mengembalikan nilai hasil fungsi','Menghentikan seluruh program','Menampilkan alert','Membuat variabel baru'], correct:0, explain:'return mengirimkan nilai hasil dari fungsi ke tempat fungsi tersebut dipanggil.' },
-        ]
+        "id": "js-4",
+        "title": "Tipe Data",
+        "level": "Pemula",
+        "duration": "7 menit",
+        "body": "<p>Tipe data dasar yang sering ditemui adalah string, number, boolean, null, dan undefined. Array dan object adalah struktur data yang dapat menyimpan kumpulan atau pasangan data.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const nama = \"Andi\";\nconst nilai = 90;\nconst lulus = true;\nconst kosong = null;\nlet belumDiisi;\nconst hobi = [\"coding\", \"musik\"];\nconst siswa = { nama: \"Andi\", kelas: \"XI RPL\" };\nconsole.log(typeof nama, typeof nilai, typeof lulus);"
+        },
+        "quiz": [
+          {
+            "q": "Nilai \"Halo\" bertipe...",
+            "options": [
+              "string",
+              "number",
+              "boolean",
+              "object"
+            ],
+            "correct": 0,
+            "explain": "Teks dalam tanda kutip adalah string."
+          },
+          {
+            "q": "Nilai true bertipe...",
+            "options": [
+              "boolean",
+              "string",
+              "number",
+              "array"
+            ],
+            "correct": 0,
+            "explain": "true/false adalah boolean."
+          },
+          {
+            "q": "Data [\"A\",\"B\"] merupakan...",
+            "options": [
+              "Array",
+              "String",
+              "Boolean",
+              "Number"
+            ],
+            "correct": 0,
+            "explain": "Kurung siku digunakan untuk array literal."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const nama = \"Andi\";\nconst nilai = 90;\nconst lulus = true;\nconst kosong = null;\nlet belumDiisi;\nconst hobi = [\"coding\", \"musik\"];\nconst siswa = { nama: \"Andi\", kelas: \"XI RPL\" };\nconsole.log(typeof nama, typeof nilai, typeof lulus);"
+        }
       },
       {
-        id:'js-5', title:'Array & perulangan', level:'Menengah', duration:'5 menit',
-        body:`<p>Array menyimpan daftar nilai. Method <code>for</code> atau <code>.forEach()</code> mengulang setiap elemennya. Method <code>.map()</code> membuat array baru hasil transformasi tiap elemen.</p>`,
-        code:{lang:'js', text:`const buah = ["apel", "jeruk", "mangga"];
-
-buah.forEach(item => console.log(item));
-
-const kapital = buah.map(item => item.toUpperCase());
-console.log(kapital);`},
-        playground:{ type:'js', starter:`const buah = ["apel", "jeruk", "mangga"];
-buah.forEach(item => console.log(item));
-
-const kapital = buah.map(b => b.toUpperCase());
-console.log(kapital);` },
-        quiz:[
-          { q:'Method untuk mengulang tiap elemen array tanpa membuat array baru adalah?', options:['forEach','map','filter','reduce'], correct:0, explain:'forEach menjalankan sebuah fungsi untuk setiap elemen array, tanpa mengembalikan array baru.' },
-          { q:'Method yang menghasilkan array baru hasil transformasi tiap elemen adalah?', options:['map','forEach','push','pop'], correct:0, explain:'map() mentransformasi setiap elemen array dan mengembalikan array baru berisi hasilnya.' },
-          { q:'Array di JavaScript digunakan untuk menyimpan?', options:['Daftar nilai','Satu nilai tunggal','Fungsi saja','Gaya CSS'], correct:0, explain:'Array adalah struktur data untuk menyimpan kumpulan nilai yang tersusun berurutan.' },
-        ]
+        "id": "js-5",
+        "title": "Operator",
+        "level": "Pemula",
+        "duration": "8 menit",
+        "body": "<p>Operator dipakai untuk melakukan operasi. Kenali operator aritmatika <code>+ - * / %</code>, perbandingan seperti <code>===</code> dan <code>!==</code>, serta operator logika <code>&&</code>, <code>||</code>, dan <code>!</code>.</p><p>Bedakan <code>=</code> sebagai assignment dengan <code>===</code> sebagai perbandingan nilai dan tipe.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const a = 10;\nconst b = 3;\nconsole.log(a + b);\nconsole.log(a % b);\nconsole.log(a === 10);\nconsole.log(a > 5 && b < 5);"
+        },
+        "quiz": [
+          {
+            "q": "Operator untuk membandingkan nilai dan tipe secara ketat adalah...",
+            "options": [
+              "===",
+              "=",
+              "==",
+              "=>"
+            ],
+            "correct": 0,
+            "explain": "=== membandingkan nilai dan tipe."
+          },
+          {
+            "q": "Operator sisa pembagian adalah...",
+            "options": [
+              "%",
+              "/",
+              "//",
+              "mod-only"
+            ],
+            "correct": 0,
+            "explain": "% menghasilkan remainder."
+          },
+          {
+            "q": "Operator logika AND adalah...",
+            "options": [
+              "&&",
+              "||",
+              "!",
+              "and"
+            ],
+            "correct": 0,
+            "explain": "&& berarti logical AND."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const a = 10;\nconst b = 3;\nconsole.log(a + b);\nconsole.log(a % b);\nconsole.log(a === 10);\nconsole.log(a > 5 && b < 5);"
+        }
       },
       {
-        id:'js-6', title:'Object', level:'Menengah', duration:'4 menit',
-        body:`<p>Object menyimpan data sebagai pasangan <code>key: value</code> — cocok untuk merepresentasikan satu entitas dengan banyak properti, seperti satu pengguna atau satu produk.</p>`,
-        code:{lang:'js', text:`const siswa = {
-  nama: "Rani",
-  umur: 20,
-  jurusan: "Informatika"
-};
-
-console.log(siswa.nama);
-console.log(siswa["jurusan"]);`},
-        playground:{ type:'js', starter:`const siswa = { nama: "Rani", umur: 20, jurusan: "Informatika" };
-console.log(siswa.nama);
-console.log(siswa.jurusan);` },
-        quiz:[
-          { q:'Object menyimpan data dalam bentuk pasangan?', options:['key: value','index: value','class: id','tag: atribut'], correct:0, explain:'Object terdiri dari pasangan key (nama properti) dan value (nilainya), seperti nama: "Rani".' },
-          { q:'Cara mengakses properti "nama" pada object siswa adalah?', options:['siswa.nama atau siswa["nama"]','siswa->nama','siswa(nama)','siswa::nama'], correct:0, explain:'Properti object bisa diakses dengan notasi titik (siswa.nama) atau notasi kurung siku (siswa["nama"]).' },
-          { q:'Object paling cocok digunakan untuk merepresentasikan?', options:['Satu entitas dengan banyak properti','Daftar angka sederhana','Satu nilai boolean saja','Kode HTML'], correct:0, explain:'Object ideal untuk menggambarkan satu entitas (misalnya satu siswa) yang punya beberapa atribut sekaligus.' },
-        ]
+        "id": "js-6",
+        "title": "Percabangan",
+        "level": "Pemula",
+        "duration": "8 menit",
+        "body": "<p>Percabangan membuat program mengambil keputusan. Mulailah dari <code>if</code>, <code>else if</code>, dan <code>else</code>. Setelah itu kenali <code>switch</code> untuk pilihan berdasarkan nilai tertentu.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const nilai = 82;\n\nif (nilai >= 75) {\n  console.log(\"Lulus\");\n} else {\n  console.log(\"Belum lulus\");\n}"
+        },
+        "quiz": [
+          {
+            "q": "Percabangan dasar JavaScript menggunakan...",
+            "options": [
+              "if/else",
+              "when/then",
+              "check/do",
+              "condition/end"
+            ],
+            "correct": 0,
+            "explain": "if dan else adalah dasar percabangan."
+          },
+          {
+            "q": "Blok alternatif yang diuji setelah if adalah...",
+            "options": [
+              "else if",
+              "next if",
+              "otherwise if only",
+              "elif-js"
+            ],
+            "correct": 0,
+            "explain": "else if menguji kondisi alternatif."
+          },
+          {
+            "q": "switch cocok untuk...",
+            "options": [
+              "Memilih berdasarkan nilai ekspresi",
+              "Membuat array",
+              "Membuat CSS",
+              "Mengambil gambar"
+            ],
+            "correct": 0,
+            "explain": "switch cocok untuk banyak cabang berdasarkan nilai tertentu."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const nilai = 82;\n\nif (nilai >= 75) {\n  console.log(\"Lulus\");\n} else {\n  console.log(\"Belum lulus\");\n}"
+        }
       },
       {
-        id:'js-7', title:'DOM: memilih elemen', level:'Menengah', duration:'5 menit',
-        body:`<p>DOM (<code>Document Object Model</code>) adalah representasi halaman HTML yang bisa diakses dan diubah lewat JavaScript. <code>document.querySelector()</code> memilih elemen pertama yang cocok dengan selector CSS.</p>`,
-        code:{lang:'js', text:`const judul = document.querySelector("h1");
-console.log(judul.textContent);
-
-judul.textContent = "Judul Baru";
-judul.style.color = "teal";`},
-        playground:{ type:'html', starter:`<h1 id="judul">Judul Asli</h1>
-<script>
-  const judul = document.querySelector("#judul");
-  judul.textContent = "Judul Diubah JS!";
-  judul.style.color = "teal";
-<\/script>` },
-        quiz:[
-          { q:'Method untuk memilih elemen pertama yang cocok dengan selector CSS adalah?', options:['document.querySelector()','document.getElement()','document.find()','document.select()'], correct:0, explain:'document.querySelector() menerima selector CSS (seperti class, id, atau tag) dan mengembalikan elemen pertama yang cocok.' },
-          { q:'DOM adalah singkatan dari?', options:['Document Object Model','Data Object Management','Document Order Model','Digital Output Model'], correct:0, explain:'DOM (Document Object Model) adalah representasi terstruktur dari dokumen HTML yang bisa dimanipulasi lewat JavaScript.' },
-          { q:'Untuk mengubah teks sebuah elemen lewat JavaScript, properti yang digunakan adalah?', options:['textContent','innerHref','textValue','content'], correct:0, explain:'textContent digunakan untuk membaca atau mengubah teks di dalam sebuah elemen.' },
-        ]
+        "id": "js-7",
+        "title": "Perulangan",
+        "level": "Pemula",
+        "duration": "9 menit",
+        "body": "<p>Perulangan menjalankan kode berkali-kali. Dasar yang penting adalah <code>for</code>, <code>while</code>, dan <code>do...while</code>. Perulangan membantu saat memproses banyak data.</p>",
+        "code": {
+          "lang": "js",
+          "text": "for (let i = 1; i <= 5; i++) {\n  console.log(\"Iterasi\", i);\n}\n\nlet n = 1;\nwhile (n <= 3) {\n  console.log(\"While\", n);\n  n++;\n}"
+        },
+        "quiz": [
+          {
+            "q": "Perulangan dengan penghitung sering menggunakan...",
+            "options": [
+              "for",
+              "repeat-css",
+              "loop-html",
+              "each-only"
+            ],
+            "correct": 0,
+            "explain": "for cocok untuk perulangan terkontrol."
+          },
+          {
+            "q": "while berjalan selama...",
+            "options": [
+              "Kondisi bernilai true",
+              "Kondisi selalu false",
+              "File tersedia",
+              "Browser tertutup"
+            ],
+            "correct": 0,
+            "explain": "while mengevaluasi kondisi sebelum setiap iterasi."
+          },
+          {
+            "q": "Apa risiko jika kondisi while tidak pernah menjadi false?",
+            "options": [
+              "Infinite loop",
+              "CSS rusak",
+              "HTML hilang",
+              "Array otomatis kosong"
+            ],
+            "correct": 0,
+            "explain": "Kondisi yang tidak pernah berhenti dapat menyebabkan infinite loop."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "for (let i = 1; i <= 5; i++) {\n  console.log(\"Iterasi\", i);\n}\n\nlet n = 1;\nwhile (n <= 3) {\n  console.log(\"While\", n);\n  n++;\n}"
+        }
       },
       {
-        id:'js-8', title:'DOM: event listener', level:'Menengah', duration:'5 menit',
-        body:`<p><code>addEventListener()</code> menjalankan fungsi ketika suatu peristiwa terjadi — klik, ketikan, submit form. Inilah yang membuat halaman terasa hidup dan responsif terhadap aksi pengguna.</p>`,
-        code:{lang:'js', text:`const tombol = document.querySelector("#tombolku");
-
-tombol.addEventListener("click", () => {
-  alert("Tombol diklik!");
-});`},
-        playground:{ type:'html', starter:`<button id="tombolku">Klik saya</button>
-<p id="hasil"></p>
-<script>
-  document.querySelector("#tombolku").addEventListener("click", () => {
-    document.querySelector("#hasil").textContent = "Tombol baru saja diklik!";
-  });
-<\/script>` },
-        quiz:[
-          { q:'Method untuk menjalankan fungsi saat elemen diklik adalah?', options:['addEventListener("click", fn)','onClick(fn)','clickEvent(fn)','triggerClick(fn)'], correct:0, explain:'addEventListener("click", fn) mendaftarkan fungsi fn agar dijalankan setiap kali elemen tersebut diklik.' },
-          { q:'Event listener membuat halaman terasa hidup karena?', options:['Merespons aksi pengguna','Mengubah warna otomatis tanpa aksi','Menjalankan animasi otomatis','Memuat ulang halaman terus-menerus'], correct:0, explain:'Event listener memungkinkan halaman bereaksi terhadap interaksi pengguna, seperti klik atau ketikan, tanpa perlu reload.' },
-          { q:'Selain "click", contoh nama event lain di JavaScript adalah?', options:['"submit"','"px"','"flex"','"grid"'], correct:0, explain:'"submit" adalah event yang terjadi saat sebuah form dikirim, salah satu dari banyak jenis event lainnya seperti "input" atau "keydown".' },
-        ]
+        "id": "js-8",
+        "title": "Array",
+        "level": "Pemula",
+        "duration": "8 menit",
+        "body": "<p>Array menyimpan banyak nilai dalam satu variabel. Index dimulai dari 0. Pelajari cara membuat, membaca, mengubah, menambah, dan menghapus data dengan operasi seperti <code>push</code>, <code>pop</code>, dan akses index.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const siswa = [\"Ani\", \"Budi\", \"Citra\"];\nconsole.log(siswa[0]);\nsiswa.push(\"Deni\");\nsiswa[1] = \"Budi Santoso\";\nconsole.log(siswa);"
+        },
+        "quiz": [
+          {
+            "q": "Index array dimulai dari...",
+            "options": [
+              "0",
+              "1",
+              "-1",
+              "10"
+            ],
+            "correct": 0,
+            "explain": "JavaScript menggunakan zero-based indexing."
+          },
+          {
+            "q": "Method untuk menambah item di akhir array adalah...",
+            "options": [
+              "push",
+              "addEnd",
+              "appendArray",
+              "insertLast"
+            ],
+            "correct": 0,
+            "explain": "push menambahkan item ke akhir array."
+          },
+          {
+            "q": "Jika arr=[\"A\",\"B\"], arr[1] adalah...",
+            "options": [
+              "B",
+              "A",
+              "undefined",
+              "1"
+            ],
+            "correct": 0,
+            "explain": "Index 1 menunjuk item kedua."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const siswa = [\"Ani\", \"Budi\", \"Citra\"];\nconsole.log(siswa[0]);\nsiswa.push(\"Deni\");\nsiswa[1] = \"Budi Santoso\";\nconsole.log(siswa);"
+        }
       },
       {
-        id:'js-9', title:'Mengubah isi halaman secara dinamis', level:'Menengah', duration:'5 menit',
-        body:`<p>Menggabungkan seleksi elemen, event, dan manipulasi DOM memungkinkan membuat fitur interaktif seperti penghitung, daftar tugas, atau validasi form — semua tanpa reload halaman.</p>`,
-        code:{lang:'js', text:`let jumlah = 0;
-const tampilan = document.querySelector("#angka");
-
-document.querySelector("#tambah").addEventListener("click", () => {
-  jumlah++;
-  tampilan.textContent = jumlah;
-});`},
-        playground:{ type:'html', starter:`<h2 id="angka">0</h2>
-<button id="tambah">+1</button>
-<script>
-  let jumlah = 0;
-  const tampilan = document.querySelector("#angka");
-  document.querySelector("#tambah").addEventListener("click", () => {
-    jumlah++;
-    tampilan.textContent = jumlah;
-  });
-<\/script>` },
-        quiz:[
-          { q:'Menggabungkan seleksi elemen, event, dan manipulasi DOM memungkinkan kita membuat?', options:['Fitur interaktif seperti penghitung','Halaman yang sepenuhnya statis','File CSS baru','Struktur HTML baru'], correct:0, explain:'Kombinasi ketiganya adalah dasar dari hampir semua fitur interaktif di web, seperti penghitung, validasi form, atau daftar tugas.' },
-          { q:'Untuk menambah nilai variabel sebanyak 1, operator yang digunakan adalah?', options:['++','--','+= 0','=='], correct:0, explain:'Operator ++ menambah nilai variabel numerik sebesar 1, singkatan dari jumlah = jumlah + 1.' },
-          { q:'Agar tampilan angka di halaman ikut berubah saat variabel berubah, kita perlu?', options:['Memperbarui textContent elemen secara manual','Menunggu reload halaman','Mengubah file CSS','Menulis ulang seluruh HTML'], correct:0, explain:'JavaScript tidak otomatis memperbarui tampilan — kita harus secara eksplisit mengatur ulang textContent elemen setelah variabel berubah.' },
-        ]
+        "id": "js-9",
+        "title": "Array & Perulangan",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>Array menjadi lebih berguna ketika diproses dengan perulangan. Kuasai <code>for</code> terlebih dahulu, lalu kenali <code>for...of</code>, <code>forEach</code>, dan <code>map</code>. Gunakan metode yang sesuai dengan tujuan.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const nilai = [80, 90, 75, 88];\nfor (const n of nilai) {\n  console.log(\"Nilai:\", n);\n}\n\nconst lulus = nilai.filter(n => n >= 80);\nconsole.log(lulus);"
+        },
+        "quiz": [
+          {
+            "q": "for...of pada array menghasilkan...",
+            "options": [
+              "Nilai setiap item",
+              "Index saja",
+              "Object DOM",
+              "CSS selector"
+            ],
+            "correct": 0,
+            "explain": "for...of mengiterasi values."
+          },
+          {
+            "q": "forEach digunakan untuk...",
+            "options": [
+              "Menjalankan fungsi untuk setiap item",
+              "Menghapus semua item",
+              "Membuat CSS",
+              "Menghentikan browser"
+            ],
+            "correct": 0,
+            "explain": "forEach menjalankan callback pada setiap elemen."
+          },
+          {
+            "q": "map biasanya digunakan untuk...",
+            "options": [
+              "Membuat array baru dari hasil transformasi",
+              "Mengubah HTML",
+              "Menghentikan loop",
+              "Mencari selector CSS"
+            ],
+            "correct": 0,
+            "explain": "map menghasilkan array baru dari callback."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const nilai = [80, 90, 75, 88];\nfor (const n of nilai) {\n  console.log(\"Nilai:\", n);\n}\n\nconst lulus = nilai.filter(n => n >= 80);\nconsole.log(lulus);"
+        }
       },
       {
-        id:'js-10', title:'Proyek kecil: daftar tugas', level:'Lanjutan', duration:'6 menit',
-        body:`<p>Sebagai latihan penutup, gabungkan semua konsep — array, DOM, dan event — untuk membangun daftar tugas sederhana. Coba tambahkan item baru lewat kotak input di preview.</p>`,
-        code:{lang:'html', text:`<input id="tugasInput">
-<button id="tambahBtn">Tambah</button>
-<ul id="daftar"></ul>
-
-<script>
-document.querySelector("#tambahBtn").addEventListener("click", () => {
-  const input = document.querySelector("#tugasInput");
-  if (input.value.trim() === "") return;
-  const li = document.createElement("li");
-  li.textContent = input.value;
-  document.querySelector("#daftar").appendChild(li);
-  input.value = "";
-});
-<\/script>`},
-        playground:{ type:'html', starter:`<input id="tugasInput" placeholder="Tugas baru...">
-<button id="tambahBtn">Tambah</button>
-<ul id="daftar"></ul>
-<script>
-document.querySelector("#tambahBtn").addEventListener("click", () => {
-  const input = document.querySelector("#tugasInput");
-  if (input.value.trim() === "") return;
-  const li = document.createElement("li");
-  li.textContent = input.value;
-  document.querySelector("#daftar").appendChild(li);
-  input.value = "";
-});
-<\/script>` },
-        quiz:[
-          { q:'Untuk membuat elemen <li> baru secara dinamis, method yang digunakan adalah?', options:['document.createElement()','document.newElement()','document.addElement()','document.makeElement()'], correct:0, explain:'document.createElement("li") membuat elemen baru di memori, yang kemudian bisa ditambahkan ke halaman.' },
-          { q:'Method untuk menambahkan elemen baru ke dalam elemen induk adalah?', options:['appendChild()','addChild()','insertNode()','pushChild()'], correct:0, explain:'appendChild() menambahkan sebuah node/elemen sebagai anak terakhir dari elemen induk yang dipilih.' },
-          { q:'Pengecekan input.value.trim() === "" berguna untuk?', options:['Mencegah menambah tugas kosong','Menghapus semua tugas','Mengubah warna tombol','Membuat variabel baru'], correct:0, explain:'Pengecekan ini memastikan tugas baru hanya ditambahkan jika input tidak kosong (setelah spasi di awal/akhir dihapus).' },
-        ]
+        "id": "js-10",
+        "title": "Function",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>Function adalah blok kode yang dapat dipanggil berulang. Pelajari deklarasi function, parameter, return, dan function expression. Arrow function dapat dipelajari setelah konsep fungsi biasa dipahami.</p>",
+        "code": {
+          "lang": "js",
+          "text": "function hitungLuas(panjang, lebar) {\n  return panjang * lebar;\n}\n\nconst luas = hitungLuas(10, 5);\nconsole.log(luas);\n\nconst sapa = nama => `Halo ${nama}`;\nconsole.log(sapa(\"Rina\"));"
+        },
+        "quiz": [
+          {
+            "q": "Function digunakan untuk...",
+            "options": [
+              "Mengelompokkan kode yang dapat dipanggil",
+              "Membuat warna CSS",
+              "Menyimpan HTML saja",
+              "Membuat folder"
+            ],
+            "correct": 0,
+            "explain": "Function membuat blok kode yang dapat digunakan kembali."
+          },
+          {
+            "q": "Nilai yang diterima function disebut...",
+            "options": [
+              "Parameter/argument",
+              "Selector",
+              "Attribute",
+              "Property CSS"
+            ],
+            "correct": 0,
+            "explain": "Parameter didefinisikan pada function dan argument diberikan saat pemanggilan."
+          },
+          {
+            "q": "Keyword untuk mengembalikan nilai dari function adalah...",
+            "options": [
+              "return",
+              "back",
+              "send",
+              "yield-only"
+            ],
+            "correct": 0,
+            "explain": "return mengembalikan nilai dan menghentikan function."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "function hitungLuas(panjang, lebar) {\n  return panjang * lebar;\n}\n\nconst luas = hitungLuas(10, 5);\nconsole.log(luas);\n\nconst sapa = nama => `Halo ${nama}`;\nconsole.log(sapa(\"Rina\"));"
+        }
       },
+      {
+        "id": "js-11",
+        "title": "Object",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Object menyimpan data dalam pasangan key-value. Object cocok untuk mewakili satu entitas seperti siswa. Pelajari akses dengan dot notation, bracket notation, perubahan property, dan array of objects.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const siswa = {\n  nama: \"Rina\",\n  kelas: \"XI RPL\",\n  nilai: 90\n};\n\nconsole.log(siswa.nama);\nsiswa.nilai = 95;\nconsole.log(siswa[\"kelas\"]);"
+        },
+        "quiz": [
+          {
+            "q": "Object menyimpan data dalam pasangan...",
+            "options": [
+              "key-value",
+              "row-column-only",
+              "tag-attribute-only",
+              "index-index"
+            ],
+            "correct": 0,
+            "explain": "Object terdiri dari property key dan value."
+          },
+          {
+            "q": "Akses siswa.nama disebut...",
+            "options": [
+              "Dot notation",
+              "Hash notation",
+              "CSS notation",
+              "Tag notation"
+            ],
+            "correct": 0,
+            "explain": "Dot notation memakai titik antara object dan property."
+          },
+          {
+            "q": "Array of objects berguna untuk...",
+            "options": [
+              "Menyimpan banyak record terstruktur",
+              "Membuat warna",
+              "Mengganti HTML DOCTYPE",
+              "Membuat media query"
+            ],
+            "correct": 0,
+            "explain": "Array of objects umum untuk kumpulan data seperti daftar siswa."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const siswa = {\n  nama: \"Rina\",\n  kelas: \"XI RPL\",\n  nilai: 90\n};\n\nconsole.log(siswa.nama);\nsiswa.nilai = 95;\nconsole.log(siswa[\"kelas\"]);"
+        }
+      },
+      {
+        "id": "js-12",
+        "title": "DOM",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>DOM (Document Object Model) adalah representasi dokumen HTML yang dapat dibaca dan diubah oleh JavaScript. Dengan DOM, program dapat menemukan elemen, membaca isi, mengubah atribut, dan membuat elemen baru.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const judul = document.querySelector(\"h1\");\nif (judul) {\n  console.log(judul.textContent);\n}"
+        },
+        "quiz": [
+          {
+            "q": "DOM adalah...",
+            "options": [
+              "Representasi dokumen HTML yang dapat dimanipulasi",
+              "Database server",
+              "Bahasa CSS",
+              "File gambar"
+            ],
+            "correct": 0,
+            "explain": "DOM memodelkan dokumen sebagai struktur node."
+          },
+          {
+            "q": "Dengan DOM JavaScript dapat...",
+            "options": [
+              "Membaca dan mengubah elemen halaman",
+              "Mengganti sistem operasi",
+              "Mengubah kabel jaringan",
+              "Membuat monitor"
+            ],
+            "correct": 0,
+            "explain": "DOM API memungkinkan interaksi dengan dokumen."
+          },
+          {
+            "q": "DOM berkaitan langsung dengan...",
+            "options": [
+              "Dokumen HTML",
+              "Database MySQL saja",
+              "CSS file saja",
+              "Server hardware"
+            ],
+            "correct": 0,
+            "explain": "DOM merepresentasikan dokumen yang dimuat browser."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const judul = document.querySelector(\"h1\");\nif (judul) {\n  console.log(judul.textContent);\n}"
+        }
+      },
+      {
+        "id": "js-13",
+        "title": "querySelector & querySelectorAll",
+        "level": "Menengah",
+        "duration": "7 menit",
+        "body": "<p><code>querySelector</code> mengambil elemen pertama yang cocok dengan selector CSS. <code>querySelectorAll</code> mengambil semua elemen yang cocok dan menghasilkan NodeList yang dapat diproses.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const pertama = document.querySelector(\".item\");\nconst semua = document.querySelectorAll(\".item\");\nconsole.log(pertama);\nconsole.log(semua.length);"
+        },
+        "quiz": [
+          {
+            "q": "querySelector mengembalikan...",
+            "options": [
+              "Elemen pertama yang cocok",
+              "Semua elemen sebagai array biasa",
+              "Hanya id",
+              "String CSS"
+            ],
+            "correct": 0,
+            "explain": "querySelector mengambil first matching element."
+          },
+          {
+            "q": "querySelectorAll mengembalikan...",
+            "options": [
+              "NodeList semua elemen yang cocok",
+              "Satu element",
+              "String",
+              "Boolean"
+            ],
+            "correct": 0,
+            "explain": "querySelectorAll menghasilkan NodeList."
+          },
+          {
+            "q": "Selector .item berarti...",
+            "options": [
+              "Class item",
+              "ID item",
+              "Tag item",
+              "Attribute item"
+            ],
+            "correct": 0,
+            "explain": ".item adalah class selector CSS."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const pertama = document.querySelector(\".item\");\nconst semua = document.querySelectorAll(\".item\");\nconsole.log(pertama);\nconsole.log(semua.length);"
+        }
+      },
+      {
+        "id": "js-14",
+        "title": "Event",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Event adalah kejadian seperti click, input, submit, change, dan keydown. Gunakan <code>addEventListener</code> untuk memasang handler tanpa menulis perilaku langsung pada HTML.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const tombol = document.querySelector(\"button\");\nif (tombol) {\n  tombol.addEventListener(\"click\", () => {\n    console.log(\"Tombol diklik\");\n  });\n}"
+        },
+        "quiz": [
+          {
+            "q": "Method untuk memasang event handler adalah...",
+            "options": [
+              "addEventListener",
+              "addEvent",
+              "listenOnly",
+              "onEvent"
+            ],
+            "correct": 0,
+            "explain": "addEventListener adalah API standar untuk event."
+          },
+          {
+            "q": "Event saat tombol ditekan dengan mouse adalah...",
+            "options": [
+              "click",
+              "press",
+              "mouse-hit",
+              "button"
+            ],
+            "correct": 0,
+            "explain": "click adalah event umum untuk tombol."
+          },
+          {
+            "q": "Event form yang tepat untuk menangani pengiriman adalah...",
+            "options": [
+              "submit",
+              "send",
+              "form-send",
+              "enter-only"
+            ],
+            "correct": 0,
+            "explain": "submit terjadi ketika form disubmit."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const tombol = document.querySelector(\"button\");\nif (tombol) {\n  tombol.addEventListener(\"click\", () => {\n    console.log(\"Tombol diklik\");\n  });\n}"
+        }
+      },
+      {
+        "id": "js-15",
+        "title": "Manipulasi DOM",
+        "level": "Menengah",
+        "duration": "9 menit",
+        "body": "<p>JavaScript dapat mengubah isi elemen melalui <code>textContent</code>, atribut melalui <code>setAttribute</code>, dan struktur melalui <code>createElement</code>, <code>append</code>, atau <code>remove</code>.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const output = document.querySelector(\"#output\");\nif (output) {\n  output.textContent = \"Konten diubah oleh JavaScript\";\n  output.setAttribute(\"title\", \"Diubah dengan DOM\");\n}"
+        },
+        "quiz": [
+          {
+            "q": "Untuk mengubah teks tanpa parsing HTML gunakan...",
+            "options": [
+              "textContent",
+              "innerStyle",
+              "textHTMLOnly",
+              "changeText"
+            ],
+            "correct": 0,
+            "explain": "textContent mengatur teks sebagai text."
+          },
+          {
+            "q": "Membuat elemen baru menggunakan...",
+            "options": [
+              "document.createElement",
+              "document.newTag",
+              "createNodeOnly",
+              "element.make"
+            ],
+            "correct": 0,
+            "explain": "createElement membuat node elemen baru."
+          },
+          {
+            "q": "Untuk menghapus node modern dapat menggunakan...",
+            "options": [
+              "remove()",
+              "deleteNode()",
+              "erase()",
+              "destroyHTML()"
+            ],
+            "correct": 0,
+            "explain": "Element.remove() menghapus elemen dari parent-nya."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const output = document.querySelector(\"#output\");\nif (output) {\n  output.textContent = \"Konten diubah oleh JavaScript\";\n  output.setAttribute(\"title\", \"Diubah dengan DOM\");\n}"
+        }
+      },
+      {
+        "id": "js-16",
+        "title": "classList",
+        "level": "Menengah",
+        "duration": "7 menit",
+        "body": "<p><code>classList</code> membantu mengatur class CSS dari JavaScript. Method pentingnya adalah <code>add</code>, <code>remove</code>, <code>toggle</code>, dan <code>contains</code>. Ini berguna untuk menu, modal, tema, dan state komponen.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const tombol = document.querySelector(\"button\");\nconst panel = document.querySelector(\".panel\");\nif (tombol && panel) {\n  tombol.addEventListener(\"click\", () => {\n    panel.classList.toggle(\"aktif\");\n  });\n}"
+        },
+        "quiz": [
+          {
+            "q": "classList.add digunakan untuk...",
+            "options": [
+              "Menambahkan class",
+              "Menghapus class",
+              "Mengganti HTML",
+              "Membuat ID"
+            ],
+            "correct": 0,
+            "explain": "add menambahkan class."
+          },
+          {
+            "q": "classList.toggle digunakan untuk...",
+            "options": [
+              "Menambah atau menghapus class sesuai keadaan",
+              "Menghapus semua CSS",
+              "Mengubah tag",
+              "Membuat array"
+            ],
+            "correct": 0,
+            "explain": "toggle membalik keberadaan class."
+          },
+          {
+            "q": "classList.contains mengembalikan...",
+            "options": [
+              "Apakah class ada",
+              "Elemen baru",
+              "HTML string",
+              "Jumlah child"
+            ],
+            "correct": 0,
+            "explain": "contains menghasilkan boolean."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const tombol = document.querySelector(\"button\");\nconst panel = document.querySelector(\".panel\");\nif (tombol && panel) {\n  tombol.addEventListener(\"click\", () => {\n    panel.classList.toggle(\"aktif\");\n  });\n}"
+        }
+      },
+      {
+        "id": "js-17",
+        "title": "Form & Validasi",
+        "level": "Menengah",
+        "duration": "10 menit",
+        "body": "<p>Form dapat ditangani dengan event <code>submit</code>. Gunakan <code>preventDefault()</code> jika ingin mencegah reload dan memvalidasi data di browser sebelum diproses lebih lanjut.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const form = document.querySelector(\"form\");\nform?.addEventListener(\"submit\", event => {\n  event.preventDefault();\n  const nama = document.querySelector(\"#nama\").value.trim();\n  if (!nama) {\n    console.log(\"Nama wajib diisi\");\n    return;\n  }\n  console.log(\"Data valid:\", nama);\n});"
+        },
+        "quiz": [
+          {
+            "q": "Untuk menangani submit form gunakan event...",
+            "options": [
+              "submit",
+              "form",
+              "send",
+              "click-only"
+            ],
+            "correct": 0,
+            "explain": "submit adalah event form."
+          },
+          {
+            "q": "preventDefault digunakan untuk...",
+            "options": [
+              "Mencegah perilaku default event",
+              "Membuat database",
+              "Menambah CSS",
+              "Menghapus input"
+            ],
+            "correct": 0,
+            "explain": "preventDefault menghentikan default action seperti reload saat submit."
+          },
+          {
+            "q": "Validasi client-side sebaiknya...",
+            "options": [
+              "Memberi feedback dan memeriksa input sebelum diproses",
+              "Menggantikan validasi server sepenuhnya",
+              "Menghapus data",
+              "Menonaktifkan browser"
+            ],
+            "correct": 0,
+            "explain": "Validasi di browser meningkatkan UX, tetapi aplikasi nyata tetap membutuhkan validasi server."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const form = document.querySelector(\"form\");\nform?.addEventListener(\"submit\", event => {\n  event.preventDefault();\n  const nama = document.querySelector(\"#nama\").value.trim();\n  if (!nama) {\n    console.log(\"Nama wajib diisi\");\n    return;\n  }\n  console.log(\"Data valid:\", nama);\n});"
+        }
+      },
+      {
+        "id": "js-18",
+        "title": "Debugging",
+        "level": "Menengah",
+        "duration": "8 menit",
+        "body": "<p>Debugging adalah proses mencari dan memperbaiki kesalahan. Biasakan membaca pesan error di Console, gunakan <code>console.log</code>, periksa nama variabel, selector DOM, dan urutan eksekusi kode.</p><p>Jangan hanya menebak. Uji satu bagian kecil, baca error, buat hipotesis, lalu perbaiki.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const nilai = 80;\nconsole.log(\"Nilai:\", nilai);\n\n// Coba ubah nama variabel di bawah dan lihat errornya.\nconsole.log(nilai + 10);"
+        },
+        "quiz": [
+          {
+            "q": "Tempat utama melihat error JavaScript di browser adalah...",
+            "options": [
+              "Console DevTools",
+              "Address bar",
+              "File explorer",
+              "Task manager"
+            ],
+            "correct": 0,
+            "explain": "Console DevTools menampilkan error dan log JavaScript."
+          },
+          {
+            "q": "console.log berguna untuk...",
+            "options": [
+              "Memeriksa nilai saat program berjalan",
+              "Membuat database",
+              "Mengubah HTML secara permanen",
+              "Menginstall browser"
+            ],
+            "correct": 0,
+            "explain": "console.log membantu mengamati nilai dan alur program."
+          },
+          {
+            "q": "Langkah debugging yang baik adalah...",
+            "options": [
+              "Baca error, isolasi masalah, uji perbaikan",
+              "Hapus semua kode",
+              "Ganti komputer",
+              "Abaikan error"
+            ],
+            "correct": 0,
+            "explain": "Debugging sistematis lebih efektif daripada menebak-nebak."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const nilai = 80;\nconsole.log(\"Nilai:\", nilai);\n\n// Coba ubah nama variabel di bawah dan lihat errornya.\nconsole.log(nilai + 10);"
+        }
+      },
+      {
+        "id": "js-19",
+        "title": "Project Todo List",
+        "level": "Menengah",
+        "duration": "20 menit",
+        "body": "<p>Project Todo List menggabungkan variable, array, function, DOM, event, classList, dan manipulasi elemen. Siswa belajar membuat item tugas, menampilkan daftar, menandai selesai, dan menghapus item.</p><p><b>Target:</b> pahami alur data: input → data array → render DOM → event → ubah data → render kembali.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const tugas = [];\n\nfunction tambahTugas(teks) {\n  if (!teks.trim()) return;\n  tugas.push({ teks: teks.trim(), selesai: false });\n}\n\nfunction tampilkan() {\n  console.log(tugas);\n}\n\ntambahTugas(\"Belajar DOM\");\ntambahTugas(\"Latihan event\");\ntampilkan();"
+        },
+        "quiz": [
+          {
+            "q": "Data Todo List sederhana dapat disimpan sebagai...",
+            "options": [
+              "Array of objects",
+              "Satu string panjang saja",
+              "CSS class saja",
+              "HTML comment"
+            ],
+            "correct": 0,
+            "explain": "Array of objects cocok untuk menyimpan banyak tugas beserta statusnya."
+          },
+          {
+            "q": "Tahap render berarti...",
+            "options": [
+              "Mengubah data menjadi tampilan DOM",
+              "Menghapus JavaScript",
+              "Membuat database otomatis",
+              "Mengganti browser"
+            ],
+            "correct": 0,
+            "explain": "Render adalah proses menampilkan state/data ke antarmuka."
+          },
+          {
+            "q": "Event click pada tombol tambah digunakan untuk...",
+            "options": [
+              "Menjalankan fungsi penambahan tugas",
+              "Mengubah DOCTYPE",
+              "Menghapus CSS",
+              "Membuat server"
+            ],
+            "correct": 0,
+            "explain": "Click handler menjalankan aksi ketika pengguna menekan tombol."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const tugas = [];\n\nfunction tambahTugas(teks) {\n  if (!teks.trim()) return;\n  tugas.push({ teks: teks.trim(), selesai: false });\n}\n\ntambahTugas(\"Belajar HTML\");\ntambahTugas(\"Belajar CSS\");\nconsole.log(tugas);"
+        }
+      },
+      {
+        "id": "js-20",
+        "title": "Project Akhir JavaScript",
+        "level": "Menengah",
+        "duration": "25 menit",
+        "body": "<p>Project akhir adalah <b>Aplikasi Data Siswa</b> sederhana. Gabungkan array of objects, function, percabangan, perulangan, DOM, event, form, validasi, dan classList.</p><p><b>Alur:</b> pengguna mengisi form → data divalidasi → object siswa dibuat → disimpan ke array → tabel dirender ulang → pengguna dapat mencari atau menghapus data.</p><p>Setelah selesai, lanjutkan dengan tantangan: tambah fitur edit, filter kelas, hitung rata-rata nilai, dan penyimpanan lokal.</p>",
+        "code": {
+          "lang": "js",
+          "text": "const siswa = [];\n\nfunction tambahSiswa(nama, kelas, nilai) {\n  if (!nama || !kelas || nilai < 0 || nilai > 100) return false;\n  siswa.push({ nama, kelas, nilai: Number(nilai) });\n  return true;\n}\n\nfunction tampilkanSiswa() {\n  siswa.forEach((item, index) => {\n    console.log(index + 1, item.nama, item.kelas, item.nilai);\n  });\n}\n\ntambahSiswa(\"Alya\", \"XI RPL 1\", 90);\ntambahSiswa(\"Bima\", \"XI RPL 2\", 84);\ntampilkanSiswa();"
+        },
+        "quiz": [
+          {
+            "q": "Konsep paling banyak digabungkan pada project akhir adalah...",
+            "options": [
+              "Data, logic, DOM, event, dan form",
+              "CSS saja",
+              "HTML saja",
+              "Database server saja"
+            ],
+            "correct": 0,
+            "explain": "Project akhir menggabungkan fondasi JavaScript yang telah dipelajari."
+          },
+          {
+            "q": "Urutan alur data yang tepat adalah...",
+            "options": [
+              "Input → validasi → simpan data → render DOM",
+              "Render → hapus input → validasi",
+              "CSS → database → HTML",
+              "Klik → DOCTYPE → CSS"
+            ],
+            "correct": 0,
+            "explain": "Alur aplikasi sederhana dimulai dari input, validasi, state/data, lalu tampilan."
+          },
+          {
+            "q": "Tantangan lanjutan yang relevan adalah...",
+            "options": [
+              "Edit/filter dan hitung rata-rata",
+              "Menghapus semua event",
+              "Mengganti HTML dengan gambar",
+              "Mematikan browser"
+            ],
+            "correct": 0,
+            "explain": "Fitur tersebut memperluas kemampuan pengolahan data dan UI."
+          }
+        ],
+        "playground": {
+          "type": "js",
+          "starter": "const siswa = [];\nfunction tambahSiswa(nama, kelas, nilai) {\n  if (!nama || !kelas || nilai < 0 || nilai > 100) return false;\n  siswa.push({ nama, kelas, nilai: Number(nilai) });\n  return true;\n}\ntambahSiswa(\"Alya\", \"XI RPL 1\", 90);\ntambahSiswa(\"Bima\", \"XI RPL 2\", 84);\nconsole.log(siswa);"
+        }
+      }
     ]
   }
 ];
@@ -1275,7 +3088,8 @@ document.querySelector("#tambahBtn").addEventListener("click", () => {
 const allLessons = TRACKS.flatMap(t => t.lessons.map(l => ({...l, trackId:t.id, trackName:t.name, trackColor:t.color})));
 const totalQuizQuestions = allLessons.reduce((sum,l) => sum + (l.quiz ? l.quiz.length : 0), 0);
 let currentLessonId = null;
-let doneSet = new Set();
+let doneSet = new Set(JSON.parse(localStorage.getItem('kodelab_done') || '[]'));
+let quizScores = JSON.parse(localStorage.getItem('kodelab_quiz_scores') || '{}');
 
 /* ======================= RENDER: SIDEBAR ======================= */
 const navEl = document.getElementById('nav');
@@ -1316,6 +3130,14 @@ function renderNav(){
     group.appendChild(list);
     navEl.appendChild(group);
   });
+
+  const projectBtn = document.createElement('button');
+  const projectUnlocked = doneSet.size >= allLessons.length;
+  const projectPassed = localStorage.getItem('kodelab_project_passed') === 'true';
+  projectBtn.className = 'project-nav' + (projectPassed ? ' done' : '') + (!projectUnlocked ? ' locked' : '');
+  projectBtn.innerHTML = `<b>${projectPassed ? '🏆' : '💻'} Project Akhir</b><br><small>${projectPassed ? 'Lulus & sertifikat tersedia' : projectUnlocked ? 'Project kelulusan' : 'Selesaikan 47 materi terlebih dahulu'}</small>`;
+  projectBtn.addEventListener('click', () => { if (projectUnlocked) renderProjectFinal(); });
+  navEl.appendChild(projectBtn);
   syncNavState();
 }
 
@@ -1328,6 +3150,14 @@ function syncNavState(){
   const done = doneSet.size;
   document.getElementById('progressText').textContent = `${done} / ${total}`;
   document.getElementById('progressFill').style.width = total ? `${(done/total)*100}%` : '0%';
+  const projectBtn = document.querySelector('.project-nav');
+  if(projectBtn){
+    const unlocked = done >= total;
+    const passed = localStorage.getItem('kodelab_project_passed') === 'true';
+    projectBtn.classList.toggle('locked', !unlocked);
+    projectBtn.classList.toggle('done', passed);
+    projectBtn.innerHTML = `<b>${passed ? '🏆' : '💻'} Project Akhir</b><br><small>${passed ? 'Lulus & sertifikat tersedia' : unlocked ? 'Project kelulusan' : 'Selesaikan 47 materi terlebih dahulu'}</small>`;
+  }
 }
 
 /* ======================= RENDER: MAIN CONTENT ======================= */
@@ -1383,6 +3213,89 @@ function renderWelcome(){
   });
 }
 
+function renderProjectFinal(){
+  currentLessonId = null;
+  crumb.innerHTML = 'kodelab / <b>Project Akhir</b>';
+  const passed = localStorage.getItem('kodelab_project_passed') === 'true';
+  const savedLink = localStorage.getItem('kodelab_project_link') || '';
+  const savedName = localStorage.getItem('kodelab_student_name') || '';
+  const checks = JSON.parse(localStorage.getItem('kodelab_project_checks') || '[]');
+  const requirements = [
+    ['HTML semantik', 'Gunakan header, nav, main, section/article, footer serta struktur HTML yang rapi.'],
+    ['Form & tabel', 'Buat form data dan tabel yang dapat digunakan untuk menampilkan data.'],
+    ['CSS profesional', 'Gunakan Flexbox/Grid, spacing, typography, warna, card, dan hover state.'],
+    ['Responsive', 'Website harus nyaman digunakan pada laptop dan smartphone.'],
+    ['JavaScript interaktif', 'Gunakan DOM, event, function, array/object, percabangan dan perulangan.'],
+    ['CRUD sederhana', 'Pengguna dapat menambah, mengubah, menghapus dan mencari data.'],
+    ['LocalStorage', 'Data utama tetap tersedia setelah halaman di-refresh.'],
+    ['Validasi & debugging', 'Form tervalidasi dan project bebas dari error utama di console.']
+  ];
+  viewport.innerHTML = `<div class="content">
+    <div class="project-hero">
+      <span class="project-badge">SYARAT KELULUSAN</span>
+      <h1>Project Akhir RPL</h1>
+      <p><b>Membangun Website Sistem Informasi Sekolah</b></p>
+      <p>Project ini adalah tahap pembuktian bahwa kamu mampu menerapkan materi HTML, CSS, dan JavaScript yang telah dipelajari.</p>
+    </div>
+
+    <div class="project-card">
+      <h2>🎯 Ketentuan Project</h2>
+      <p>Buat satu website yang memiliki halaman beranda, profil sekolah, data guru/siswa, jurusan, berita atau informasi, form kontak, pencarian/filter, dan interaksi JavaScript.</p>
+      <div class="project-grid">
+        ${requirements.map((r,i)=>`<label class="project-requirement"><input type="checkbox" class="project-check" data-i="${i}" ${checks.includes(i)?'checked':''}><span><strong>${r[0]}</strong>${r[1]}</span></label>`).join('')}
+      </div>
+    </div>
+
+    <div class="project-card">
+      <h2>📤 Pengumpulan Project</h2>
+      <p>Masukkan nama siswa dan link project yang sudah kamu kerjakan.</p>
+      <div class="project-form">
+        <label>Nama siswa</label>
+        <input id="studentNameInput" type="text" value="${escapeHtml(savedName)}" placeholder="Contoh: Ahmad Fauzan">
+        <label>Link project</label>
+        <input id="projectLinkInput" type="text" value="${escapeHtml(savedLink)}" placeholder="https://... atau link GitHub Pages">
+        <label><input id="projectDeclaration" type="checkbox"> Saya menyatakan project ini saya kerjakan sendiri dan seluruh persyaratan di atas telah dipenuhi.</label>
+        <button class="project-submit" id="submitProjectBtn" ${passed?'disabled':''}>${passed?'✓ Project sudah dinyatakan lulus':'Kirim Project untuk Penilaian'}</button>
+      </div>
+      <div id="projectStatus"></div>
+    </div>
+
+    ${passed ? `<div class="graduate-card"><div style="font-size:48px">🏆</div><h2>SELAMAT, ANDA LULUS!</h2><p>Project akhir telah diselesaikan dan status kelulusan Kodelab RPL telah aktif.</p><p><b>Nilai Project: LULUS</b></p><div class="certificate" id="certificate"><div>KODELAB RPL</div><h2>SERTIFIKAT KELULUSAN</h2><p>Diberikan kepada</p><div class="student-name">${escapeHtml(savedName || 'Nama Siswa')}</div><p>atas keberhasilannya menyelesaikan pembelajaran HTML, CSS, dan JavaScript serta Project Akhir Kodelab RPL.</p><div class="cert-meta"><b>Project:</b> Sistem Informasi Sekolah<br><b>Status:</b> LULUS<br><b>Tanggal:</b> ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</div></div><div class="cert-actions"><button class="cert-btn" id="printCertificate">🖨️ Cetak / Simpan PDF</button></div></div>` : ''}
+  </div>`;
+
+  viewport.querySelectorAll('.project-check').forEach(cb => cb.addEventListener('change', () => {
+    const arr = [...viewport.querySelectorAll('.project-check')].filter(x=>x.checked).map(x=>+x.dataset.i);
+    localStorage.setItem('kodelab_project_checks', JSON.stringify(arr));
+  }));
+  const submit = document.getElementById('submitProjectBtn');
+  if(submit && !passed) submit.addEventListener('click', () => {
+    const name = document.getElementById('studentNameInput').value.trim();
+    const link = document.getElementById('projectLinkInput').value.trim();
+    const declaration = document.getElementById('projectDeclaration').checked;
+    const allChecked = viewport.querySelectorAll('.project-check:checked').length === requirements.length;
+    const status = document.getElementById('projectStatus');
+    if(!name || !link || !declaration || !allChecked){
+      status.className='project-status';
+      status.innerHTML='<b>Belum dapat dinyatakan lulus.</b><br>Lengkapi seluruh checklist, nama, link project, dan pernyataan terlebih dahulu.';
+      return;
+    }
+    localStorage.setItem('kodelab_student_name',name);
+    localStorage.setItem('kodelab_project_link',link);
+    localStorage.setItem('kodelab_project_passed','true');
+    status.className='project-status';
+    status.innerHTML='<b>✓ Project berhasil diselesaikan.</b><br>Status LULUS dan sertifikat sekarang tersedia.';
+    renderNav();
+    renderProjectFinal();
+  });
+  const printBtn=document.getElementById('printCertificate');
+  if(printBtn) printBtn.addEventListener('click',()=>{
+    const cert=document.getElementById('certificate');
+    const w=window.open('','_blank');
+    w.document.write(`<html><head><title>Sertifikat Kodelab RPL</title><style>body{font-family:Arial,sans-serif;padding:30px}.certificate{background:#fff;color:#1d2430;padding:60px 40px;border:12px double #b89435;text-align:center;max-width:900px;margin:auto}.certificate h2{font-size:34px}.student-name{font-size:30px;font-weight:800;margin:25px}</style></head><body>${cert.outerHTML}</body></html>`);
+    w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
+  });
+}
+
 function goToLesson(id){
   currentLessonId = id;
   const lesson = allLessons.find(l => l.id === id);
@@ -1423,7 +3336,9 @@ function renderLesson(lesson){
       ${lesson.playground ? renderPlaygroundHtml(lesson) : ''}
       ${lesson.quiz && lesson.quiz.length ? renderQuizHtml(lesson) : ''}
 
-      <button class="mark-done ${doneSet.has(lesson.id) ? 'done' : ''}" id="markDoneBtn">
+      <button class="mark-done ${doneSet.has(lesson.id) ? 'done' : ''}" id="markDoneBtn"
+        data-quiz-complete="${(!lesson.quiz || !lesson.quiz.length || doneSet.has(lesson.id) || quizScores[lesson.id]?.score === 100) ? 'true' : 'false'}"
+        ${lesson.quiz && lesson.quiz.length && !doneSet.has(lesson.id) && quizScores[lesson.id]?.score !== 100 ? 'disabled title="Selesaikan semua soal kuis dengan benar terlebih dahulu"' : ''}>
         <span>${doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai'}</span>
       </button>
 
@@ -1432,7 +3347,8 @@ function renderLesson(lesson){
           <div class="nav-btn-label">← Sebelumnya</div>
           <div class="nav-btn-title">${prev ? prev.title : '—'}</div>
         </button>
-        <button class="nav-btn next" ${next ? '' : 'disabled'}>
+        <button class="nav-btn next" ${(!next || !doneSet.has(lesson.id)) ? 'disabled' : ''}
+          title="${next && !doneSet.has(lesson.id) ? 'Tandai materi ini selesai terlebih dahulu' : ''}">
           <div class="nav-btn-label">Selanjutnya →</div>
           <div class="nav-btn-title">${next ? next.title : '—'}</div>
         </button>
@@ -1469,11 +3385,41 @@ function renderLesson(lesson){
   }
 
   // mark done
-  document.getElementById('markDoneBtn').addEventListener('click', (e) => {
+  const markDoneBtn = document.getElementById('markDoneBtn');
+  markDoneBtn.addEventListener('click', (e) => {
+    // Jika materi memiliki kuis, siswa wajib menyelesaikan semua soal dengan benar.
+    // Gunakan status tombol + skor tersimpan agar tidak ada kondisi tombol terlihat aktif
+    // tetapi kliknya ditolak oleh pemeriksaan state yang berbeda.
+    const quizComplete = !lesson.quiz || !lesson.quiz.length ||
+      e.currentTarget.dataset.quizComplete === 'true' ||
+      quizScores[lesson.id]?.score === 100 ||
+      doneSet.has(lesson.id);
+    if (!quizComplete) return;
+
     if (doneSet.has(lesson.id)) doneSet.delete(lesson.id);
     else doneSet.add(lesson.id);
+
+    // Simpan progress agar materi yang sudah selesai tidak hilang saat halaman di-reload.
+    localStorage.setItem('kodelab_done', JSON.stringify([...doneSet]));
+
     e.currentTarget.classList.toggle('done');
     e.currentTarget.querySelector('span').textContent = doneSet.has(lesson.id) ? '✓ Selesai dipelajari' : 'Tandai selesai';
+
+    // Jika dibatalkan, wajib mengerjakan kuis lagi sebelum bisa menandai selesai.
+    if (lesson.quiz && lesson.quiz.length && !doneSet.has(lesson.id)) {
+      e.currentTarget.disabled = true;
+      e.currentTarget.title = 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
+    }
+
+    // Tombol "Selanjutnya" hanya aktif setelah materi ini benar-benar ditandai selesai.
+    const nextBtn = viewport.querySelector('.nav-btn.next');
+    if (nextBtn) {
+      nextBtn.disabled = !next || !doneSet.has(lesson.id);
+      nextBtn.title = (next && !doneSet.has(lesson.id))
+        ? 'Tandai materi ini selesai terlebih dahulu'
+        : '';
+    }
+
     syncNavState();
   });
 
@@ -1570,6 +3516,7 @@ function quizItemsHtml(lesson){
           ${shuffled.map(item => `<button class="quiz-opt" type="button" data-original-index="${item.originalIndex}">${escapeHtml(item.text)}</button>`).join('')}
         </div>
         <div class="quiz-feedback"></div>
+        <button class="quiz-question-retry" type="button">🔄 Coba lagi</button>
       </div>
     `;
   }).join('');
@@ -1583,7 +3530,7 @@ function renderQuizHtml(lesson){
           <div class="quiz-eyebrow">Uji pemahaman</div>
           <h3 class="quiz-title">Sudah paham materi ini?</h3>
         </div>
-        <div class="quiz-progress" id="quizProgress">0 / ${lesson.quiz.length} dijawab</div>
+        <div class="quiz-progress" id="quizProgress">0 / ${lesson.quiz.length} benar</div>
       </div>
       <div id="quizList">${quizItemsHtml(lesson)}</div>
       <div class="quiz-summary" id="quizSummary">
@@ -1596,79 +3543,165 @@ function renderQuizHtml(lesson){
 
 function setupQuiz(lesson){
   const total = lesson.quiz.length;
+  const progressKey = `kodelab_quiz_progress_${lesson.id}`;
   let answered = {};
 
-  function bindQuestions(){
-    document.querySelectorAll('.quiz-q').forEach(qEl => {
-      const qi = +qEl.dataset.qi;
-      const q = lesson.quiz[qi];
-      const opts = qEl.querySelectorAll('.quiz-opt');
+  // Pulihkan soal yang sebelumnya sudah dijawab BENAR.
+  try {
+    const saved = JSON.parse(localStorage.getItem(progressKey) || '[]');
+    saved.forEach(qi => { answered[qi] = true; });
+  } catch(e) {
+    answered = {};
+  }
 
-      opts.forEach(optEl => {
-        optEl.addEventListener('click', () => {
-          if (answered[qi] !== undefined) return;
-
-          // Ambil indeks pilihan dari data asli, bukan posisi acak di layar.
-          const originalIndex = +optEl.dataset.originalIndex;
-          answered[qi] = originalIndex;
-
-          const correct = originalIndex === q.correct;
-
-          opts.forEach(o => {
-            o.disabled = true;
-            const oOriginalIndex = +o.dataset.originalIndex;
-
-            if (oOriginalIndex === q.correct) {
-              o.classList.add('correct');
-            } else if (o === optEl && !correct) {
-              o.classList.add('incorrect');
-            }
-          });
-
-          const fb = qEl.querySelector('.quiz-feedback');
-          fb.style.display = 'block';
-          fb.className = 'quiz-feedback ' + (correct ? 'ok' : 'bad');
-          fb.innerHTML = (correct ? '<b>Benar.</b> ' : '<b>Belum tepat.</b> ') + escapeHtml(q.explain);
-          updateProgress();
-        });
-      });
-    });
+  function saveProgress(){
+    localStorage.setItem(progressKey, JSON.stringify(Object.keys(answered).map(Number)));
   }
 
   function updateProgress(){
     const doneCount = Object.keys(answered).length;
     const progressEl = document.getElementById('quizProgress');
-    if (progressEl) progressEl.textContent = `${doneCount} / ${total} dijawab`;
+    if (progressEl) progressEl.textContent = `${doneCount} / ${total} benar`;
 
-    if (doneCount === total){
-      let correctCount = 0;
-      Object.keys(answered).forEach(qi => {
-        if (lesson.quiz[qi].correct === answered[qi]) correctCount++;
-      });
+    const quizComplete = doneCount >= total;
+    const markDoneBtn = document.getElementById('markDoneBtn');
 
-      const summary = document.getElementById('quizSummary');
-      if (summary){
+    // PENTING: tombol Tandai selesai hanya aktif setelah SEMUA soal benar.
+    if (markDoneBtn) {
+      markDoneBtn.dataset.quizComplete = quizComplete ? 'true' : 'false';
+      markDoneBtn.disabled = !quizComplete && !doneSet.has(lesson.id);
+      markDoneBtn.title = quizComplete
+        ? 'Semua soal benar. Klik untuk menandai materi selesai.'
+        : 'Selesaikan semua soal kuis dengan benar terlebih dahulu';
+    }
+
+    // Selanjutnya hanya aktif setelah Tandai selesai benar-benar ditekan.
+    const nextBtn = viewport.querySelector('.nav-btn.next');
+    if (nextBtn) {
+      const unlocked = !!next && doneSet.has(lesson.id);
+      nextBtn.disabled = !unlocked;
+      nextBtn.title = (next && !unlocked)
+        ? 'Tandai materi ini selesai terlebih dahulu'
+        : '';
+    }
+
+    // Jika semua soal benar, simpan skor 100.
+    if (quizComplete) {
+      quizScores[lesson.id] = {
+        correct: total,
+        total,
+        score: 100,
+        at: new Date().toISOString()
+      };
+      localStorage.setItem('kodelab_quiz_scores', JSON.stringify(quizScores));
+    }
+
+    const summary = document.getElementById('quizSummary');
+    if (summary) {
+      summary.style.display = quizComplete ? 'flex' : 'none';
+      if (quizComplete) {
         summary.classList.add('show-flex');
-        summary.style.display = 'flex';
-        document.getElementById('quizSummaryScore').textContent = `Skor kamu: ${correctCount} dari ${total} jawaban benar`;
+        const scoreEl = document.getElementById('quizSummaryScore');
+        if (scoreEl) scoreEl.textContent = `Semua soal benar: ${total} dari ${total}`;
       }
     }
   }
 
+  function bindQuestions(){
+    document.querySelectorAll('.quiz-q').forEach(qEl => {
+      const qi = Number(qEl.dataset.qi);
+      const q = lesson.quiz[qi];
+      const opts = qEl.querySelectorAll('.quiz-opt');
+      const feedback = qEl.querySelector('.quiz-feedback');
+      const retryQuestionBtn = qEl.querySelector('.quiz-question-retry');
+
+      function showCorrectState(){
+        opts.forEach(o => {
+          o.disabled = true;
+          const oi = Number(o.dataset.originalIndex);
+          o.classList.remove('correct','incorrect');
+          if (oi === q.correct) o.classList.add('correct');
+        });
+        feedback.style.display = 'block';
+        feedback.className = 'quiz-feedback ok';
+        feedback.innerHTML = '<b>Benar.</b> ' + escapeHtml(q.explain);
+        if (retryQuestionBtn) retryQuestionBtn.style.display = 'none';
+      }
+
+      // Tampilkan kembali jawaban benar jika siswa pernah menjawabnya sebelumnya.
+      if (answered[qi] !== undefined) showCorrectState();
+
+      opts.forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          if (answered[qi] !== undefined) return;
+
+          const originalIndex = Number(optEl.dataset.originalIndex);
+          const correct = originalIndex === q.correct;
+
+          opts.forEach(o => {
+            o.disabled = true;
+            o.classList.remove('correct','incorrect');
+            const oi = Number(o.dataset.originalIndex);
+            if (oi === q.correct) o.classList.add('correct');
+            else if (o === optEl && !correct) o.classList.add('incorrect');
+          });
+
+          feedback.style.display = 'block';
+          feedback.className = 'quiz-feedback ' + (correct ? 'ok' : 'bad');
+          feedback.innerHTML = correct
+            ? '<b>Benar.</b> ' + escapeHtml(q.explain)
+            : '<b>Belum tepat.</b> Jawabanmu belum benar. Klik <b>🔄 Coba lagi</b> untuk menjawab soal ini kembali.';
+
+          if (correct) {
+            answered[qi] = true;
+            saveProgress();
+            if (retryQuestionBtn) retryQuestionBtn.style.display = 'none';
+          } else {
+            if (retryQuestionBtn) retryQuestionBtn.style.display = 'inline-flex';
+          }
+
+          updateProgress();
+        });
+      });
+
+      if (retryQuestionBtn){
+        retryQuestionBtn.addEventListener('click', () => {
+          delete answered[qi];
+          saveProgress();
+          opts.forEach(o => {
+            o.disabled = false;
+            o.classList.remove('correct','incorrect');
+          });
+          feedback.style.display = 'none';
+          feedback.className = 'quiz-feedback';
+          feedback.innerHTML = '';
+          retryQuestionBtn.style.display = 'none';
+          updateProgress();
+        });
+      }
+    });
+  }
+
   bindQuestions();
+  updateProgress();
 
   const retryBtn = document.getElementById('quizRetryBtn');
   if (retryBtn){
     retryBtn.addEventListener('click', () => {
       answered = {};
+      localStorage.removeItem(progressKey);
+      delete quizScores[lesson.id];
+      localStorage.setItem('kodelab_quiz_scores', JSON.stringify(quizScores));
+
       document.getElementById('quizList').innerHTML = quizItemsHtml(lesson);
       document.getElementById('quizSummary').style.display = 'none';
-      document.getElementById('quizProgress').textContent = `0 / ${total} dijawab`;
+      document.getElementById('quizProgress').textContent = `0 / ${total} benar`;
+
       bindQuestions();
+      updateProgress();
     });
   }
 }
-
 /* ======================= MOBILE SIDEBAR ======================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
